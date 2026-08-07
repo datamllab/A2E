@@ -2,16 +2,10 @@
   <img src="ui/ailab-logo.png" alt="Shanghai AI Lab" width="540"/>
 </p>
 
-<table align="center">
-  <tr>
-    <td>
-      <img src="docs/A2E_logo.png" alt="A2E" width="72"/>
-    </td>
-    <td>
-      <h1>A<sup>2</sup>E — Agent Auditing Engine</h1>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="docs/A2E_logo.png" alt="A2E" width="120" align="absmiddle"/>
+  <strong>Agent Auditing Engine</strong>
+</p>
 
 <p align="center">
   <em>An agent auditing engine — evaluate any agent on any dataset, with full trace visibility.</em>
