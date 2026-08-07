@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-agent-google-adk"
+version = "0.1.0"
+description = "A2E google-adk agent — dataset-agnostic AgentBinding runner powered by the Google Agent Development Kit"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "openinference-instrumentation-google-adk>=0.1.0",
+    "google-adk>=1.2.1",
+    "litellm>=1.0.0",
+    "openai>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

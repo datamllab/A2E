@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-tau2"
+version = "0.1.0"
+description = "τ2-bench (next-gen sierra-research benchmark) adapter for A2E"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "datasets>=2.14.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+artifacts = ["src/ageneval/task/datasets/tau2/full_tasks.json.gz"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]
+artifacts = ["src/ageneval/task/datasets/tau2/full_tasks.json.gz"]

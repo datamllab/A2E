@@ -1,0 +1,4 @@
+{
+  "extends": "../../../src/a2e/client/helpers/sdk/pyrightconfig.json",
+  "reportPrivateUsage": false
+}

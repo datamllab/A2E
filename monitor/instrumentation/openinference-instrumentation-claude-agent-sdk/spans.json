@@ -1,0 +1,153 @@
+[
+  {
+    "name": "Bash",
+    "context": {
+      "trace_id": "0xa25c023e290b36d94b6fa4015c998d54",
+      "span_id": "0xb12a5c6c6f24b1e3",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x26c3f6f46b0450d7",
+    "start_time": "2026-05-10T04:24:45.666396Z",
+    "end_time": "2026-05-10T04:24:46.484929Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "tool.id": "toolu_01C98Bdc8FmU5V5bG5fCSRaZ",
+      "tool.name": "Bash",
+      "tool.parameters": "{\"command\": \"printf 'hello' | wc -c\", \"description\": \"Count bytes in 'hello'\"}",
+      "input.value": "{\"command\": \"printf 'hello' | wc -c\", \"description\": \"Count bytes in 'hello'\"}",
+      "input.mime_type": "application/json",
+      "output.value": "{\"stdout\": \"       5\", \"stderr\": \"\", \"interrupted\": false, \"isImage\": false, \"noOutputExpected\": false}",
+      "output.mime_type": "application/json",
+      "openinference.span.kind": "TOOL"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.41.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "Agent",
+    "context": {
+      "trace_id": "0xa25c023e290b36d94b6fa4015c998d54",
+      "span_id": "0x6b7521fb63406678",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x26c3f6f46b0450d7",
+    "start_time": "2026-05-10T04:24:42.318040Z",
+    "end_time": "2026-05-10T04:24:48.410901Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "tool.id": "toolu_01YPkEz5egsYqFexPc8vHWQK",
+      "tool.name": "Agent",
+      "tool.parameters": "{\"description\": \"Run wc -c on hello\", \"subagent_type\": \"general-purpose\", \"prompt\": \"Use the Bash tool to run exactly this command: `printf 'hello' | wc -c`\\n\\nThen return ONLY the numeric output from that command, with no other text, explanation, formatting, or whitespace beyond the number itself.\"}",
+      "input.value": "{\"description\": \"Run wc -c on hello\", \"subagent_type\": \"general-purpose\", \"prompt\": \"Use the Bash tool to run exactly this command: `printf 'hello' | wc -c`\\n\\nThen return ONLY the numeric output from that command, with no other text, explanation, formatting, or whitespace beyond the number itself.\"}",
+      "input.mime_type": "application/json",
+      "output.value": "{\"status\": \"completed\", \"prompt\": \"Use the Bash tool to run exactly this command: `printf 'hello' | wc -c`\\n\\nThen return ONLY the numeric output from that command, with no other text, explanation, formatting, or whitespace beyond the number itself.\", \"agentId\": \"a1c871ddc6299bbc8\", \"agentType\": \"general-purpose\", \"content\": [{\"type\": \"text\", \"text\": \"5\"}], \"totalDurationMs\": 6079, \"totalTokens\": 13442, \"totalToolUseCount\": 1, \"usage\": {\"input_tokens\": 1, \"cache_creation_input_tokens\": 125, \"cache_read_input_tokens\": 13311, \"output_tokens\": 5, \"server_tool_use\": {\"web_search_requests\": 0, \"web_fetch_requests\": 0}, \"service_tier\": \"standard\", \"cache_creation\": {\"ephemeral_1h_input_tokens\": 0, \"ephemeral_5m_input_tokens\": 125}, \"inference_geo\": \"\", \"iterations\": [{\"input_tokens\": 1, \"output_tokens\": 5, \"cache_read_input_tokens\": 13311, \"cache_creation_input_tokens\": 125, \"cache_creation\": {\"ephemeral_5m_input_tokens\": 125, \"ephemeral_1h_input_tokens\": 0}, \"type\": \"message\"}], \"speed\": \"standard\"}, \"toolStats\": {\"readCount\": 0, \"searchCount\": 0, \"bashCount\": 1, \"editFileCount\": 0, \"linesAdded\": 0, \"linesRemoved\": 0, \"otherToolCount\": 0}}",
+      "output.mime_type": "application/json",
+      "openinference.span.kind": "TOOL"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.41.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "ClaudeAgentSDK.Agent",
+    "context": {
+      "trace_id": "0xa25c023e290b36d94b6fa4015c998d54",
+      "span_id": "0x6b2cda310aaf1e7a",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x6b7521fb63406678",
+    "start_time": "2026-05-10T04:24:42.411782Z",
+    "end_time": "2026-05-10T04:24:50.356950Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "agent.name": "Agent",
+      "llm.model_name": "claude-opus-4-7",
+      "openinference.span.kind": "AGENT"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.41.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "ClaudeAgentSDK.query",
+    "context": {
+      "trace_id": "0xa25c023e290b36d94b6fa4015c998d54",
+      "span_id": "0x26c3f6f46b0450d7",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-05-10T04:24:35.168328Z",
+    "end_time": "2026-05-10T04:24:50.361039Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "llm.system": "anthropic",
+      "input.value": "Use the Task tool to delegate a sub-agent. The sub-agent must use the Bash tool to run: `printf 'hello' | wc -c`. Return exactly the numeric output and nothing else.",
+      "input.mime_type": "text/plain",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.id": "toolu_01YPkEz5egsYqFexPc8vHWQK",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "Agent",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"description\": \"Run wc -c on hello\", \"subagent_type\": \"general-purpose\", \"prompt\": \"Use the Bash tool to run exactly this command: `printf 'hello' | wc -c`\\n\\nThen return ONLY the numeric output from that command, with no other text, explanation, formatting, or whitespace beyond the number itself.\"}",
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.output_messages.1.message.content.0": "5",
+      "llm.output_messages.1.message.role": "assistant",
+      "output.value": "5",
+      "output.mime_type": "text/plain",
+      "llm.model_name": "claude-haiku-4-5-20251001",
+      "llm.token_count.prompt": 7,
+      "llm.token_count.completion": 271,
+      "llm.token_count.total": 278,
+      "llm.token_count.prompt_details.cache_read": 16804,
+      "llm.token_count.prompt_details.cache_write": 17175,
+      "llm.cost.total": 0.21643425000000002,
+      "session.id": "e98b3757-fa8d-4f4d-82be-1fa795ba611e",
+      "openinference.span.kind": "AGENT"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.41.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  }
+]

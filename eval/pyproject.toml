@@ -1,0 +1,26 @@
+# eval/ — uv workspace coordinator for the eval compute layer.
+#
+# This file is NOT a package (no [project], no build-system). It only declares
+# which subdirectories belong to this workspace and how cross-package deps
+# resolve.
+#
+# After the restructure, server/client/otel moved out to the top-level server/
+# hub; eval/ now holds only a2e-evals — the library that core eval work
+# extends. The eval flow pulls data from server (via a2e-client) and
+# writes results back; it depends on server/, not the reverse.
+#
+# Day-to-day:
+#   cd eval && uv sync     # install a2e-evals + monitor's openinference-*
+#                          # all editable into eval/.venv
+
+[tool.uv]
+required-version = ">=0.10.9"
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+# a2e-evals (the only member) depends on these monitor packages; resolve
+# them to the sibling monitor/ workspace via editable path sources.
+openinference-semantic-conventions = { path = "../monitor/openinference-semantic-conventions", editable = true }
+openinference-instrumentation = { path = "../monitor/openinference-instrumentation", editable = true }

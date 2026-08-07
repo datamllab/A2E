@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+    />
+    <title>A2E · ui</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- frosted top bar -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="counter lab-logo" id="counter" aria-label="Shanghai Artificial Intelligence Laboratory">
+          <img src="./ailab-logo.png" alt="" />
+        </div>
+      </div>
+      <nav class="segmented" id="segmented" aria-label="Switch view">
+        <div class="seg-track" id="seg-track">
+          <button data-panel="0" class="seg active">Task</button>
+          <button data-panel="1" class="seg">Trace</button>
+          <button data-panel="2" class="seg">Eval</button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- horizontal deck: Task (benchmark tree) / Trace / Eval -->
+    <main class="pager" id="deck"></main>
+
+    <!-- right-edge sample dots (reflect Trace samples) -->
+    <aside class="dots" id="dots" aria-hidden="true"></aside>
+
+    <!-- transient message -->
+    <div class="toast" id="toast"></div>
+
+    <!-- states -->
+    <div class="overlay" id="overlay">
+      <div class="overlay-card">
+        <div class="spinner" id="spinner"></div>
+        <p class="overlay-msg" id="overlay-msg">Loading…</p>
+        <button class="retry" id="retry" hidden>Retry</button>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

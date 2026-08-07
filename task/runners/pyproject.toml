@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-runners"
+version = "0.1.0"
+description = "Task-layer runners gluing dataset + agent + tracer for A2E"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "ageneval-task-tau-bench>=0.1.0",
+]
+
+[project.optional-dependencies]
+claude = ["ageneval-task-claude-sdk-agent>=0.1.0"]
+langgraph = ["ageneval-task-langgraph-agent>=0.1.0"]
+smolagents = ["ageneval-task-agent-smolagents>=0.1.0"]
+all = [
+    "ageneval-task-claude-sdk-agent>=0.1.0",
+    "ageneval-task-langgraph-agent>=0.1.0",
+    "ageneval-task-agent-smolagents>=0.1.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

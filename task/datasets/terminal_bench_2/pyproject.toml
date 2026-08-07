@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-terminal-bench-2"
+version = "0.1.0"
+description = "Terminal-Bench 2.0 (laude-institute) dataset adapter for A2E — sandboxed terminal-task evaluation"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "ageneval-task-sandbox>=0.1.0",
+    # task.toml parsing: tomllib is stdlib on 3.11+, tomli on 3.10.
+    "tomli>=2.0.0; python_version<'3.11'",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+# Hatchling includes non-Python files below the selected package directory, so
+# the vendored task.toml, instructions, Dockerfiles, and tests ship as package
+# data without a duplicate force-include entry.
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

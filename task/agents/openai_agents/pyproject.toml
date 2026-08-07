@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-agent-openai-agents"
+version = "0.1.0"
+description = "A2E openai-agents agent — dataset-agnostic AgentBinding runner powered by the OpenAI Agents SDK"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "openinference-instrumentation-openai-agents>=0.1.0",
+    "openai-agents>=0.2.6",
+    "openai>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

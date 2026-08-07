@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-agent-crewai"
+version = "0.1.0"
+description = "A2E crewai agent — dataset-agnostic AgentBinding runner powered by CrewAI"
+requires-python = ">=3.10,<3.14"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "openinference-instrumentation-crewai==0.1.16",
+    # The existing unified task/server lock selects CrewAI 1.6.1. The vendored
+    # OpenInference CrewAI instrumentor is pinned to its compatible v0.1.16
+    # implementation so automatic tracing is not silently disabled.
+    "crewai==1.6.1",
+    "openai>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

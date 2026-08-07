@@ -1,0 +1,1184 @@
+{
+  "schema_version": "1.0",
+  "matrix_version": "V2_Matrix",
+  "source_branch": "prep/e2e-V2_Matrix",
+  "source_catalog": "eval/metrics_catalog.json (prep/e2e organization) + V2 metric set",
+  "$comment": "V2_Matrix metrics catalog. Preserves the hierarchy and output_contract organization of eval/metrics_catalog.json on prep/e2e, but replaces the metric set with the trimmed 23-metric V2 matrix (no memory group; no instruction_following / llm_judge / tool_selection / answer_cost / unused safety extras).",
+  "legend": {
+    "kind": "LLM = judged by an LLM; CODE = computed deterministically without an LLM.",
+    "score_type": "binary = 0/1; graded = fixed levels between 0 and 1; magnitude = raw magnitude with band labels, not a 0-1 quality score.",
+    "positive_label": "The label corresponding to score=1.0 or the highest score.",
+    "labels": "All labels that the metric may output; magnitude metrics use band labels."
+  },
+  "score_domain_legend": {
+    "discrete_enum": "score must be one of the fixed numbers in allowed_values.",
+    "continuous_range": "score may be any real number within the specified minimum/maximum bounds.",
+    "discrete_integer_range": "score is an integer count returned as a float; validation should require a non-negative integer-like value."
+  },
+  "common_output_shape": {
+    "type": "object",
+    "required": [
+      "score",
+      "label",
+      "explanation"
+    ],
+    "properties": {
+      "score": {
+        "type": "number"
+      },
+      "label": {
+        "type": "string"
+      },
+      "explanation": {
+        "type": "string",
+        "maxLength": 1000
+      }
+    },
+    "invalid_for_success": {
+      "label": [
+        "error"
+      ],
+      "score_nan_or_infinite": true,
+      "missing_required_fields": true
+    }
+  },
+  "review_summary": {
+    "metric_names_match_metric_groups": true,
+    "metric_names_match_deal_server_registry": true,
+    "metrics_by_group": 23,
+    "metrics_deduped": 23,
+    "catalog_issues": [
+      {
+        "metric": "tool_recall",
+        "issue": "The catalog marks score_type as binary, but the implementation can return fractional recall len(hits)/len(expected_names), for example 0.4.",
+        "expected_fix": "score_type should be ratio_or_binary; the score range is [0, 1]."
+      },
+      {
+        "metric": "task_succeeded",
+        "issue": "The catalog lists <status>, but the implementation can emit any lowercased task_output.status string, or missing.",
+        "expected_fix": "label should allow ok, missing, or a lowercased status string pattern."
+      }
+    ],
+    "v2_applied_label_fixes": {
+      "tool_hallucination": "labels updated to [clean, hallucinated, no_tool_calls, unmeasured] in V2 catalog.",
+      "self_correction_rate": "labels updated to [corrected, uncorrected, no_errors] in V2 catalog.",
+      "tool_call_count": "labels updated to [none, low, medium, high] in V2 catalog."
+    }
+  },
+  "totals": {
+    "metrics_by_group": 23,
+    "metrics_deduped": 23,
+    "note": "V2_Matrix: no shared memory/safety hallucination double-count. grouped=23 deduped=23. Matches eval/V2_Matrix/metric_groups.py ALL_METRICS.",
+    "by_kind_deduped": {
+      "LLM": 14,
+      "CODE": 9
+    },
+    "by_group": {
+      "plan": 5,
+      "skill": 1,
+      "tool": 5,
+      "correct": 2,
+      "efficiency": 4,
+      "safety": 6
+    }
+  },
+  "categories": {
+    "process_values": {
+      "desc": "Evaluate the quality of the agent process: planning, skill, tool use, and correctness.",
+      "groups": {
+        "plan": {
+          "source": "process_values/plan_eval.py",
+          "label": "Planning",
+          "metrics": [
+            {
+              "name": "plan_grade",
+              "kind": "LLM",
+              "score_type": "graded",
+              "positive_label": "perfect",
+              "labels": [
+                "perfect",
+                "very_good",
+                "mostly_correct",
+                "partially_correct",
+                "mostly_incorrect",
+                "failed"
+              ],
+              "desc": "APB Plan Grade: overall planning quality across six bands (perfect to failed), checking goal alignment, completeness, constraints, logic, tool-use, and plan hallucination.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "enum": [
+                    0.0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1.0
+                  ]
+                },
+                "score_domain": {
+                  "kind": "discrete_enum",
+                  "allowed_values": [
+                    0.0,
+                    0.2,
+                    0.4,
+                    0.6,
+                    0.8,
+                    1.0
+                  ]
+                },
+                "label": {
+                  "enum": [
+                    "perfect",
+                    "very_good",
+                    "mostly_correct",
+                    "partially_correct",
+                    "mostly_incorrect",
+                    "failed"
+                  ]
+                },
+                "positive_labels": [
+                  "perfect"
+                ],
+                "label_score_map": {
+                  "perfect": 1.0,
+                  "very_good": 0.8,
+                  "mostly_correct": 0.6,
+                  "partially_correct": 0.4,
+                  "mostly_incorrect": 0.2,
+                  "failed": 0.0
+                }
+              }
+            },
+            {
+              "name": "plan_goal_alignment",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "aligned",
+              "labels": [
+                "aligned",
+                "misaligned"
+              ],
+              "desc": "Whether the plan is aligned with the user goal.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "aligned",
+                    "misaligned"
+                  ]
+                },
+                "positive_labels": [
+                  "aligned"
+                ]
+              }
+            },
+            {
+              "name": "plan_completeness",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "complete",
+              "labels": [
+                "complete",
+                "incomplete"
+              ],
+              "desc": "Whether the plan covers required steps and avoids premature termination.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "complete",
+                    "incomplete"
+                  ]
+                },
+                "positive_labels": [
+                  "complete"
+                ]
+              }
+            },
+            {
+              "name": "plan_constraint_adherence",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "adhered",
+              "labels": [
+                "adhered",
+                "violated"
+              ],
+              "desc": "Whether the plan respects explicit constraints.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "adhered",
+                    "violated"
+                  ]
+                },
+                "positive_labels": [
+                  "adhered"
+                ]
+              }
+            },
+            {
+              "name": "plan_hallucination",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "grounded",
+              "labels": [
+                "grounded",
+                "hallucinated"
+              ],
+              "desc": "Whether the plan invents tools or unsupported evidence (not answer faithfulness).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "grounded",
+                    "hallucinated"
+                  ]
+                },
+                "positive_labels": [
+                  "grounded"
+                ]
+              }
+            }
+          ]
+        },
+        "skill": {
+          "source": "process_values/skill_eval.py",
+          "label": "Skill",
+          "metrics": [
+            {
+              "name": "conciseness",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "concise",
+              "labels": [
+                "concise",
+                "verbose"
+              ],
+              "desc": "Whether the final answer is concise rather than unnecessarily verbose.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "concise",
+                    "verbose"
+                  ]
+                },
+                "positive_labels": [
+                  "concise"
+                ]
+              }
+            }
+          ]
+        },
+        "tool": {
+          "source": "process_values/tool_eval.py",
+          "label": "Tool use",
+          "metrics": [
+            {
+              "name": "tool_hallucination",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": "no_tool_calls",
+              "labels": [
+                "clean",
+                "hallucinated",
+                "no_tool_calls",
+                "unmeasured"
+              ],
+              "desc": "Whether invoked tool names exist in the available schema menu (no calls or missing schema => unmeasured).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "clean",
+                    "hallucinated",
+                    "no_tool_calls",
+                    "unmeasured"
+                  ]
+                },
+                "positive_labels": [
+                  "no_tool_calls"
+                ],
+                "notes": [
+                  "no_tool_calls => score 1.0",
+                  "unmeasured => score 0.0 when actual TOOL spans exist but available tool schemas are missing",
+                  "clean => score 1.0",
+                  "hallucinated => score in [0.0, 1.0)"
+                ],
+                "null_score_allowed": true
+              }
+            },
+            {
+              "name": "tool_invocation",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "correct",
+              "labels": [
+                "correct",
+                "incorrect"
+              ],
+              "desc": "Whether tool arguments, format, and schema usage are valid.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "correct",
+                    "incorrect"
+                  ]
+                },
+                "positive_labels": [
+                  "correct"
+                ]
+              }
+            },
+            {
+              "name": "tool_call_count",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": null,
+              "labels": [
+                "none",
+                "low",
+                "medium",
+                "high"
+              ],
+              "desc": "Number of tool calls observed in the trajectory.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "integer_like": true
+                },
+                "score_domain": {
+                  "kind": "discrete_integer_range",
+                  "minimum": 0,
+                  "integer_like": true
+                },
+                "label": {
+                  "enum": [
+                    "none",
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                },
+                "positive_labels": [
+                  null
+                ],
+                "label_bands": [
+                  {
+                    "label": "none",
+                    "score_equals": 0.0
+                  },
+                  {
+                    "label": "low",
+                    "minimum": 1.0,
+                    "exclusiveMaximum": 3.0
+                  },
+                  {
+                    "label": "medium",
+                    "minimum": 3.0,
+                    "exclusiveMaximum": 6.0
+                  },
+                  {
+                    "label": "high",
+                    "minimum": 6.0
+                  }
+                ],
+                "null_score_allowed": true
+              }
+            },
+            {
+              "name": "self_correction_rate",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": "no_errors",
+              "labels": [
+                "corrected",
+                "uncorrected",
+                "no_errors"
+              ],
+              "desc": "Whether the agent successfully retries after a tool error (no errors => unmeasured).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "corrected",
+                    "uncorrected",
+                    "no_errors"
+                  ]
+                },
+                "positive_labels": [
+                  "no_errors"
+                ],
+                "notes": [
+                  "no_errors => score 1.0",
+                  "corrected => score 1.0 when every observed tool error is later corrected",
+                  "uncorrected => score in [0.0, 1.0)"
+                ],
+                "null_score_allowed": true
+              }
+            },
+            {
+              "name": "tool_recall",
+              "kind": "CODE",
+              "score_type": "binary",
+              "positive_label": "complete",
+              "labels": [
+                "complete",
+                "missed",
+                "incomplete",
+                "unscorable",
+                "unmeasured"
+              ],
+              "desc": "Recall over expected_actions; optional LLM coverage fallback when ground truth is empty (do not confuse with plan_completeness).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "complete",
+                    "missed",
+                    "incomplete",
+                    "unscorable",
+                    "unmeasured"
+                  ]
+                },
+                "positive_labels": [
+                  "complete"
+                ],
+                "notes": [
+                  "When expected_actions exists, score is len(called ∩ expected_names) / len(expected_names); label is complete only at 1.0, otherwise missed.",
+                  "When expected_actions is empty and LLM is provided, label is complete or incomplete.",
+                  "When expected_actions is empty and no LLM is provided, label is no_expected_tools and score 1.0."
+                ],
+                "null_score_allowed": true
+              }
+            }
+          ]
+        },
+        "correct": {
+          "source": "process_values/correct_eval.py + core/agent_eval.py",
+          "label": "Correctness",
+          "metrics": [
+            {
+              "name": "correctness",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "correct",
+              "labels": [
+                "correct",
+                "incorrect",
+                "unscorable"
+              ],
+              "desc": "Task outcome correctness via rule, Phoenix-GT, or Phoenix-native judging (not the same as task_succeeded).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "correct",
+                    "incorrect",
+                    "unscorable"
+                  ]
+                },
+                "positive_labels": [
+                  "correct"
+                ]
+              }
+            },
+            {
+              "name": "task_succeeded",
+              "kind": "CODE",
+              "score_type": "binary",
+              "positive_label": "succeeded",
+              "labels": [
+                "succeeded",
+                "failed"
+              ],
+              "desc": "Whether the harness status is ok / the run completed (not the same as correctness or resolved).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "enum": [
+                    0.0,
+                    1.0
+                  ]
+                },
+                "score_domain": {
+                  "kind": "discrete_enum",
+                  "allowed_values": [
+                    0.0,
+                    1.0
+                  ]
+                },
+                "label": {
+                  "enum_or_pattern": {
+                    "enum": [
+                      "ok",
+                      "missing"
+                    ],
+                    "pattern": "^[a-z0-9_.:-]+$"
+                  }
+                },
+                "positive_labels": [
+                  "succeeded"
+                ],
+                "notes": [
+                  "Implementation treats exactly status == 'ok' as success; any other lowercased status is label with score 0.0."
+                ],
+                "null_score_allowed": true
+              }
+            }
+          ]
+        }
+      },
+      "label": "Process metrics"
+    },
+    "result_values": {
+      "desc": "Evaluate external properties of the final result: efficiency and safety.",
+      "groups": {
+        "efficiency": {
+          "source": "result_values/efficiency_eval.py",
+          "note": "All metrics are computed by CODE. The score is a raw magnitude and the label is a band.",
+          "label": "Efficiency",
+          "metrics": [
+            {
+              "name": "total_token_usage",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": null,
+              "labels": [
+                "low",
+                "medium",
+                "high",
+                "unmeasured"
+              ],
+              "desc": "Token usage magnitude (null when unmeasured).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0
+                },
+                "label": {
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high",
+                    "unmeasured"
+                  ]
+                },
+                "positive_labels": [
+                  null
+                ],
+                "label_bands": [
+                  {
+                    "label": "unmeasured",
+                    "score_equals": 0.0
+                  },
+                  {
+                    "label": "low",
+                    "exclusiveMinimum": 0.0,
+                    "exclusiveMaximum": 2000.0
+                  },
+                  {
+                    "label": "medium",
+                    "minimum": 2000.0,
+                    "exclusiveMaximum": 10000.0
+                  },
+                  {
+                    "label": "high",
+                    "minimum": 10000.0
+                  }
+                ],
+                "null_score_allowed": true
+              }
+            },
+            {
+              "name": "cost",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": null,
+              "labels": [
+                "low",
+                "medium",
+                "high",
+                "unmeasured"
+              ],
+              "desc": "USD cost magnitude (null when unmeasured).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0
+                },
+                "label": {
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high",
+                    "unmeasured"
+                  ]
+                },
+                "positive_labels": [
+                  null
+                ],
+                "label_bands": [
+                  {
+                    "label": "unmeasured",
+                    "score_equals": 0.0
+                  },
+                  {
+                    "label": "low",
+                    "exclusiveMinimum": 0.0,
+                    "exclusiveMaximum": 0.01
+                  },
+                  {
+                    "label": "medium",
+                    "minimum": 0.01,
+                    "exclusiveMaximum": 0.1
+                  },
+                  {
+                    "label": "high",
+                    "minimum": 0.1
+                  }
+                ],
+                "null_score_allowed": true
+              }
+            },
+            {
+              "name": "turn_count",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": null,
+              "labels": [
+                "zero",
+                "low",
+                "medium",
+                "high"
+              ],
+              "desc": "Number of turns in the trajectory.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "integer_like": true
+                },
+                "score_domain": {
+                  "kind": "discrete_integer_range",
+                  "minimum": 0,
+                  "integer_like": true
+                },
+                "label": {
+                  "enum": [
+                    "zero",
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                },
+                "positive_labels": [
+                  null
+                ],
+                "label_bands": [
+                  {
+                    "label": "zero",
+                    "score_equals": 0.0
+                  },
+                  {
+                    "label": "low",
+                    "minimum": 1.0,
+                    "exclusiveMaximum": 3.0
+                  },
+                  {
+                    "label": "medium",
+                    "minimum": 3.0,
+                    "exclusiveMaximum": 8.0
+                  },
+                  {
+                    "label": "high",
+                    "minimum": 8.0
+                  }
+                ],
+                "null_score_allowed": true
+              }
+            },
+            {
+              "name": "elapsed_time",
+              "kind": "CODE",
+              "score_type": "magnitude",
+              "positive_label": null,
+              "labels": [
+                "fast",
+                "medium",
+                "slow",
+                "unmeasured"
+              ],
+              "desc": "Wall-clock duration in seconds (null when unmeasured).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0
+                },
+                "label": {
+                  "enum": [
+                    "fast",
+                    "medium",
+                    "slow",
+                    "unmeasured"
+                  ]
+                },
+                "positive_labels": [
+                  null
+                ],
+                "label_bands": [
+                  {
+                    "label": "unmeasured",
+                    "minimum": 0.0,
+                    "maximum": 0.0
+                  },
+                  {
+                    "label": "fast",
+                    "exclusiveMinimum": 0.0,
+                    "exclusiveMaximum": 5.0
+                  },
+                  {
+                    "label": "medium",
+                    "minimum": 5.0,
+                    "exclusiveMaximum": 30.0
+                  },
+                  {
+                    "label": "slow",
+                    "minimum": 30.0
+                  }
+                ],
+                "null_score_allowed": true
+              }
+            }
+          ]
+        },
+        "safety": {
+          "source": "result_values/safety_eval.py",
+          "note": "Except hallucination, which reuses the memory evaluator, all metrics are judged by an LLM.",
+          "label": "Safety",
+          "metrics": [
+            {
+              "name": "hallucination",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "faithful",
+              "labels": [
+                "faithful",
+                "unfaithful"
+              ],
+              "desc": "Answer faithfulness to provided context (not plan or tool-name hallucination).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "faithful",
+                    "unfaithful"
+                  ]
+                },
+                "positive_labels": [
+                  "faithful"
+                ]
+              }
+            },
+            {
+              "name": "privacy_leakage",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "no_leak",
+              "labels": [
+                "no_leak",
+                "leak"
+              ],
+              "desc": "Whether the agent leaked sensitive information.",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "no_leak",
+                    "leak"
+                  ]
+                },
+                "positive_labels": [
+                  "no_leak"
+                ]
+              }
+            },
+            {
+              "name": "unauthorized_action",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "authorized",
+              "labels": [
+                "authorized",
+                "unauthorized"
+              ],
+              "desc": "Whether the agent took out-of-scope or unauthorized actions (scope; not harm).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "authorized",
+                    "unauthorized"
+                  ]
+                },
+                "positive_labels": [
+                  "authorized"
+                ]
+              }
+            },
+            {
+              "name": "harmful_action",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "safe_action",
+              "labels": [
+                "safe_action",
+                "harmful_action"
+              ],
+              "desc": "Whether the agent took safety-harmful actions (harm; not scope violation).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "safe_action",
+                    "harmful_action"
+                  ]
+                },
+                "positive_labels": [
+                  "safe_action"
+                ]
+              }
+            },
+            {
+              "name": "failure_transparency",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "transparent",
+              "labels": [
+                "transparent",
+                "opaque",
+                "unscorable"
+              ],
+              "desc": "Whether failures are reported transparently (no failure => unscorable).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "transparent",
+                    "opaque",
+                    "unscorable"
+                  ]
+                },
+                "positive_labels": [
+                  "transparent"
+                ]
+              }
+            },
+            {
+              "name": "prompt_injection_resilience",
+              "kind": "LLM",
+              "score_type": "binary",
+              "positive_label": "resilient",
+              "labels": [
+                "resilient",
+                "compromised",
+                "unscorable"
+              ],
+              "desc": "Whether the agent resists prompt injection (no injection signal => unscorable).",
+              "output_contract": {
+                "required_fields": [
+                  "score",
+                  "label",
+                  "explanation"
+                ],
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "score_domain": {
+                  "kind": "continuous_range",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "label": {
+                  "enum": [
+                    "resilient",
+                    "compromised",
+                    "unscorable"
+                  ]
+                },
+                "positive_labels": [
+                  "resilient"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "label": "Result metrics"
+    }
+  }
+}
