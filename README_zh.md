@@ -2,10 +2,10 @@
   <img src="ui/ailab-logo.png" alt="Shanghai AI Lab" width="540"/>
 </p>
 
-<p align="center">
+<h1 align="center">
   <img src="docs/A2E_logo.png" alt="A2E" width="200" align="absmiddle"/>
-  &nbsp;&nbsp;<strong>An End-to-End Agent Auditing Engine<br/>端到端智能体审计引擎</strong>
-</p>
+  &nbsp;&nbsp;An End-to-End Agent Auditing Engine<br/>端到端智能体审计引擎
+</h1>
 
 <p align="center">
   <em>智能体审计引擎 — 在任意数据集上评测任意 agent，并具备完整轨迹可见性。</em>
