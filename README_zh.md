@@ -8,6 +8,10 @@
   <em>在任意 benchmark 上评测任意 agent，采集完整执行轨迹并可视化。</em>
 </p>
 
+<p align="center">
+  <a href="README.md">English</a> | <strong>中文</strong>
+</p>
+
 ---
 
 ## 概述

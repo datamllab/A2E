@@ -8,6 +8,10 @@
   <em>An agent auditing engine — evaluate any agent on any dataset, with full trace visibility.</em>
 </p>
 
+<p align="center">
+  <strong>English</strong> | <a href="README_zh.md">中文</a>
+</p>
+
 ---
 
 ## Overview
