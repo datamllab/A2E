@@ -162,9 +162,9 @@ uv run --frozen python examples/run_experiment.py \
 
 | 旗标 | 作用 |
 |------|------|
-| `--list` | 打印全部 dataset / agent / evaluator（权威清单） |
+| `--list` | 打印全部 dataset / agent harnesses / evaluator（权威清单） |
 | `--dataset` | 数据集名（必填） |
-| `--agent` | agent 框架（默认 `agno`） |
+| `--agent` | agent harnesses（默认 `agno`） |
 | `--model` | 覆盖本次的 `A2E_MODEL` |
 | `--evaluators` | 逗号分隔打分器 |
 | `--n` | 样本数（绝对数量，随机无放回） |
@@ -174,19 +174,15 @@ uv run --frozen python examples/run_experiment.py \
 uv run --frozen python examples/run_experiment.py --list
 ```
 
-### 数据集 / Agent / Evaluator
+### 数据集 / Agent Harnesses / Evaluator
 
-| 类型 | 代表 |
-|------|------|
-| 工具调用 | tau-bench, tau2, tau3, traject-bench |
-| QA | mmlu, gsm8k, humaneval, gpqa, mmlu-pro, math, bbh, … |
-| 沙盒 | swe-bench-lite, swe-bench-verified, swe-bench-pro, terminal-bench-2, terminal-bench-2.1 |
+| 数据集 |
+|---|
+| tau-bench, tau2, tau3, traject-bench, mmlu, gsm8k, humaneval, gpqa, mmlu-pro, math, bbh, swe-bench-lite, swe-bench-verified, swe-bench-pro, terminal-bench-2, terminal-bench-2.1, … |
 
-| 分组 | 框架 |
-|------|------|
-| Agent 优先 | smolagents · agno · llama-index |
-| 编排式 | langgraph · crewai · google-adk · autogen-agentchat |
-| 厂商 SDK | claude-sdk · openai-agents |
+| Agent Harnesses |
+|---|
+| smolagents · agno · llama-index · langgraph · crewai · google-adk · autogen-agentchat · claude-sdk · openai-agents |
 
 内置 evaluator：`exact_match`、`substring`、`tool_recall`、`numeric_match`、
 `mc_letter`、`swe_resolved`、`swe_fail_to_pass`、`swe_pass_to_pass`、`tb_resolved`，
