@@ -166,9 +166,9 @@ uv run --frozen python examples/run_experiment.py \
 
 | Flag | Purpose |
 |------|---------|
-| `--list` | Print all datasets / agents / evaluators (source of truth) |
+| `--list` | Print all datasets/agent harnesses/evaluators (source of truth) |
 | `--dataset` | Dataset name (required) |
-| `--agent` | Agent framework (default `agno`) |
+| `--agent` | Agent harnesses (default `agno`) |
 | `--model` | Override `A2E_MODEL` for this run |
 | `--evaluators` | Comma-separated scorers |
 | `--n` | Sample size (absolute count, random without replacement) |
@@ -178,19 +178,16 @@ uv run --frozen python examples/run_experiment.py \
 uv run --frozen python examples/run_experiment.py --list
 ```
 
-### Datasets / agents / evaluators
+### Datasets / Agent Harnesses / Evaluators
 
-| Kind | Examples |
-|------|----------|
-| Tool-use | tau-bench, tau2, tau3, traject-bench |
-| QA | mmlu, gsm8k, humaneval, gpqa, mmlu-pro, math, bbh, … |
-| Sandbox | swe-bench-lite, swe-bench-verified, swe-bench-pro, terminal-bench-2, terminal-bench-2.1 |
+| Datasets |
+|---|
+| tau-bench, tau2, tau3, traject-bench, mmlu, gsm8k, humaneval, gpqa, mmlu-pro, math, bbh, swe-bench-lite, swe-bench-verified, swe-bench-pro, terminal-bench-2, terminal-bench-2.1, … |
 
-| Group | Frameworks |
-|-------|------------|
-| Agent-first | smolagents · agno · llama-index |
-| Orchestration | langgraph · crewai · google-adk · autogen-agentchat |
-| Vendor SDKs | claude-sdk · openai-agents |
+| Agent Harnesses |
+|---|
+| smolagents · agno · llama-index · langgraph · crewai · google-adk · autogen-agentchat · claude-sdk · openai-agents |
+
 
 Built-in evaluators: `exact_match`, `substring`, `tool_recall`, `numeric_match`,
 `mc_letter`, `swe_resolved`, `swe_fail_to_pass`, `swe_pass_to_pass`, `tb_resolved`,
