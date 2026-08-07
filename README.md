@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <img src="docs/A2E_logo.png" alt="A2E" width="120" align="absmiddle"/>
-  <strong>Agent Auditing Engine</strong>
+  <img src="docs/A2E_logo.png" alt="A2E" width="200" align="absmiddle"/>
+  &nbsp;&nbsp;<strong>An End-to-End Agent Auditing Engine</strong>
 </p>
 
 <p align="center">
