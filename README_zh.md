@@ -2,10 +2,19 @@
   <img src="ui/ailab-logo.png" alt="Shanghai AI Lab" width="540"/>
 </p>
 
-<h1 align="center">A<sup>2</sup>E — Agent Auditing Engine<br/>智能体审计引擎</h1>
+<table align="center">
+  <tr>
+    <td>
+      <img src="docs/A2E_logo.png" alt="A2E" width="72"/>
+    </td>
+    <td>
+      <h1>A<sup>2</sup>E — Agent Auditing Engine<br/>智能体审计引擎</h1>
+    </td>
+  </tr>
+</table>
 
 <p align="center">
-  <em>在任意 benchmark 上评测任意 agent，采集完整执行轨迹并可视化。</em>
+  <em>智能体审计引擎 — 在任意数据集上评测任意 agent，并具备完整轨迹可见性。</em>
 </p>
 
 <p align="center">
