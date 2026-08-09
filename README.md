@@ -135,40 +135,30 @@ Browse captured trajectories at http://localhost:6006 under **`Experiment-<id>`*
 | `/experiments` | Per-sample scores |
 | `/projects` | Trace trees (LLM + tool calls) |
 
-## 4. Score results
+## 4. Evaluation
 
-After trajectories land on the server, score the process and the outcome. Lightweight inline scoring can ride along with `--evaluators` on the experiment CLI; use `eval/` for deeper metric groups.
+Evaluate agent runs from both the process and outcome perspectives.
 
-### Run all metrics
+Once trajectories are collected, the evaluation module analyzes agent behavior,
+including planning, tool usage, memory, efficiency, safety, and final task
+correctness.
+
+Evaluations can be run at different granularities:
+- Run the complete evaluation suite to obtain an overall profile.
+- Run individual evaluation groups to analyze specific capabilities.
+
+### Run all evaluations
 
 ```bash
-# Terminal 1
+# Start the evaluation service
 bash script/start.sh
 
-# Terminal 2
+# Run the full evaluation pipeline
 cd server
 uv run python ../eval/scripts/run_eval.py \
   --base-url http://localhost:6006 \
   --experiment-id <id> \
   --part all
-```
-
-### Run one metric group
-
-Supported parts:
-
-```text
-plan, skill, memory, tool, correct, efficiency, safety
-```
-
-```bash
-cd server
-uv run python ../eval/scripts/run_eval.py \
-  --base-url http://localhost:6006 \
-  --experiment-id <id> \
-  --part plan
-```
-
 ## 5. View results
 
 The React viewer is served by `a2e serve` at http://localhost:6006 (built by `script/start.sh`). Swipe between **Task / Trace / Eval** for the same sample; open Trace for the span tree.
