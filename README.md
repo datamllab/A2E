@@ -8,7 +8,7 @@
 </h1>
 
 <p align="center">
-  <em>An agent auditing engine — evaluate any agent on any dataset, with full trace visibility.</em>
+  <em>Evaluate any agent on any dataset, with full trajectory visibility.</em>
 </p>
 
 <p align="center">
@@ -17,73 +17,43 @@
 
 ---
 
-## Overview
+**A<sup>2</sup>E** (Agent Auditing Engine) is an open-source platform for auditing agent harnesses end to end. It helps you:
 
-**A<sup>2</sup>E** (Agent Auditing Engine) is an end-to-end auditing engine for agent
-harnesses. It uses the **Agent Task Protocol (ATP)** to plug evaluation tasks into
-different harnesses quickly, captures standardized execution traces via an
-auto-instrumented **Monitor**, and scores harness capabilities with
-multidimensional metrics beyond accuracy alone.
+- **Build experiments** — pair any benchmark with any agent harness and run them through one CLI
+- **Capture trajectories** — auto-instrument LLM and tool calls into standardized traces
+- **Score results** — score both the process and the final outcome with multidimensional metrics
+- **View results** — browse datasets, experiments, and trace trees in a local UI
 
-The core loop is **TASK → SERVER → EVAL → UI**. **TASK** runs Benchmark × Agent
-(optionally in a sandbox) while **Monitor** auto-instruments the run and writes
-runs + traces to **SERVER**. **EVAL** then pulls traces from the server, scores
-both the process (**TRACE EVAL**) and the final result (**OUTCOME EVAL**), and
-writes scores back. **UI** reads from the server to display traces and scores.
-**SERVER** is the hub that stores data, traces, and eval results for the other
-three stages.
+The loop is simple: **build → capture → score → view**. A local server stores runs, traces, and scores for every step.
 
 <p align="center">
   <img src="ui/pipeline.png" alt="A2E pipeline" width="720"/>
 </p>
 
-## Project Structure
-
-```
-AEP/
-├── script/              # One-click install + server start
-├── server/              # Backend + REST API + a2e-client SDK
-├── task/                # Datasets, agents, experiment runners
-│   ├── datasets/        # Benchmark adapters
-│   ├── agents/          # Agent framework adapters
-│   ├── runners/         # Registry (DATASETS / AGENTS / EVALUATORS)
-│   └── examples/        # CLI: run_experiment.py
-├── eval/                # Standalone evaluation pipeline
-├── monitor/             # OpenInference instrumentation
-├── ui/                  # React experiment viewer
-└── example/             # Interactive walkthrough script
-```
-
 ## Contents
 
 1. [Quick start](#1-quick-start)
-2. [Task Layer](#2-task-layer)
-3. [Eval Layer](#3-eval-layer)
-4. [UI Layer](#4-ui-layer)
+2. [Build experiments](#2-build-experiments)
+3. [Capture trajectories](#3-capture-trajectories)
+4. [Score results](#4-score-results)
+5. [View results](#5-view-results)
 
 ## 1. Quick start
-
-### One-click install & serve
 
 ```bash
 bash script/start.sh
 ```
 
-Prerequisites are listed in the script header. Syncs `task` / `server` / `eval`, builds the UI, creates `.env` from `.env.example` when missing, and starts the server at http://localhost:6006.
+Prerequisites are listed in the script header. This syncs dependencies, builds the UI, creates `.env` from `.env.example` when missing, and starts the server at http://localhost:6006.
 
-### Configure `.env`
+Before running experiments, fill in API keys in `.env`. Field meanings and override priority are documented in `.env.example`.
 
-Before running experiments, copy `.env.example` to `.env` and fill in API keys.
-See comments in `.env.example` for field meanings and override priority.
+## 2. Build experiments
 
-## 2. Task Layer
-
-Entry point: `task/examples/run_experiment.py`.
-
-### Start server + run an experiment
+Pick a dataset and an agent harness, then run:
 
 ```bash
-# Terminal 1 — keep open
+# Terminal 1 — keep the server up
 bash script/start.sh                 # → http://localhost:6006
 
 # Terminal 2
@@ -112,9 +82,9 @@ uv run --frozen python examples/run_experiment.py \
 
 | Flag | Purpose |
 |------|---------|
-| `--list` | Print all datasets/agent harnesses/evaluators (source of truth) |
+| `--list` | Print all datasets / agent harnesses / evaluators |
 | `--dataset` | Dataset name (required) |
-| `--agent` | Agent harnesses (default `agno`) |
+| `--agent` | Agent harness (default `agno`) |
 | `--model` | Override `A2E_MODEL` for this run |
 | `--evaluators` | Comma-separated scorers |
 | `--n` | Sample size (absolute count, random without replacement) |
@@ -124,25 +94,24 @@ uv run --frozen python examples/run_experiment.py \
 uv run --frozen python examples/run_experiment.py --list
 ```
 
-### Datasets / Agent Harnesses / Evaluators
+### Datasets & agent harnesses
 
 | Datasets |
 |---|
 | tau-bench, tau2, tau3, traject-bench, mmlu, gsm8k, humaneval, gpqa, mmlu-pro, math, bbh, swe-bench-lite, swe-bench-verified, swe-bench-pro, terminal-bench-2, terminal-bench-2.1, … |
 
-| Agent Harnesses |
+| Agent harnesses |
 |---|
 | smolagents · agno · llama-index · langgraph · crewai · google-adk · autogen-agentchat · claude-sdk · openai-agents |
 
-
-Built-in evaluators: `exact_match`, `substring`, `tool_recall`, `numeric_match`,
+Built-in scorers include `exact_match`, `substring`, `tool_recall`, `numeric_match`,
 `mc_letter`, `swe_resolved`, `swe_fail_to_pass`, `swe_pass_to_pass`, `tb_resolved`,
-plus `llm_judge`. Recommended combos live in `task/runners/.../registry.py`
+and `llm_judge`. Recommended combos live in `task/runners/.../registry.py`
 (`default_evaluators`).
 
-### Sandbox tips
+### Sandbox experiments
 
-Needs Docker and pullable images (1–3 GB each). Pin a cached instance before formal runs:
+Sandbox datasets need Docker and pullable images (1–3 GB each). Pin a cached instance before formal runs:
 
 ```bash
 A2E_SWE_INSTANCE="<cached_instance_id>" \
@@ -154,23 +123,21 @@ uv run --frozen python examples/run_experiment.py \
 - `swe-bench-pro` → `A2E_SWE_PRO_INSTANCE`
 - `terminal-bench-2` → `A2E_TB2_TASK=<task>`
 
-### View results
+## 3. Capture trajectories
 
-Open http://localhost:6006:
+While an experiment runs, **Monitor** auto-instruments the agent: LLM calls, tool calls, and related spans are written to the server as OpenTelemetry / OpenInference traces. You do not need a separate capture step for supported harnesses.
+
+Browse captured trajectories at http://localhost:6006 under **`Experiment-<id>`** projects:
 
 | Page | What you see |
 |------|----------------|
 | `/datasets` | Uploaded samples |
 | `/experiments` | Per-sample scores |
-| `/projects` | OpenTelemetry trace trees (LLM + tool calls) |
+| `/projects` | Trace trees (LLM + tool calls) |
 
-Task traces live under the **`Experiment-<id>`** project.
+## 4. Score results
 
-## 3. Eval Layer
-
-The eval layer pulls existing traces, scores them, and writes results back.
-Task runs do not require eval; pass `--evaluators` on the task CLI for lightweight
-inline scoring, or use `eval/` for deeper metric groups.
+After trajectories land on the server, score the process and the outcome. Lightweight inline scoring can ride along with `--evaluators` on the experiment CLI; use `eval/` for deeper metric groups.
 
 ### Run all metrics
 
@@ -202,32 +169,36 @@ uv run python ../eval/scripts/run_eval.py \
   --part plan
 ```
 
-## 4. UI Layer
+## 5. View results
 
-React experiment viewer. Production build is served by `a2e serve` at
-http://localhost:6006. Swipe between **Task / Trace / Eval** for the same sample;
-open the Trace panel for the span tree.
-
-### Production
-
-```bash
-cd ui && pnpm install && pnpm build
-bash script/start.sh                # http://localhost:6006
-```
-
-Artifacts go to `ui/dist/`. The server mounts them automatically.
+The React viewer is served by `a2e serve` at http://localhost:6006 (built by `script/start.sh`). Swipe between **Task / Trace / Eval** for the same sample; open Trace for the span tree.
 
 ### Development (HMR)
 
+`script/start.sh` builds the production UI. For Vite HMR, start the API and the UI separately:
+
 ```bash
-# Terminal 1
-bash script/start.sh                # http://127.0.0.1:6006
+# Terminal 1 — API only (after deps are installed)
+cd server && uv run a2e serve       # http://127.0.0.1:6006
 
 # Terminal 2
 cd ui && pnpm install && pnpm dev   # http://127.0.0.1:5173  (proxies /v1 → :6006)
 ```
 
 Or use `a2e serve --dev` for Vite HMR via the server templates.
+
+## Project layout
+
+```
+AEP/
+├── script/              # One-click install + server start
+├── task/                # Build experiments (datasets, agents, runners)
+├── monitor/             # Capture trajectories (auto-instrumentation)
+├── eval/                # Score results (process and outcomes)
+├── server/              # Store runs, traces, and scores
+├── ui/                  # View results
+└── example/             # Interactive walkthrough
+```
 
 ## Acknowledgements
 
