@@ -41,6 +41,7 @@ three stages.
 
 ```
 AEP/
+├── script/              # One-click install + server start
 ├── server/              # Backend + REST API + a2e-client SDK
 ├── task/                # Datasets, agents, experiment runners
 │   ├── datasets/        # Benchmark adapters
@@ -55,80 +56,25 @@ AEP/
 
 ## Contents
 
-1. [Configuration](#1-configuration)
+1. [Quick start](#1-quick-start)
 2. [Task Layer](#2-task-layer)
 3. [Eval Layer](#3-eval-layer)
 4. [UI Layer](#4-ui-layer)
 
-## 1. Configuration
+## 1. Quick start
 
-### Prerequisites
-
-| Tool | Version | Notes |
-|------|---------|-------|
-| **Python** | 3.10 – 3.14 | `uv python install 3.11` |
-| **uv** | latest | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| **Docker** | any | Only for sandbox datasets (swe-bench, terminal-bench) |
-| **Node.js + pnpm** | Node 18+ | Only if you rebuild the UI |
-
-### Install & credentials
+### One-click install & serve
 
 ```bash
-# task — experiments / datasets / agents
-cd task && uv sync --frozen --all-packages --index-strategy unsafe-best-match
-
-# server — a2e serve + REST API
-cd server && uv sync
-
-# eval — standalone evaluation pipeline
-cd eval && uv sync
-
-cp .env.example .env   # then fill in real keys
+bash script/start.sh
 ```
 
-`.env` (gitignored):
+Prerequisites are listed in the script header. Syncs `task` / `server` / `eval`, builds the UI, creates `.env` from `.env.example` when missing, and starts the server at http://localhost:6006.
 
-```bash
-A2E_MODEL=qwen3-coder-plus        # default model for all agents
-OPENAI_API_KEY=sk-...
-OPENAI_API_BASE=...
-ANTHROPIC_API_KEY=sk-...          # claude-sdk only
-ANTHROPIC_BASE_URL=...            # no trailing /v1
-```
+### Configure `.env`
 
-Priority: **CLI flags > `.env` / env vars > code defaults**.
-
-| What to change | Where |
-|----------------|-------|
-| Default model | `.env` → `A2E_MODEL` |
-| One-off model | CLI `--model` |
-| OpenAI-compatible endpoint / key | `.env` → `OPENAI_API_BASE` / `OPENAI_API_KEY`, or `--api-base` / `--api-key` |
-| Anthropic endpoint / key | `.env` → `ANTHROPIC_BASE_URL` / `ANTHROPIC_API_KEY` |
-| Where trajectories land | `A2E_WORKING_DIR` when starting `a2e serve` (unset → `~/.a2e/a2e.db`) |
-
-Optional:
-
-```bash
-# Rebuild UI
-cd ui && pnpm install && pnpm build
-
-# autogen-agentchat (isolated — protobuf conflict with main workspace)
-cd task/agents/autogen_agentchat && uv sync --index-strategy unsafe-best-match
-```
-
-### Three rules before every run
-
-1. **Start `a2e serve` first** — experiments upload datasets / spans to the running backend.
-2. **`no_proxy` must include `127.0.0.1,localhost`** — otherwise spans are swallowed by a local proxy and `a2e.db` shows `spans=0`.
-3. **DB location follows the serve process** — set by `A2E_WORKING_DIR` at serve time; the experiment CLI only writes to whatever backend is up.
-
-Standard prelude (every experiment terminal):
-
-```bash
-cd task
-set -a; . ../.env; set +a
-export no_proxy="127.0.0.1,localhost,${no_proxy:-}"; export NO_PROXY="$no_proxy"
-```
+Before running experiments, copy `.env.example` to `.env` and fill in API keys.
+See comments in `.env.example` for field meanings and override priority.
 
 ## 2. Task Layer
 
@@ -138,7 +84,7 @@ Entry point: `task/examples/run_experiment.py`.
 
 ```bash
 # Terminal 1 — keep open
-cd server && uv run a2e serve      # → http://localhost:6006
+bash script/start.sh                 # → http://localhost:6006
 
 # Terminal 2
 cd task
@@ -230,7 +176,7 @@ inline scoring, or use `eval/` for deeper metric groups.
 
 ```bash
 # Terminal 1
-cd server && uv run a2e serve
+bash script/start.sh
 
 # Terminal 2
 cd server
@@ -266,7 +212,7 @@ open the Trace panel for the span tree.
 
 ```bash
 cd ui && pnpm install && pnpm build
-cd server && uv run a2e serve       # http://localhost:6006
+bash script/start.sh                # http://localhost:6006
 ```
 
 Artifacts go to `ui/dist/`. The server mounts them automatically.
@@ -275,7 +221,7 @@ Artifacts go to `ui/dist/`. The server mounts them automatically.
 
 ```bash
 # Terminal 1
-cd server && uv run a2e serve       # http://127.0.0.1:6006
+bash script/start.sh                # http://127.0.0.1:6006
 
 # Terminal 2
 cd ui && pnpm install && pnpm dev   # http://127.0.0.1:5173  (proxies /v1 → :6006)

@@ -1,25 +1,17 @@
-<p align="center">
-  <img src="ui/ailab-logo.png" alt="Shanghai AI Lab" width="540"/>
-</p>
 
-<h1 align="center">
-  <img src="docs/A2E_logo.png" alt="A2E" width="200" align="absmiddle"/>
-  &nbsp;&nbsp;An End-to-End Agent Auditing Engine<br/>端到端智能体审计引擎
-</h1>
 
-<p align="center">
-  <em>智能体审计引擎 — 在任意数据集上评测任意 agent，并具备完整轨迹可见性。</em>
-</p>
+#   An End-to-End Agent Auditing Engine  
+端到端智能体审计引擎
 
-<p align="center">
-  <a href="README.md">English</a> | <strong>中文</strong>
-</p>
+*智能体审计引擎 — 在任意数据集上评测任意 agent，并具备完整轨迹可见性。*
+
+[English](README.md) | **中文**
 
 ---
 
 ## 概述
 
-**A<sup>2</sup>E**（Agent Auditing Engine）是面向 agent harness 的端到端智能体审计引擎。它基于
+**A2E**（Agent Auditing Engine）是面向 agent harness 的端到端智能体审计引擎。它基于
 **Agent Task Protocol（ATP）** 将评测任务快速接入不同 harness，通过自动打桩的
 **Monitor** 采集标准化执行轨迹，并以多维指标（而不只是准确率）系统评估 harness 能力。
 
@@ -29,14 +21,13 @@
 **UI** 从服务端读取并展示轨迹与得分。**SERVER** 作为中枢，统一存放 data / trace / eval，
 供其余三端读写。
 
-<p align="center">
-  <img src="ui/pipeline.png" alt="A2E 管线" width="720"/>
-</p>
+
 
 ## 项目结构
 
 ```
 AEP/
+├── script/              # 一键安装依赖并启动服务
 ├── server/              # 后端 + REST API + a2e-client SDK
 ├── task/                # 数据集、agent 框架、实验运行器
 │   ├── datasets/        # Benchmark 适配
@@ -51,80 +42,25 @@ AEP/
 
 ## 目录
 
-1. [配置](#1-配置)
+1. [快速开始](#1-快速开始)
 2. [Task Layer](#2-task-layer)
 3. [Eval Layer](#3-eval-layer)
 4. [UI Layer](#4-ui-layer)
 
-## 1. 配置
+## 1. 快速开始
 
-### 前置条件
-
-| 工具 | 版本 | 说明 |
-|------|------|------|
-| **Python** | 3.10 – 3.14 | `uv python install 3.11` |
-| **uv** | latest | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| **Docker** | any | 仅沙盒数据集需要（swe-bench、terminal-bench） |
-| **Node.js + pnpm** | Node 18+ | 仅重建 UI 时需要 |
-
-### 安装与凭证
+### 一键安装并启动服务
 
 ```bash
-# task — 实验 / 数据集 / agent
-cd task && uv sync --frozen --all-packages --index-strategy unsafe-best-match
-
-# server — a2e serve + REST API
-cd server && uv sync
-
-# eval — 独立评测管线
-cd eval && uv sync
-
-cp .env.example .env   # 填入真实 key
+bash script/start.sh
 ```
 
-`.env`（已 gitignore）：
+前置条件见脚本头部注释。依次 sync `task` / `server` / `eval`、构建 UI；若没有 `.env` 则从 `.env.example` 复制，并启动服务：http://localhost:6006。
 
-```bash
-A2E_MODEL=qwen3-coder-plus        # 所有 agent 的默认模型
-OPENAI_API_KEY=sk-...
-OPENAI_API_BASE=...
-ANTHROPIC_API_KEY=sk-...          # 仅 claude-sdk
-ANTHROPIC_BASE_URL=...            # 不要带尾部 /v1
-```
+### 配置 `.env`
 
-优先级：**CLI 旗标 > `.env` / 环境变量 > 代码默认**。
-
-| 想改的东西 | 改这里 |
-|------------|--------|
-| 默认模型 | `.env` → `A2E_MODEL` |
-| 本次实验模型 | CLI `--model` |
-| OpenAI 兼容端点 / key | `.env` → `OPENAI_API_BASE` / `OPENAI_API_KEY`，或 `--api-base` / `--api-key` |
-| Anthropic 端点 / key | `.env` → `ANTHROPIC_BASE_URL` / `ANTHROPIC_API_KEY` |
-| trajectory 落库位置 | 启动 `a2e serve` 时的 `A2E_WORKING_DIR`（不设 → `~/.a2e/a2e.db`） |
-
-可选：
-
-```bash
-# 重建 UI
-cd ui && pnpm install && pnpm build
-
-# autogen-agentchat（隔离安装 — 与主 workspace 存在 protobuf 冲突）
-cd task/agents/autogen_agentchat && uv sync --index-strategy unsafe-best-match
-```
-
-### 跑实验前的三条前提
-
-1. **先起 `a2e serve`，再跑实验** — 脚本通过 HTTP / OTLP 写到正在运行的后端。
-2. **`no_proxy` 必须含 `127.0.0.1,localhost`** — 否则 span 会被本地代理丢掉，`a2e.db` 里 `spans=0`。
-3. **落库位置由 serve 进程决定** — 看启动时的 `A2E_WORKING_DIR`；实验脚本只写当前后端。
-
-每个跑实验的终端先执行：
-
-```bash
-cd task
-set -a; . ../.env; set +a
-export no_proxy="127.0.0.1,localhost,${no_proxy:-}"; export NO_PROXY="$no_proxy"
-```
+跑实验前将 `.env.example` 复制为 `.env` 并填入 API key。
+字段含义与覆盖优先级见 `.env.example` 内注释。
 
 ## 2. Task Layer
 
@@ -134,7 +70,7 @@ export no_proxy="127.0.0.1,localhost,${no_proxy:-}"; export NO_PROXY="$no_proxy"
 
 ```bash
 # 终端 1 — 保持运行
-cd server && uv run a2e serve      # → http://localhost:6006
+bash script/start.sh                 # → http://localhost:6006
 
 # 终端 2
 cd task
@@ -160,15 +96,17 @@ uv run --frozen python examples/run_experiment.py \
   --domain  retail           # 仅 tau-bench / tau2
 ```
 
-| 旗标 | 作用 |
-|------|------|
-| `--list` | 打印全部 dataset / agent harnesses / evaluator（权威清单） |
-| `--dataset` | 数据集名（必填） |
-| `--agent` | agent harnesses（默认 `agno`） |
-| `--model` | 覆盖本次的 `A2E_MODEL` |
-| `--evaluators` | 逗号分隔打分器 |
-| `--n` | 样本数（绝对数量，随机无放回） |
-| `--domain` | `retail` / `airline`（tau-bench / tau2） |
+
+| 旗标             | 作用                                               |
+| -------------- | ------------------------------------------------ |
+| `--list`       | 打印全部 dataset / agent harnesses / evaluator（权威清单） |
+| `--dataset`    | 数据集名（必填）                                         |
+| `--agent`      | agent harnesses（默认 `agno`）                       |
+| `--model`      | 覆盖本次的 `A2E_MODEL`                                |
+| `--evaluators` | 逗号分隔打分器                                          |
+| `--n`          | 样本数（绝对数量，随机无放回）                                  |
+| `--domain`     | `retail` / `airline`（tau-bench / tau2）           |
+
 
 ```bash
 uv run --frozen python examples/run_experiment.py --list
@@ -176,13 +114,17 @@ uv run --frozen python examples/run_experiment.py --list
 
 ### 数据集 / Agent Harnesses / Evaluator
 
-| 数据集 |
-|---|
+
+| 数据集                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | tau-bench, tau2, tau3, traject-bench, mmlu, gsm8k, humaneval, gpqa, mmlu-pro, math, bbh, swe-bench-lite, swe-bench-verified, swe-bench-pro, terminal-bench-2, terminal-bench-2.1, … |
 
-| Agent Harnesses |
-|---|
+
+
+| Agent Harnesses                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------ |
 | smolagents · agno · llama-index · langgraph · crewai · google-adk · autogen-agentchat · claude-sdk · openai-agents |
+
 
 内置 evaluator：`exact_match`、`substring`、`tool_recall`、`numeric_match`、
 `mc_letter`、`swe_resolved`、`swe_fail_to_pass`、`swe_pass_to_pass`、`tb_resolved`，
@@ -205,15 +147,17 @@ uv run --frozen python examples/run_experiment.py \
 
 ### 查看结果
 
-打开 http://localhost:6006：
+打开 [http://localhost:6006：](http://localhost:6006：)
 
-| 页面 | 内容 |
-|------|------|
-| `/datasets` | 已上传样本 |
-| `/experiments` | 逐样本得分 |
-| `/projects` | OpenTelemetry trace 树（LLM / tool 调用） |
 
-Task 的 trace 挂在 **`Experiment-<id>`** project 下。
+| 页面             | 内容                                   |
+| -------------- | ------------------------------------ |
+| `/datasets`    | 已上传样本                                |
+| `/experiments` | 逐样本得分                                |
+| `/projects`    | OpenTelemetry trace 树（LLM / tool 调用） |
+
+
+Task 的 trace 挂在 `**Experiment-<id>**` project 下。
 
 ## 3. Eval Layer
 
@@ -225,7 +169,7 @@ Task 的 trace 挂在 **`Experiment-<id>`** project 下。
 
 ```bash
 # 终端 1
-cd server && uv run a2e serve
+bash script/start.sh
 
 # 终端 2
 cd server
@@ -253,14 +197,14 @@ uv run python ../eval/scripts/run_eval.py \
 
 ## 4. UI Layer
 
-React 实验查看器。生产构建由 `a2e serve` 挂载在 http://localhost:6006。
+React 实验查看器。生产构建由 `a2e serve` 挂载在 [http://localhost:6006。](http://localhost:6006。)
 可在同一条样本上左右滑动切换 **Task / Trace / Eval**，在 Trace 面板查看 span 树。
 
 ### 生产构建
 
 ```bash
 cd ui && pnpm install && pnpm build
-cd server && uv run a2e serve       # http://localhost:6006
+bash script/start.sh                # http://localhost:6006
 ```
 
 产物在 `ui/dist/`，服务端会自动挂载。
@@ -269,7 +213,7 @@ cd server && uv run a2e serve       # http://localhost:6006
 
 ```bash
 # 终端 1
-cd server && uv run a2e serve       # http://127.0.0.1:6006
+bash script/start.sh                # http://127.0.0.1:6006
 
 # 终端 2
 cd ui && pnpm install && pnpm dev   # http://127.0.0.1:5173  （/v1 代理到 :6006）
@@ -279,7 +223,8 @@ cd ui && pnpm install && pnpm dev   # http://127.0.0.1:5173  （/v1 代理到 :6
 
 ## 致谢
 
-A<sup>2</sup>E 的实现依赖并参考了以下开源项目：
+A2E 的实现依赖并参考了以下开源项目：
 
 - [OpenInference](https://github.com/Arize-ai/openinference)
 - [Phoenix](https://github.com/Arize-ai/phoenix)
+
