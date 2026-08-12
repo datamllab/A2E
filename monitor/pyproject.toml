@@ -1,0 +1,35 @@
+# monitor/ — uv workspace coordinator for the openinference-* packages.
+#
+# This file is NOT a package (no [project], no build-system). It only tells uv
+# which subdirectories belong to this workspace.
+#
+# Day-to-day:
+#   cd monitor && uv sync     # install all 4 members editable into monitor/.venv
+#
+# Adding a new instrumentation package:
+#   1. mkdir monitor/instrumentation/openinference-instrumentation-<x>
+#   2. add its own pyproject.toml + src/openinference/instrumentation/<x>/
+#   3. uv sync   (the instrumentation/* glob below picks it up; no edit needed)
+#
+# eval/ is a separate workspace. eval depends on this monitor's packages via
+# path sources declared in eval/pyproject.toml — not via this file.
+
+[tool.uv]
+required-version = ">=0.10.9"
+
+[tool.uv.workspace]
+members = [
+  "openinference-semantic-conventions",
+  "openinference-instrumentation",
+  "instrumentation/*",
+]
+
+# Cross-package deps inside this workspace must resolve to local members,
+# not PyPI. Names match the `name` field in each member's pyproject.toml.
+[tool.uv.sources]
+openinference-semantic-conventions = { workspace = true }
+openinference-instrumentation = { workspace = true }
+openinference-instrumentation-anthropic = { workspace = true }
+openinference-instrumentation-claude-agent-sdk = { workspace = true }
+openinference-instrumentation-langchain = { workspace = true }
+openinference-instrumentation-openai = { workspace = true }

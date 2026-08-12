@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-swe-bench-pro"
+version = "0.1.0"
+description = "SWE-bench Pro (ScaleAI) dataset adapter for A2E — sandboxed long-horizon code-fix evaluation graded with the official Scale harness"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "MIT" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "ageneval-task-sandbox>=0.1.0",
+    "datasets>=2.16.0",
+]
+
+# Grading uses the official per-instance run_script.sh + parser.py from
+# scaleapi/SWE-bench_Pro-os (MIT), vendored as a tarball under
+# src/.../swe_bench_pro/_harness/. There is **no PyPI grading package** for
+# SWE-bench Pro (unlike princeton's `swebench`), so nothing extra is needed.
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+artifacts = [
+    "src/ageneval/task/datasets/swe_bench_pro/_harness/run_scripts.tar.gz",
+]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]
+artifacts = [
+    "src/ageneval/task/datasets/swe_bench_pro/_harness/run_scripts.tar.gz",
+]

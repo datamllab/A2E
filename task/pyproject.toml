@@ -1,0 +1,188 @@
+# A2E — task workspace
+# uv workspace root for the task/ layer. Datasets + Agents + Runners.
+#
+# After the restructure, `server` was pulled out of eval/ to become the hub that
+# ui/eval/task depend on. This task workspace is the integrated runtime: it
+# includes the A2E backend (../server/server) AND every dataset/agent/runner,
+# so `cd task && uv run a2e serve` reproduces the single-URL experience with
+# the /a2e launcher able to start experiments.
+#
+# Cross-layer members (monitor/, server/, eval/) are pulled in via ../ member
+# paths below and resolved as workspace members ({ workspace = true } sources).
+#
+# Day-to-day (run from task/):
+#   uv sync                       # install task + monitor/server/eval members editable
+#   uv run a2e serve          # single-URL integrated server (UI + API + /a2e)
+
+[project]
+name = "ageneval-a2e"
+version = "0.1.0"
+description = "A2E — Agent Evaluation Platform (Shanghai AI Lab)"
+requires-python = ">=3.10,<3.15"
+readme = "README.md"
+
+[tool.uv]
+required-version = ">=0.10.9"
+# NOTE: task/uv.lock is reused from the pre-restructure single-workspace lock
+# (same package graph; only the editable member paths were re-rooted to this
+# task/ dir). It is installed with `uv sync --frozen` so uv does NOT re-resolve
+# against the pjlab mirror, which reliably 504s on macOS arm64 wheels (e.g.
+# claude-agent-sdk, nodejs-wheel-binaries) that the universal resolver would
+# otherwise fetch metadata for. To regenerate from scratch, run `uv lock` from a
+# host whose PyPI mirror can serve those wheels.
+# The langchain instrumentation package pins `langchain-core==0.3.9` in its
+# `type-check` extra (upstream). Modern `langgraph`/`langchain-openai` need
+# `langchain-core>=0.3.77`. Override at workspace level without modifying
+# monitor source files.
+override-dependencies = [
+  "langchain-core>=0.3.77",
+  # The workspace member `openinference-instrumentation` (now 0.1.50) shadows
+  # the PyPI package of the same name. Packages like
+  # `openinference-instrumentation-smolagents` declare a transitive dep on
+  # `openinference-instrumentation`; without this override the resolver
+  # cannot reconcile the workspace member with those transitive demands.
+  "openinference-instrumentation>=0.1.50",
+  # smolagents pins `huggingface-hub<1.0.0`, but `pydantic-ai-slim[huggingface]`
+  # (transitively pulled by a2e-server:dev) requires `huggingface-hub>=1.3.4`.
+  # The huggingface-hub sub-feature is unused at A2E runtime; force the
+  # smolagents-compatible version so both coexist in the lock.
+  "huggingface-hub<1.0.0",
+]
+
+[tool.uv.workspace]
+members = [
+  "../monitor/openinference-semantic-conventions",
+  "../monitor/openinference-instrumentation",
+  "../monitor/instrumentation/openinference-instrumentation-claude-agent-sdk",
+  "../monitor/instrumentation/openinference-instrumentation-langchain",
+  "../monitor/instrumentation/openinference-instrumentation-smolagents",
+  "../monitor/instrumentation/openinference-instrumentation-anthropic",
+  "../monitor/instrumentation/openinference-instrumentation-openai-agents",
+  "../monitor/instrumentation/openinference-instrumentation-autogen-agentchat",
+  "../monitor/instrumentation/openinference-instrumentation-crewai",
+  "../monitor/instrumentation/openinference-instrumentation-llama-index",
+  "../monitor/instrumentation/openinference-instrumentation-google-adk",
+  "../monitor/instrumentation/openinference-instrumentation-agno",
+  "../server/server",
+  "../server/packages/a2e-client",
+  "../eval/packages/a2e-evals",
+  "../server/packages/a2e-otel",
+  "packages/ageneval-task-core",
+  "packages/ageneval-task-sandbox",
+  "datasets/tau_bench",
+  "datasets/tau2",
+  "datasets/tau3",
+  "datasets/mmlu",
+  "datasets/gsm8k",
+  "datasets/humaneval",
+  "datasets/persistbench",
+  "datasets/qa_suite",
+  "datasets/traject_bench",
+  "datasets/deepsearchqa",
+  "datasets/swe_bench",
+  "datasets/swe_bench_pro",
+  "datasets/gdpval",
+  "datasets/terminal_bench_2",
+  "datasets/terminal_bench_2_1",
+  "agents/claude_sdk",
+  "agents/langgraph",
+  "agents/smolagents",
+  "agents/openai_agents",
+  "agents/google_adk",
+  "agents/agno",
+  "agents/llama_index",
+  "agents/crewai",
+  "runners",
+]
+
+# Cross-package deps must resolve to local workspace members, not PyPI.
+# Names match the [project.name] in each member's pyproject.toml.
+[tool.uv.sources]
+# monitor packages
+openinference-semantic-conventions = { workspace = true }
+openinference-instrumentation = { workspace = true }
+openinference-instrumentation-claude-agent-sdk = { workspace = true }
+openinference-instrumentation-langchain = { workspace = true }
+openinference-instrumentation-smolagents = { workspace = true }
+openinference-instrumentation-anthropic = { workspace = true }
+openinference-instrumentation-openai-agents = { workspace = true }
+openinference-instrumentation-autogen-agentchat = { workspace = true }
+openinference-instrumentation-crewai = { workspace = true }
+openinference-instrumentation-llama-index = { workspace = true }
+openinference-instrumentation-google-adk = { workspace = true }
+openinference-instrumentation-agno = { workspace = true }
+# server + eval packages
+a2e-server = { workspace = true }
+a2e-client = { workspace = true }
+a2e-evals = { workspace = true }
+a2e-otel = { workspace = true }
+# task packages
+ageneval-task-core = { workspace = true }
+ageneval-task-sandbox = { workspace = true }
+ageneval-task-tau-bench = { workspace = true }
+ageneval-task-tau2 = { workspace = true }
+ageneval-task-tau3 = { workspace = true }
+ageneval-task-mmlu = { workspace = true }
+ageneval-task-gsm8k = { workspace = true }
+ageneval-task-humaneval = { workspace = true }
+ageneval-task-persistbench = { workspace = true }
+ageneval-task-qa-suite = { workspace = true }
+ageneval-task-traject-bench = { workspace = true }
+ageneval-task-deepsearchqa = { workspace = true }
+ageneval-task-swe-bench = { workspace = true }
+ageneval-task-swe-bench-pro = { workspace = true }
+ageneval-task-gdpval = { workspace = true }
+ageneval-task-terminal-bench-2 = { workspace = true }
+ageneval-task-terminal-bench-2-1 = { workspace = true }
+ageneval-task-claude-sdk-agent = { workspace = true }
+ageneval-task-langgraph-agent = { workspace = true }
+ageneval-task-agent-smolagents = { workspace = true }
+ageneval-task-agent-openai-agents = { workspace = true }
+ageneval-task-agent-google-adk = { workspace = true }
+ageneval-task-agent-agno = { workspace = true }
+ageneval-task-agent-llama-index = { workspace = true }
+ageneval-task-agent-crewai = { workspace = true }
+ageneval-task-runners = { workspace = true }
+
+# ─── lint / type / test ──────────────────────────────────────────────────────
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = [
+  "**/vendor/**",
+  "**/_generated/**",
+  "**/__generated__/**",
+  "*.ipynb",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "RUF"]
+ignore = ["E501"]  # line-length already configured
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+strict_optional = true
+exclude = ["vendor/", "_generated/", "__generated__/"]
+
+[tool.pytest.ini_options]
+testpaths = ["../monitor", "../eval", ".", "../test/mingxuan"]
+asyncio_mode = "auto"
+filterwarnings = [
+  "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["ageneval.task"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=7.1.0",
+]

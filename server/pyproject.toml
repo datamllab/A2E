@@ -1,0 +1,43 @@
+# server/ — uv workspace coordinator for the A2E server + its interface SDKs.
+#
+# This file is NOT a package (no [project], no build-system). It only declares
+# which subdirectories belong to this workspace and how cross-layer deps resolve.
+#
+# Layout:
+#   server/                  — a2e-server (the backend + UI host)
+#   packages/a2e-client  — a2e-client (SDK to talk to the server)
+#   packages/a2e-otel    — a2e-otel   (OTel config helper)
+#
+# This is the hub: ui / eval / task depend on it. It does NOT depend upward,
+# EXCEPT one transitional edge: the server still pulls in a2e-evals
+# because of the (to-be-retired) a2e.py router. When a2e router is replaced, drop the
+# a2e-evals source below AND its 3 dep lines in server/pyproject.toml.
+#
+# Day-to-day:
+#   cd server && uv sync     # install server + client + otel editable into .venv
+
+[tool.uv]
+required-version = ">=0.10.9"
+# a2e-server pins strawberry-graphql==0.314.3, which still imports
+# `ExecutionContext` from graphql.execution. That symbol was removed in
+# graphql-core 3.3.0a13 (renamed to `Executor`). A2E's own constraint
+# `graphql-core>=3.3.0a0,<3.4` otherwise lets uv grab the newest a14, which
+# breaks server startup. Cap at the last alpha (a12) that still has it.
+constraint-dependencies = ["graphql-core<3.3.0a13"]
+
+[tool.uv.workspace]
+members = ["server", "packages/*"]
+
+[tool.uv.sources]
+# interface SDKs — local workspace members
+a2e-client = { workspace = true }
+a2e-otel = { workspace = true }
+# TRANSITIONAL reverse edge: server depends on evals only via a2e.py.
+# Remove this line (and the a2e-evals dep in server/pyproject.toml)
+# once a2e router is retired.
+a2e-evals = { path = "../eval/packages/a2e-evals", editable = true }
+# monitor instrumentation — sibling dir, editable path sources
+openinference-semantic-conventions = { path = "../monitor/openinference-semantic-conventions", editable = true }
+openinference-instrumentation = { path = "../monitor/openinference-instrumentation", editable = true }
+openinference-instrumentation-anthropic = { path = "../monitor/instrumentation/openinference-instrumentation-anthropic", editable = true }
+openinference-instrumentation-openai = { path = "../monitor/instrumentation/openinference-instrumentation-openai", editable = true }

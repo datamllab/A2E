@@ -1,0 +1,27 @@
+interactions:
+- request:
+    body: "{\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\":
+      [\n        {\n          \"text\": \"Tell me a funny joke, a one-liner.\"\n        }\n
+      \     ]\n    }\n  ],\n  \"generationConfig\": {\n    \"candidateCount\": 1\n
+      \ }\n}"
+    headers: {}
+    method: POST
+    uri: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/test-project/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent?%24alt=json%3Benum-encoding%3Dint
+  response:
+    body:
+      string: "{\n  \"candidates\": [\n    {\n      \"content\": {\n        \"role\":
+        \"model\",\n        \"parts\": [\n          {\n            \"text\": \"I'm
+        on a seafood diet. I see food, and I eat it.\"\n          }\n        ]\n      },\n
+        \     \"finishReason\": 1,\n      \"avgLogprobs\": -4.1875125660615806\n    }\n
+        \ ],\n  \"usageMetadata\": {\n    \"promptTokenCount\": 11,\n    \"candidatesTokenCount\":
+        17,\n    \"totalTokenCount\": 218,\n    \"trafficType\": 1,\n    \"promptTokensDetails\":
+        [\n      {\n        \"modality\": 1,\n        \"tokenCount\": 11\n      }\n
+        \   ],\n    \"candidatesTokensDetails\": [\n      {\n        \"modality\":
+        1,\n        \"tokenCount\": 17\n      }\n    ],\n    \"thoughtsTokenCount\":
+        190\n  },\n  \"modelVersion\": \"gemini-2.5-flash\",\n  \"createTime\": \"2025-12-19T23:45:36.565494Z\",\n
+        \ \"responseId\": \"oONFafbBIrrygLUP36rmIA\"\n}\n"
+    headers: {}
+    status:
+      code: 200
+      message: OK
+version: 1

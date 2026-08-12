@@ -1,0 +1,80 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Build outputs
+build/
+dist/
+sdist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS and editor state
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Node / frontend
+node_modules/
+.pnpm-store/
+*.tsbuildinfo
+
+# uv lockfiles are committed per workspace, e.g. eval/uv.lock, monitor/uv.lock,
+# and task/uv.lock. Do not ignore them here.
+
+# A2E legacy frontend build output (kept for back-compat)
+# UI standalone build output
+ui/dist/
+
+# A2E runtime data (SQLite, traces, etc.)
+.a2e-data/
+.a2e-data*
+*.db
+
+# Claude Code / project-unrelated tooling state
+.omc/
+.claude/
+
+# Local-only pre-push self-check (xuan-branch specific, not shared)
+scripts/check_before_push.sh
+
+# Plan / notes scratch
+plan/
+notes/
+
+# AI Tool
+AGENTS.md
+CLAUDE.md
+
+# Results
+results/
+
+# LaTeX report — its own git repo, synced to Overleaf (see docs/report/README.md)
+docs/report/
+
+# Local agent workspace
+agent/
+
+# Local dependency/package cache
+.extra-pkgs/

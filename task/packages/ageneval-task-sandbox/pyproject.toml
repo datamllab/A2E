@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-sandbox"
+version = "0.1.0"
+description = "Synchronous sandbox abstraction for A2E (local + docker providers) for code-execution datasets like SWE-bench"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "MIT" }
+readme = "README.md"
+# Zero heavy dependencies on purpose: the local provider uses only the stdlib
+# (tempfile + subprocess) and the docker provider shells out to the `docker`
+# CLI. This keeps the package trivially resolvable inside the main uv lock.
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+# PEP 420 implicit namespace — ship src/ageneval, no top-level __init__.py so
+# multiple workspace packages merge under ageneval.task.* at install time.
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

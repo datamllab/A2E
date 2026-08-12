@@ -1,0 +1,434 @@
+<h1 align="center" style="border-bottom: none">
+    <div>
+        <a href="https://a2e.example.com/?utm_medium=github&utm_content=header_img&utm_campaign=a2e-client">
+            <picture>
+                <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/a2e-ai/a2e-assets/refs/heads/main/logos/A2E/a2e.svg">
+                <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/a2e-ai/a2e-assets/refs/heads/main/logos/A2E/a2e-white.svg">
+                <img alt="A2E logo" src="https://raw.githubusercontent.com/a2e-ai/a2e-assets/refs/heads/main/logos/A2E/a2e.svg" width="100" />
+            </picture>
+        </a>
+        <br>
+        a2e-client
+    </div>
+</h1>
+<p align="center">
+    <a href="https://pypi.org/project/a2e-client/">
+        <img src="https://img.shields.io/pypi/v/a2e-client" alt="PyPI Version">
+    </a>
+    <a href="https://a2e-server.readthedocs.io/projects/client/en/latest/index.html">
+        <img src="https://img.shields.io/badge/docs-blue?logo=readthedocs&logoColor=white" alt="Documentation">
+    </a>
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=8e8e8b34-7900-43fa-a38f-1f070bd48c64&page=packages/a2e-client/README.md" />
+</p>
+A2E Client provides a interface for interacting with the A2E platform via its REST API, enabling you to manage datasets, run experiments, analyze traces, and collect feedback programmatically.
+
+## Features
+
+- **REST API Interface** - Interact with A2E's OpenAPI REST interface
+- **Prompts** - Create, version, and invoke prompt templates
+- **Datasets** - Create and append to datasets from DataFrames, CSV files, or dictionaries
+- **Experiments** - Run evaluations and track experiment results
+- **Spans** - Query and analyze traces with powerful filtering
+- **Annotations** - Add human feedback and automated evaluations
+- **Evaluation Helpers** - Extract span data in formats optimized for RAG evaluation workflows
+
+## Installation
+
+Install the A2E Client using pip:
+
+```bash
+pip install a2e-client
+```
+
+## Getting Started
+
+### Environment Variables
+
+Configure the A2E Client using environment variables for seamless use across different environments:
+
+```bash
+# For local A2E server (default)
+export A2E_BASE_URL="http://localhost:6006"
+
+# Cloud Instance
+export A2E_API_KEY="your-api-key"
+export A2E_BASE_URL="https://app.a2e.example.com/s/your-space"
+
+# For custom A2E instances with API key authentication
+export A2E_BASE_URL="https://your-a2e-instance.com"
+export A2E_API_KEY="your-api-key"
+
+# Customize headers
+export A2E_CLIENT_HEADERS="Authorization=Bearer your-api-key,custom-header=value"
+```
+
+### Client Initialization
+
+The client automatically reads environment variables, or you can override them:
+
+```python
+from a2e.client import Client, AsyncClient
+
+# Automatic configuration from environment variables
+client = Client()
+
+client = Client(base_url="http://localhost:6006")  # Local A2E server
+
+# Cloud instance with API key
+client = Client(
+    base_url="https://app.a2e.example.com/s/your-space",
+    api_key="your-api-key"
+)
+
+# Custom authentication headers
+client = Client(
+    base_url="https://your-a2e-instance.com",
+    headers={"Authorization": "Bearer your-api-key"}
+)
+
+# Asynchronous client (same configuration options)
+async_client = AsyncClient()
+async_client = AsyncClient(base_url="http://localhost:6006")
+async_client = AsyncClient(
+    base_url="https://app.a2e.example.com/s/your-space",
+    api_key="your-api-key"
+)
+```
+
+## Resources
+
+The A2E Client organizes functionality into resources that correspond to key A2E platform features. Each resource provides specialized methods for managing different types of data:
+
+### Prompts
+
+Manage prompt templates and versions:
+
+```python
+from a2e.client import Client
+from a2e.client.types import PromptVersion
+
+client = Client()
+
+content = """
+You're an expert educator in {{ topic }}. Summarize the following article
+in a few concise bullet points that are easy for beginners to understand.
+
+{{ article }}
+"""
+
+prompt = client.prompts.create(
+    name="article-bullet-summarizer",
+    version=PromptVersion(
+        messages=[{"role": "user", "content": content}],
+        model_name="gpt-4o-mini",
+    ),
+    prompt_description="Summarize an article in a few bullet points"
+)
+
+# Retrieve and use prompts
+prompt = client.prompts.get(prompt_identifier="article-bullet-summarizer")
+
+# Format the prompt with variables
+prompt_vars = {
+    "topic": "Sports",
+    "article": "Moises Henriques, the Australian all-rounder, has signed to play for Surrey in this summer's NatWest T20 Blast. He will join after the IPL and is expected to strengthen the squad throughout the campaign."
+}
+formatted_prompt = prompt.format(variables=prompt_vars)
+
+# Make a request with your Prompt using OpenAI
+from openai import OpenAI
+oai_client = OpenAI()
+resp = oai_client.chat.completions.create(**formatted_prompt)
+print(resp.choices[0].message.content)
+```
+
+### Datasets
+
+Manage evaluation datasets and examples for experiments and evaluation:
+
+```python
+from a2e.client import Client
+import pandas as pd
+
+client = Client()
+
+# List all available datasets
+datasets = client.datasets.list()
+for dataset in datasets:
+    print(f"Dataset: {dataset['name']} ({dataset['example_count']} examples)")
+
+# Get a specific dataset with all examples
+dataset = client.datasets.get_dataset(dataset="qa-evaluation")
+print(f"Dataset {dataset.name} has {len(dataset)} examples")
+
+# Convert dataset to pandas DataFrame for analysis
+df = dataset.to_dataframe()
+print(df.columns)  # Index(['input', 'output', 'metadata'], dtype='object')
+
+# Create a new dataset from dictionaries
+dataset = client.datasets.create_dataset(
+    name="customer-support-qa",
+    dataset_description="Q&A dataset for customer support evaluation",
+    inputs=[
+        {"question": "How do I reset my password?"},
+        {"question": "What's your return policy?"},
+        {"question": "How do I track my order?"}
+    ],
+    outputs=[
+        {"answer": "You can reset your password by clicking the 'Forgot Password' link on the login page."},
+        {"answer": "We offer 30-day returns for unused items in original packaging."},
+        {"answer": "You can track your order using the tracking number sent to your email."}
+    ],
+    metadata=[
+        {"category": "account", "difficulty": "easy"},
+        {"category": "policy", "difficulty": "medium"},
+        {"category": "orders", "difficulty": "easy"}
+    ]
+)
+
+# Create dataset from pandas DataFrame
+df = pd.DataFrame({
+    "prompt": ["Hello", "Hi there", "Good morning"],
+    "response": ["Hi! How can I help?", "Hello! What can I do for you?", "Good morning! How may I assist?"],
+    "sentiment": ["neutral", "positive", "positive"],
+    "length": [20, 25, 30]
+})
+
+dataset = client.datasets.create_dataset(
+    name="greeting-responses",
+    dataframe=df,
+    input_keys=["prompt"],           # Columns to use as input
+    output_keys=["response"],        # Columns to use as expected output
+    metadata_keys=["sentiment", "length"]  # Additional metadata columns
+)
+```
+
+### Traces
+
+Retrieve traces for a project with optional filtering and sorting:
+
+```python
+from a2e.client import Client
+
+client = Client()
+
+# Get the latest 100 traces
+traces = client.traces.get_traces(project_identifier="my-llm-app")
+for trace in traces:
+    print(f"Trace {trace.trace_id}: {trace.status} ({trace.latency_ms}ms)")
+
+# Filter by time range
+from datetime import datetime, timedelta
+
+traces = client.traces.get_traces(
+    project_identifier="my-llm-app",
+    start_time=datetime.now() - timedelta(hours=24),
+    end_time=datetime.now(),
+    sort="latency_ms",
+    order="desc",
+    limit=50,
+)
+
+# Include full span details
+traces = client.traces.get_traces(
+    project_identifier="my-llm-app",
+    include_spans=True,  # caution: can increase response size significantly
+    limit=10,
+)
+
+# Filter by session
+traces = client.traces.get_traces(
+    project_identifier="my-llm-app",
+    session_id="my-session-id",
+)
+```
+
+**Async usage:**
+
+```python
+from a2e.client import AsyncClient
+
+async_client = AsyncClient()
+
+traces = await async_client.traces.get_traces(
+    project_identifier="my-llm-app",
+    limit=50,
+)
+```
+
+| Parameter              | Type                                    | Default | Description                                          |
+| ---------------------- | --------------------------------------- | ------- | ---------------------------------------------------- |
+| `project_identifier`   | `str`                                   | —       | Project name or ID — **required**                    |
+| `start_time`           | `datetime \| None`                      | `None`  | Inclusive lower bound on trace start time             |
+| `end_time`             | `datetime \| None`                      | `None`  | Exclusive upper bound on trace start time            |
+| `sort`                 | `"start_time" \| "latency_ms" \| None`  | `None`  | Sort field (server defaults to `"start_time"`)       |
+| `order`                | `"asc" \| "desc" \| None`              | `None`  | Sort direction (server defaults to `"desc"`)         |
+| `include_spans`        | `bool`                                  | `False` | Include full span details for each trace             |
+| `session_id`           | `str \| Sequence[str] \| None`          | `None`  | Filter by session ID(s) or GlobalID(s)               |
+| `limit`                | `int`                                   | `100`   | Maximum number of traces to return                   |
+| `timeout`              | `int \| None`                           | `60`    | Request timeout in seconds                           |
+
+> **Note:** Requires A2E server >= 13.15.0.
+
+### Spans
+
+Query for spans and annotations from your projects for custom evaluation and annotation workflows:
+
+```python
+from a2e.client import Client
+from datetime import datetime, timedelta
+
+client = Client()
+
+# Get spans as pandas DataFrame for analysis
+spans_df = client.spans.get_spans_dataframe(
+    project_identifier="my-llm-app",
+    limit=1000,
+    root_spans_only=True,  # Only get top-level spans
+    start_time=datetime.now() - timedelta(hours=24)
+)
+
+# Get span annotations as DataFrame
+annotations_df = client.spans.get_span_annotations_dataframe(
+    spans_dataframe=spans_df,  # Use spans from previous query
+    project_identifier="my-llm-app",
+    include_annotation_names=["relevance", "accuracy"],  # Only specific annotations
+    exclude_annotation_names=["note"]  # Exclude UI notes
+)
+```
+
+### Annotations
+
+Add annotations to spans for evaluation, user feedback, and custom annotation workflows:
+
+```python
+from a2e.client import Client
+
+client = Client()
+
+# Add a single annotation with human feedback
+client.spans.add_span_annotation(
+    span_id="span-123",
+    annotation_name="helpfulness",
+    annotator_kind="HUMAN",
+    label="helpful",
+    score=0.9,
+    explanation="Response directly answered the user's question"
+)
+
+# Bulk annotation logging for multiple spans
+annotations = [
+    {
+        "name": "sentiment",
+        "span_id": "span-123",
+        "annotator_kind": "LLM",
+        "result": {"label": "positive", "score": 0.8}
+    },
+    {
+        "name": "accuracy",
+        "span_id": "span-456",
+        "annotator_kind": "HUMAN",
+        "result": {"label": "accurate", "score": 0.95}
+    },
+]
+client.spans.log_span_annotations(span_annotations=annotations)
+```
+
+### Sessions
+
+Retrieve and annotate conversation sessions:
+
+```python
+from a2e.client import Client
+
+client = Client()
+
+# List sessions for a project
+sessions = client.sessions.list(project_name="my-llm-app")
+for session in sessions:
+    print(f"Session: {session['session_id']}")
+
+# Get conversation turns for a session
+turns = client.sessions.get_session_turns(session_id="my-session-id")
+for turn in turns:
+    print(f"Input: {turn.get('input', {}).get('value')}")
+    print(f"Output: {turn.get('output', {}).get('value')}")
+
+# Add a session-level annotation
+client.sessions.add_session_annotation(
+    session_id="my-session-id",
+    annotation_name="user-satisfaction",
+    label="satisfied",
+    score=0.9,
+    annotator_kind="HUMAN",
+)
+```
+
+### Experiments
+
+Run tasks across datasets and evaluate their outputs:
+
+```python
+from a2e.client import Client
+
+client = Client()
+
+# Get an existing dataset to run the experiment on
+dataset = client.datasets.get_dataset(dataset="my-dataset")
+
+# Define a task function
+def my_task(example):
+    # Your LLM call or business logic here
+    return f"Result for: {example['input']['question']}"
+
+# Run an experiment
+experiment = client.experiments.run_experiment(
+    dataset=dataset,
+    task=my_task,
+    experiment_name="my-experiment",
+)
+
+# Retrieve an existing experiment
+ran_experiment = client.experiments.get_experiment(experiment_id="my-experiment-id")
+for run in ran_experiment["task_runs"]:
+    print(f"Output: {run['output']}, Error: {run['error']}")
+```
+
+### Projects
+
+Manage A2E projects that organize your AI application data:
+
+```python
+from a2e.client import Client
+
+client = Client()
+
+# List all projects
+projects = client.projects.list()
+for project in projects:
+    print(f"Project: {project['name']} (ID: {project['id']})")
+
+# Create a new project
+new_project = client.projects.create(
+    name="Customer Support Bot",
+    description="Traces and evaluations for our customer support chatbot"
+)
+print(f"Created project with ID: {new_project['id']}")
+```
+
+## Documentation
+
+- **[Full Documentation](https://a2e-server.readthedocs.io/projects/client/en/latest/index.html)** - Complete API reference and guides
+- **[A2E Docs](https://example.com/docs/a2e)** - Main A2E documentation
+- **[GitHub Repository](https://github.com/a2e-ai/a2e)** - Source code and examples
+
+## Community
+
+Join our community to connect with thousands of AI builders:
+
+- 🌍 Join our [Slack community](https://example.com/slack/shared_invite/zt-3r07iavnk-ammtATWSlF0pSrd1DsMW7g).
+- 💡 Ask questions and provide feedback in the _#a2e-support_ channel.
+- 🌟 Leave a star on our [GitHub](https://github.com/a2e-ai/a2e).
+- 🐞 Report bugs with [GitHub Issues](https://github.com/a2e-ai/a2e/issues).
+- 𝕏 Follow us on [𝕏](https://twitter.com/ArizeA2E).
+- 🗺️ Check out our [roadmap](https://github.com/orgs/a2e-ai/projects/45) to see where we're heading next.

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-tau3"
+version = "0.1.0"
+description = "τ³-bench (sierra-research tau2-bench @ dev/tau3) TEXT-task adapter for A2E — voice/audio modality intentionally excluded"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "MIT" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "ageneval-task-tau-bench>=0.1.0",
+]
+
+# τ³-bench tasks are vendored (a small real text-task sample extracted from the
+# dev/tau3 domains' tasks.json). The voice modality (tasks_voice.json + audio)
+# is deliberately NOT integrated. No upstream PyPI package is required.
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+artifacts = ["src/ageneval/task/datasets/tau3/full_tasks.json.gz"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]
+artifacts = ["src/ageneval/task/datasets/tau3/full_tasks.json.gz"]

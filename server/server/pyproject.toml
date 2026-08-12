@@ -1,0 +1,326 @@
+[project]
+name = "a2e-server"
+description = "AI Observability and Evaluation"
+# readme = "README.md"                                       # not present locally; restore before publishing
+license = { text = "MIT" }
+requires-python = ">=3.10, <3.15"
+keywords = [
+  "Observability",
+  "Monitoring",
+  "Explainability",
+]
+authors = [
+  { name = "Shanghai AI Lab", email = "a2e-devs@example.com" },
+]
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+  "scikit-learn",
+  "numpy",
+  "pandas>=1.0",
+  "jinja2",
+  "jsonpath-ng",
+  "jsonschema",
+  "pystache",
+  "PyYAML",
+  "starlette>=0.37.0",
+  "uvicorn",
+  "psutil",
+  "strawberry-graphql==0.314.3",
+  "graphql-core>=3.3.0a0,<3.4",  # incremental execution currently requires the graphql-core 3.3 prerelease line
+  "pyarrow",
+  "typing-extensions>=4.6",
+  "scipy",
+  "wrapt>=1.17.2,<2",
+  "grpcio",
+  "grpc-interceptor",
+  "tqdm",
+  "httpx",
+  "opentelemetry-sdk",
+  "opentelemetry-proto>=1.12.0",  # needed to avoid this issue: https://github.com/a2e-ai/a2e/issues/2695
+  "opentelemetry-exporter-otlp",
+  "openinference-semantic-conventions>=0.1.26",
+  "openinference-instrumentation>=0.1.44",
+  "openinference-instrumentation-openai>=0.1.41",
+  "sqlalchemy[asyncio]>=2.0.4, <3",
+  "alembic>=1.3.0, <2",
+  "aiosqlite",
+  "aioitertools",
+  "sqlean.py>=3.45.1; platform_system != 'Windows' and python_version < '3.14'",
+  "sqlean.py>=3.50; platform_system != 'Windows' and python_version >= '3.14'",  # 3.49.1 has no cp314 wheels
+  "sqlean.py>=3.45.1,<3.50; platform_system == 'Windows'",  # no Windows wheels for >=3.50; Windows + 3.14 will fail at install (no cp314 wheels exist)
+  "cachetools",
+  "python-multipart",  # see https://www.starlette.io/#dependencies
+  "a2e-evals>=2.11.0",
+  "a2e-otel>=0.15.0",
+  "fastapi>=0.135.2",  # older versions raise AssertionError on 204 routes, see https://github.com/a2e-ai/a2e/issues/12384
+  "pydantic>=2.1.0", # exclude 2.0.* since it does not support the `json_encoders` configuration setting
+  "authlib",
+  "a2e-client>=2.1.0",
+  "email-validator",
+  "python-dateutil",
+  "prometheus_client",
+  "orjson",
+  "jmespath",
+  "ldap3",
+]
+dynamic = ["version"]
+
+[project.scripts]
+a2e-server = "a2e.server.main:main"
+a2e = "a2e.server.main:main"
+phoenix = "a2e.server.main:phoenix_main"
+arize-phoenix = "a2e.server.main:phoenix_main"
+
+[dependency-groups]
+dev = [
+  "check-wheel-contents",
+  "twine",
+  "aiobotocore>=3.1.1",
+  "aioboto3",
+  "aiosqlite<0.22.0",  # new version is causing tests to hang
+  "anthropic>=0.79.0",
+  "arize>=8.1.0",
+  "asgi-lifespan",
+  "asyncpg",
+  "azure-identity",
+  "beautifulsoup4",
+  "boto3",
+  "debugpy",
+  "deepdiff==8.6.2",
+  "Faker>=30.1.0",
+  "freezegun",
+  "google-genai>=1.0.0",
+  "grpc-interceptor[testing]",
+  "grpcio",
+  "httpx",
+  "jsonpath-ng",
+  "ldap3",
+  "litellm>1.61.15,<1.82.7",  # Pinned: 1.82.7-1.82.8 compromised (supply chain attack, 2026-03)
+  "mypy==1.19.1",
+  "mypy-boto3-bedrock-runtime",
+  "nest-asyncio",  # for executor testing
+  "numpy",
+  "openai",
+  "openinference-semantic-conventions>=0.1.26",
+  "openinference-instrumentation>=0.1.44",
+  "opentelemetry-exporter-otlp",
+  "opentelemetry-instrumentation-fastapi",
+  "opentelemetry-instrumentation-grpc",
+  "opentelemetry-instrumentation-sqlalchemy",
+  "opentelemetry-instrumentation-httpx",
+  "opentelemetry-instrumentation-aiohttp-client",
+  "opentelemetry-proto>=1.12.0",
+  "opentelemetry-sdk>=1.35.0",
+  "opentelemetry-semantic-conventions",
+  "pandas>=1.0",
+  "pandas-stubs==2.0.3.230814",
+  "prometheus_client",
+  "psutil",
+  "py-grpc-prometheus",
+  "pyarrow-stubs",
+  "pydantic>=1.0,!=2.0.*,<3",
+  "mcp>=1.26.0",
+  "pydantic-ai>=1.62.0",
+  "pyjwt",
+  "pypistats",  # this is needed to type-check third-party packages
+  "pyright[nodejs]==1.1.394",
+  "pytest",
+  "pytest-asyncio",
+  "pytest-postgresql",
+  "pytest-randomly",
+  "pytest-rerunfailures",
+  "pytest-smtpd",
+  "pytest-xdist",
+  "requests",  # this is needed to type-check third-party packages
+  "responses",
+  "respx>=0.22.0",
+  "strawberry-graphql[opentelemetry]==0.314.3",
+  "syrupy",
+  "tenacity",
+  "tiktoken",
+  "ty",
+  "types-aiobotocore-bedrock-runtime>=3.1.1",
+  "types-beautifulsoup4",
+  "types-cachetools",
+  "types-jmespath",
+  "types-jsonschema",
+  "types-ldap3",
+  "types-protobuf",
+  "types-psutil",
+  "types-python-dateutil",
+  "types-PyYAML",
+  "types-requests",
+  "types-setuptools",
+  "types-tabulate",
+  "types-tqdm",
+  "typing-extensions",
+  "uvloop; platform_system != 'Windows'",
+  "vcrpy",
+  "jupyter>=1.1.1",
+  "ruff>=0.15.2",
+  "libcst>=1.8.6",
+  "datamodel-code-generator==0.32.0",
+  "grpcio-tools>=1.78.0",
+  "mypy-protobuf>=5.0.0",
+  "jinja2>=3.1.6",
+]
+
+[project.optional-dependencies]
+evals = []
+experimental = []
+pg = [
+  "asyncpg",
+]
+aws = [
+  "aioboto3",
+]
+# `container` extra removed for A2E: its pinned opentelemetry==1.39.1 and
+# pyyaml==6.0.2 collided with the workspace dev group during universal lock
+# resolution. For container deployments, install these pins manually on top
+# of the base server.
+
+[project.urls]
+Documentation = "https://example.com/docs/a2e/"
+Issues = "https://github.com/a2e-ai/a2e/issues"
+Source = "https://github.com/a2e-ai/a2e"
+
+[tool.hatch.version]
+path = "src/a2e/version.py"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/a2e"]
+exclude = [
+  "src/a2e/client/",
+  "src/a2e/evals/",
+  "src/a2e/otel/",
+]
+artifacts = [
+  "src/a2e/db/migrations",
+  "src/a2e/server/cost_tracking/model_cost_manifest.json",
+  "src/a2e/server/api/helpers/substitutions/server.yaml",
+]
+
+[tool.hatch.build]
+only-packages = true
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "src/a2e/client/",
+  "src/a2e/evals/",
+  "src/a2e/otel/",
+  "tests/",
+  "scripts/",
+  "examples/",
+]
+artifacts = [
+  "src/a2e/db/migrations",
+  "src/a2e/server/cost_tracking/model_cost_manifest.json",
+  "src/a2e/server/api/helpers/substitutions/server.yaml",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope="function"
+addopts = [
+  "-rA",
+  "--import-mode=importlib",
+  "--doctest-modules",
+  "--new-first",
+  "--showlocals",
+]
+testpaths = [
+  "tests",
+]
+
+[tool.mypy]
+plugins = ["strawberry.ext.mypy_plugin", "pydantic.mypy"]
+strict = true
+files = [
+  "src/",
+  "tests/",
+]
+exclude = [
+  "api_reference",
+  "dist/",
+  "examples/",
+  "scripts/",
+  "sdist/",
+  "src/a2e/client/",
+  "src/a2e/evals/",
+  "src/a2e/otel/",
+  "tutorials/",
+]
+
+[[tool.mypy.overrides]]
+module = [
+  "scipy.*",
+  "sklearn.*",
+  "arize.*",
+  "wrapt",
+  "langchain.*",
+  "litellm",
+  "litellm.*",
+  "nest_asyncio",
+  "opentelemetry.*",
+  "pyarrow",
+  "sqlean",
+  "grpc.*",
+  "py_grpc_prometheus.*",
+  "orjson",  # suppress fastapi internal type errors
+  "pypistats",
+  "pystache",
+  "authlib.*",
+  "google.*",
+  "mistralai.*",
+  "jsonpath_ng",
+]
+ignore_missing_imports = true
+
+[tool.basedpyright]
+# Resolve imports against the uv-managed environment and src-layout package root.
+venvPath = "."
+venv = ".venv"
+extraPaths = ["src"]
+pythonVersion = "3.10"
+
+[tool.ruff]
+exclude = [
+  "api_reference",
+  "dist/",
+  ".git",
+  "__pycache__",
+  "*_pb2.py*",
+  "*.pyi",
+  "docs/",
+  "src/a2e/trace/v1/evaluation_pb2.py*",
+]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = ["E402", "E501"]
+"examples/**/*.py" = ["E501"]
+"tests/**/*.py" = ["E501"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "NPY201"]
+
+[tool.ruff.lint.isort]
+force-single-line = false
+
+[tool.ruff.format]
+line-ending = "native"
+
+[tool.alembic]
+script_location = "src/a2e/db/migrations"  # enables `uv run alembic <command>`

@@ -1,0 +1,98 @@
+# OpenInference LlamaIndex Instrumentation
+Python auto-instrumentation library for LlamaIndex.
+
+These traces are fully OpenTelemetry compatible and can be sent to an OpenTelemetry collector for viewing, such as [`a2e-server`](https://github.com/a2e-ai/a2e).
+
+[![pypi](https://badge.fury.io/py/openinference-instrumentation-llama-index.svg)](https://pypi.org/project/openinference-instrumentation-llama-index/)
+
+## Installation
+
+```shell
+pip install openinference-instrumentation-llama-index
+```
+
+## Compatibility
+
+| llama-index version | openinference-instrumentation-llama-index version |
+|---------------------|---------------------------------------------------|
+| \>=0.12.3           | \>=4.0                                            |
+| \>=0.11.0           | \>=3.0                                            |
+| \>=0.10.43          | \>=2.0, <3.0                                      |
+| \>=0.10.0, <0.10.43 | \>=1.0, <0.2                                      |
+| \>=0.9.14, <0.10.0  | 0.1.3                                             |
+
+## Quickstart
+
+Install packages needed for this demonstration.
+
+```shell
+python -m pip install --upgrade \
+    openinference-instrumentation-llama-index \
+    opentelemetry-sdk \
+    opentelemetry-exporter-otlp \
+    "opentelemetry-proto>=1.12.0" \
+    a2e-server
+```
+
+Start the A2E app in the background as a collector. By default, it listens on `http://localhost:6006`. You can visit the app via a browser at the same address.
+
+The A2E app does not send data over the internet. It only operates locally on your machine.
+
+```shell
+python -m a2e.server.main serve
+```
+
+The following Python code sets up the `LlamaIndexInstrumentor` to trace `llama-index` and send the traces to A2E at the endpoint shown below.
+
+```python
+from openinference.instrumentation.llama_index import LlamaIndexInstrumentor
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk import trace as trace_sdk
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+
+endpoint = "http://127.0.0.1:6006/v1/traces"
+tracer_provider = trace_sdk.TracerProvider()
+tracer_provider.add_span_processor(SimpleSpanProcessor(OTLPSpanExporter(endpoint)))
+
+LlamaIndexInstrumentor().instrument(tracer_provider=tracer_provider)
+```
+
+To demonstrate tracing, we'll use LlamaIndex below to query a document. 
+
+First, download a text file.
+
+```python
+import tempfile
+from urllib.request import urlretrieve
+from llama_index.core import SimpleDirectoryReader
+
+url = "https://raw.githubusercontent.com/a2e-ai/a2e-assets/main/data/paul_graham/paul_graham_essay.txt"
+with tempfile.NamedTemporaryFile() as tf:
+    urlretrieve(url, tf.name)
+    documents = SimpleDirectoryReader(input_files=[tf.name]).load_data()
+```
+
+Next, we'll query using OpenAI. To do that you need to set up your OpenAI API key in an environment variable.
+
+```python
+import os
+
+os.environ["OPENAI_API_KEY"] = "<your openai key>"
+```
+
+Now we can query the indexed documents.
+
+```python
+from llama_index.core import VectorStoreIndex
+
+query_engine = VectorStoreIndex.from_documents(documents).as_query_engine()
+print(query_engine.query("What did the author do growing up?"))
+```
+
+Visit the A2E app at `http://localhost:6006` to see the traces.
+
+## More Info
+
+* [More info on OpenInference and A2E](https://docs.example.com/a2e)
+* [How to customize spans to track sessions, metadata, etc.](https://github.com/a2e-ai/openinference/tree/main/python/openinference-instrumentation#customizing-spans)
+* [How to account for private information and span payload customization](https://github.com/a2e-ai/openinference/tree/main/python/openinference-instrumentation#tracing-configuration)

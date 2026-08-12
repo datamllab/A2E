@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-swe-bench"
+version = "0.1.0"
+description = "SWE-bench (Lite + Verified) dataset adapter for A2E — sandboxed code-fix evaluation"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "MIT" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "ageneval-task-sandbox>=0.1.0",
+    "datasets>=2.16.0",
+]
+
+# Authoritative grading uses the official `swebench` package (test specs +
+# image keys + log parsers). It is heavy (pulls docker/modal python SDKs); if it
+# resolves cleanly into the main lock it is installed, otherwise the grader runs
+# it in an isolated `uv run --with swebench` subprocess.
+[project.optional-dependencies]
+grade = [
+    "swebench>=3.0.0",
+    "unidiff>=0.7.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

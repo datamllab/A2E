@@ -1,0 +1,87 @@
+[project]
+name = "a2e-otel"
+description = "LLM Observability"
+readme = "README.md"
+requires-python = ">=3.10, <3.15"
+license = { text = "MIT" }
+keywords = [
+  "Observability",
+  "Monitoring",
+  "Explainability",
+]
+authors = [
+  { name = "Shanghai AI Lab", email = "a2e-devs@example.com" },
+]
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+version = "0.15.0"
+dependencies = [
+  "opentelemetry-semantic-conventions",
+  "opentelemetry-exporter-otlp",
+  "opentelemetry-proto>=1.12.0",
+  "opentelemetry-sdk",
+  "openinference-semantic-conventions>=0.1.17",
+  "openinference-instrumentation>=0.1.38",
+  "typing-extensions>=4.5, <5",
+  "wrapt",
+]
+
+[project.optional-dependencies]
+test = [
+]
+
+[project.urls]
+Documentation = "https://example.com/docs/a2e/"
+Issues = "https://github.com/a2e-ai/a2e/issues"
+Source = "https://github.com/a2e-ai/a2e"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/a2e"]
+
+[tool.hatch.build]
+only-packages = true
+
+[tool.ruff]
+exclude = [".git", "__pycache__", ".tox", "dist"]
+extend-include = ["*.ipynb"]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.isort]
+force-single-line = false
+
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = ["E402", "E501"]
+
+[tool.ruff.format]
+line-ending = "native"
+
+[tool.mypy]
+explicit_package_bases = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs  = true
+strict = true
+exclude = [
+  "dist/",
+  "tests/",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = [
+  "tests",
+]

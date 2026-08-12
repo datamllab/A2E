@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-agent-autogen-agentchat"
+version = "0.1.0"
+description = "A2E autogen-agentchat agent — dataset-agnostic AgentBinding runner powered by Microsoft AutoGen AgentChat"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "MIT" }
+readme = "README.md"
+dependencies = [
+    "ageneval-task-core>=0.1.0",
+    "openinference-instrumentation-autogen-agentchat>=0.1.0",
+    "autogen-agentchat>=0.5.0",
+    "autogen-ext[openai]>=0.5.0",
+    "openai>=1.0.0",
+]
+
+# NOTE: This package is an ISOLATED uv project — it is intentionally NOT a
+# member of the top-level A2E uv workspace. `autogen-core` (a transitive
+# dependency of autogen-agentchat) pins `protobuf>=5.29.3,<5.30`, which is
+# irreconcilable with A2E's `protobuf>=6.31.1,<7.0.0` requirement (pulled
+# in transitively via `grpcio-tools>=1.78.0`). See README.md.
+# `ageneval-task-core` is referenced by an in-repo relative path — this does
+# NOT violate the standalone red line (which forbids paths OUTSIDE the repo).
+[tool.uv.sources]
+ageneval-task-core = { path = "../../packages/ageneval-task-core" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]

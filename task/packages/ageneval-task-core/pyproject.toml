@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ageneval-task-core"
+version = "0.1.0"
+description = "Core abstractions for A2E task layer (Dataset, AgentRunner, ExperimentRunner)"
+requires-python = ">=3.10,<3.15"
+authors = [{ name = "Shanghai AI Lab" }]
+license = { text = "MIT" }
+readme = "README.md"
+dependencies = [
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-exporter-otlp>=1.20.0",
+    "openinference-semantic-conventions>=0.1.20",
+    "openinference-instrumentation>=0.1.20",
+    "ageneval-task-sandbox>=0.1.0",
+]
+
+[project.optional-dependencies]
+a2e = [
+    "a2e-client>=2.0.0",
+    "a2e-evals>=3.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+# PEP 420 implicit namespace. Hatch ships everything under src/ageneval/;
+# the empty namespace dirs (ageneval/, ageneval/task/) carry no __init__.py
+# so multiple workspace packages merge automatically at install time.
+packages = ["src/ageneval"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/ageneval", "README.md"]
