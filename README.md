@@ -127,6 +127,12 @@ uv run --frozen python examples/run_experiment.py \
 
 While an experiment runs, **Monitor** auto-instruments the agent: LLM calls, tool calls, and related spans are written to the server as OpenTelemetry / OpenInference traces. You do not need a separate capture step for supported harnesses.
 
+Pi trajectory monitoring is also available for independently launched Pi runs:
+standalone `pi-agent-core` Agents use the public `Agent.subscribe()` adapter,
+while the full coding agent uses a non-invasive Pi Package extension. This
+Monitor integration does not add an A2E `--agent pi` Runner. See the
+[Pi monitor setup guide](./monitor/instrumentation-js/a2e-pi-monitor/README.md).
+
 Browse captured trajectories at http://localhost:6006 under **`Experiment-<id>`** projects:
 
 | Page | What you see |

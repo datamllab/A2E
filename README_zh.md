@@ -127,6 +127,11 @@ uv run --frozen python examples/run_experiment.py \
 
 实验运行时，**Monitor** 会自动打桩：LLM 调用、tool 调用及相关 span 以 OpenTelemetry / OpenInference 轨迹写入 server。对已支持的 harness，通常不需要单独做捕获步骤。
 
+对于独立启动的 Pi，也可以采集轨迹：裸 `pi-agent-core` Agent 使用公开的
+`Agent.subscribe()` 适配器，完整 coding agent 使用非侵入式 Pi Package 扩展。该 Monitor
+接入不包含 A2E 的 `--agent pi` Runner。安装与配置见
+[Pi Monitor 使用说明](./monitor/instrumentation-js/a2e-pi-monitor/README.md)。
+
 在 http://localhost:6006 的 **`Experiment-<id>`** project 下查看轨迹：
 
 | 页面 | 内容 |
