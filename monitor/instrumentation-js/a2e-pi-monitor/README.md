@@ -9,9 +9,11 @@ module. This adapter targets the current
 
 This package captures both standalone `pi-agent-core` Agents and complete Pi
 coding-agent runs as OpenTelemetry traces using the OpenInference attributes
-already understood by A2E. It uses Pi's public event APIs only; it does not
-replace model clients, mutate prompts, wrap tools, or register a global
-OpenTelemetry provider.
+already understood by A2E. It uses Pi's public event APIs only; the monitor
+extension does not replace model clients, wrap tools, or register a global
+OpenTelemetry provider. The optional runner-only binding extension appends the
+dataset system prompt and registers its tools when `A2E_PI_BINDING_CONFIG` is
+present.
 
 ## Integration layers
 
@@ -20,10 +22,16 @@ The shared event-to-span implementation has two public adapters:
 - `instrumentPiAgent(agent)` subscribes to a standalone
   `@earendil-works/pi-agent-core` `Agent` through `Agent.subscribe()` and safely
   chains its public `onPayload` / `onResponse` hooks;
-- the Pi Package extension listens through
+- the Pi Package monitor extension listens through
   `@earendil-works/pi-coding-agent` `ExtensionAPI.on()` and adds coding-agent
   prompt, context, provider-response, working-directory, and session lifecycle
   data.
+
+When this package is launched by A2E's `--agent pi` runner, a second extension
+registers the selected dataset's `AgentBinding` tools. Tool execution crosses a
+token-protected loopback bridge back to the existing Python executor, so Pi's
+native tool events are traced without changing dataset interfaces. Direct Pi
+users who do not set `A2E_PI_BINDING_CONFIG` are unaffected.
 
 The coding-agent extension reuses the same core event dispatcher. Do not attach
 `instrumentPiAgent()` to the same underlying Agent while the extension is
@@ -225,10 +233,19 @@ still passed. The
 LLM spans all identified `qwen3.8-max` and retained their message and token
 metadata.
 
-This is a Monitor validation using an official benchmark task and its Python
-assertions. Pi ran in a host-side temporary workspace; it did not run inside the
-task's published image or through `SandboxScoringRunner`. It deliberately does
-not claim support for
-`--dataset terminal-bench-2.1 --agent pi`: automatic A2E experiment orchestration
-would additionally require a Pi Runner, while the Monitor integration itself
-can observe an independently launched Pi coding-agent process.
+The normal A2E experiment path is now also supported:
+
+```bash
+cd task
+uv run --frozen python examples/run_experiment.py \
+  --dataset terminal-bench-2.1 --agent pi \
+  --model deepseek-v4-pro --evaluators tb_resolved --n 1
+```
+
+Pi stays on the host while its registered `bash` and editor tools execute
+through the dataset binding in the live Docker container. The official verifier
+runs before container cleanup. On 2026-08-13, Terminal-Bench 2.1 `fix-git`
+completed with reward `1`; A2E stored one trace containing one CHAIN, one AGENT,
+ten LLM, and nine TOOL spans, with the Pi AGENT parented to the experiment
+CHAIN. The experiment run, score, trace ID, and all spans were persisted to the
+same SQLite database used by the A2E UI.

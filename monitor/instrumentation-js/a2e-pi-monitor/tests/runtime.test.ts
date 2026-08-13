@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { describe, it } from "node:test";
+import { trace } from "@opentelemetry/api";
 
 import {
   createA2EPiMonitor,
+  extractParentContext,
   normalizeTraceEndpoint,
   parseHeaders,
   resolveRuntimeConfig,
@@ -46,6 +48,21 @@ describe("Pi monitor runtime configuration", () => {
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "https://otel.example/custom/traces/",
     });
     assert.equal(config.endpoint, "https://otel.example/custom/traces");
+  });
+
+  it("extracts a remote W3C parent context for experiment-linked Pi spans", () => {
+    const parent = extractParentContext({
+      TRACEPARENT: "00-0123456789abcdef0123456789abcdef-0123456789abcdef-01",
+    });
+    assert.ok(parent);
+    const spanContext = trace.getSpanContext(parent);
+    assert.deepEqual(spanContext, {
+      traceId: "0123456789abcdef0123456789abcdef",
+      spanId: "0123456789abcdef",
+      traceFlags: 1,
+      isRemote: true,
+    });
+    assert.equal(extractParentContext({ TRACEPARENT: "not-a-traceparent" }), undefined);
   });
 
   it("parses W3C baggage-style headers defensively", () => {

@@ -3,6 +3,7 @@ import {
   context,
   trace,
   type Attributes,
+  type Context,
   type Span,
   type Tracer,
 } from "@opentelemetry/api";
@@ -15,6 +16,7 @@ const TEXT_MIME_TYPE = "text/plain";
 export interface PiTraceMonitorOptions {
   captureContent?: boolean;
   maxAttributeLength?: number;
+  parentContext?: Context | undefined;
   lifecycle?: TraceLifecycle;
 }
 
@@ -201,10 +203,13 @@ export class PiTraceMonitor {
   private agentInputCaptured = false;
   private readonly toolSpans = new Map<string, Span>();
 
+  private readonly parentContext: Context | undefined;
+
   constructor(tracer: Tracer, options: PiTraceMonitorOptions = {}) {
     this.tracer = tracer;
     this.captureContent = options.captureContent ?? true;
     this.maxAttributeLength = Math.max(1_024, options.maxAttributeLength ?? 262_144);
+    this.parentContext = options.parentContext;
     this.lifecycle = options.lifecycle ?? {};
   }
 
@@ -242,7 +247,7 @@ export class PiTraceMonitor {
       );
       this.agentInputCaptured = true;
     }
-    this.agentSpan = this.tracer.startSpan("pi.agent", { attributes });
+    this.agentSpan = this.tracer.startSpan("pi.agent", { attributes }, this.parentContext);
     this.pendingAgentInput = undefined;
   }
 

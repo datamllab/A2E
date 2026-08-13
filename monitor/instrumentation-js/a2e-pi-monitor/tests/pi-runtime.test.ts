@@ -62,7 +62,7 @@ describe("Pi 0.84 runtime integration", () => {
       await loader.reload();
       const loaded = loader.getExtensions();
       assert.deepEqual(loaded.errors, []);
-      assert.equal(loaded.extensions.length, 1);
+      assert.equal(loaded.extensions.length, 2);
 
       const faux = fauxProvider({ api: "faux", provider: "faux" });
       faux.setResponses([

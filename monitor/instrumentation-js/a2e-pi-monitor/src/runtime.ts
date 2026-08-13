@@ -1,3 +1,4 @@
+import { ROOT_CONTEXT, trace, type Context } from "@opentelemetry/api";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { BasicTracerProvider, BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
@@ -73,8 +74,31 @@ export function resolveRuntimeConfig(env: PiMonitorEnvironment = process.env): {
   };
 }
 
+export function extractParentContext(env: PiMonitorEnvironment): Context | undefined {
+  const traceparent = env.TRACEPARENT;
+  if (!traceparent) return undefined;
+  // W3C traceparent: "00-{trace_id(32)}-{span_id(16)}-{flags(2)}"
+  const match = /^([0-9a-f]{2})-([0-9a-f]{32})-([0-9a-f]{16})-([0-9a-f]{2})$/i.exec(traceparent);
+  if (!match) return undefined;
+  const traceId = match[2]!;
+  const spanId = match[3]!;
+  const flags = match[4]!;
+  try {
+    const spanContext = {
+      traceId,
+      spanId,
+      traceFlags: Number.parseInt(flags, 16),
+      isRemote: true,
+    };
+    return trace.setSpanContext(ROOT_CONTEXT, spanContext);
+  } catch {
+    return undefined;
+  }
+}
+
 export function createA2EPiMonitor(env: PiMonitorEnvironment = process.env): PiTraceMonitor {
   const config = resolveRuntimeConfig(env);
+  const parentContext = extractParentContext(env);
   const exporter = new OTLPTraceExporter({
     url: config.endpoint,
     headers: config.headers,
@@ -99,6 +123,7 @@ export function createA2EPiMonitor(env: PiMonitorEnvironment = process.env): PiT
   return new PiTraceMonitor(tracer, {
     captureContent: config.captureContent,
     maxAttributeLength: config.maxAttributeLength,
+    ...(parentContext ? { parentContext } : {}),
     lifecycle: {
       forceFlush: () => provider.forceFlush(),
       shutdown: () => provider.shutdown(),
