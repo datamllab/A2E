@@ -1,0 +1,16 @@
+# Installed automatically as a DeepSeek Harness profile bundle by
+# `dsh plugin --profile <profile> add <this-directory>`.
+- id: tool-bash
+  disabled: !!js Boolean(process.env.A2E_DEEPSEEK_BINDING_CONFIG)
+
+- id: tool-pwsh
+  disabled: !!js Boolean(process.env.A2E_DEEPSEEK_BINDING_CONFIG)
+
+- id: tool-str-replace-editor
+  disabled: !!js Boolean(process.env.A2E_DEEPSEEK_BINDING_CONFIG)
+
+- insert:
+    - id: a2e-deepseek-harness-monitor
+      name: a2e-deepseek-harness-monitor
+      inject: [sessions, tools]
+      disabled: !!js "['0', 'false', 'no', 'off'].includes((process.env.A2E_DEEPSEEK_MONITOR_ENABLED ?? 'true').trim().toLowerCase())"

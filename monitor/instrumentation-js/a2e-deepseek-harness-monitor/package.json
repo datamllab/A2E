@@ -1,0 +1,48 @@
+{
+  "name": "a2e-deepseek-harness-monitor",
+  "version": "0.1.0",
+  "description": "A2E OpenInference tracing for DeepSeek Harness",
+  "type": "module",
+  "private": true,
+  "main": "./dist/src/plugin.js",
+  "types": "./dist/src/plugin.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/plugin.d.ts",
+      "import": "./dist/src/plugin.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "dist",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "test": "npm run build && tsc --outDir test-dist --noEmit false && node --test test-dist/tests/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.220.0",
+    "@opentelemetry/resources": "^2.9.0",
+    "@opentelemetry/sdk-trace-base": "^2.9.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh": "^0.1.0-rc.6",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  }
+}

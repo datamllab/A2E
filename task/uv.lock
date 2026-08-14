@@ -21,6 +21,7 @@ members = [
     "ageneval-a2e",
     "ageneval-task-agent-agno",
     "ageneval-task-agent-crewai",
+    "ageneval-task-agent-deepseek-harness",
     "ageneval-task-agent-google-adk",
     "ageneval-task-agent-llama-index",
     "ageneval-task-agent-openai-agents",
@@ -566,6 +567,17 @@ requires-dist = [
 ]
 
 [[package]]
+name = "ageneval-task-agent-deepseek-harness"
+version = "0.1.0"
+source = { editable = "agents/deepseek_harness" }
+dependencies = [
+    { name = "ageneval-task-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "ageneval-task-core", editable = "packages/ageneval-task-core" }]
+
+[[package]]
 name = "ageneval-task-agent-google-adk"
 version = "0.1.0"
 source = { editable = "agents/google_adk" }
@@ -820,12 +832,16 @@ dependencies = [
 
 [package.optional-dependencies]
 all = [
+    { name = "ageneval-task-agent-deepseek-harness" },
     { name = "ageneval-task-agent-smolagents" },
     { name = "ageneval-task-claude-sdk-agent" },
     { name = "ageneval-task-langgraph-agent" },
 ]
 claude = [
     { name = "ageneval-task-claude-sdk-agent" },
+]
+deepseek-harness = [
+    { name = "ageneval-task-agent-deepseek-harness" },
 ]
 langgraph = [
     { name = "ageneval-task-langgraph-agent" },
@@ -836,6 +852,8 @@ smolagents = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ageneval-task-agent-deepseek-harness", marker = "extra == 'all'", editable = "agents/deepseek_harness" },
+    { name = "ageneval-task-agent-deepseek-harness", marker = "extra == 'deepseek-harness'", editable = "agents/deepseek_harness" },
     { name = "ageneval-task-agent-smolagents", marker = "extra == 'all'", editable = "agents/smolagents" },
     { name = "ageneval-task-agent-smolagents", marker = "extra == 'smolagents'", editable = "agents/smolagents" },
     { name = "ageneval-task-claude-sdk-agent", marker = "extra == 'all'", editable = "agents/claude_sdk" },
@@ -845,7 +863,7 @@ requires-dist = [
     { name = "ageneval-task-langgraph-agent", marker = "extra == 'langgraph'", editable = "agents/langgraph" },
     { name = "ageneval-task-tau-bench", editable = "datasets/tau_bench" },
 ]
-provides-extras = ["claude", "langgraph", "smolagents", "all"]
+provides-extras = ["claude", "langgraph", "smolagents", "deepseek-harness", "all"]
 
 [[package]]
 name = "ageneval-task-sandbox"
