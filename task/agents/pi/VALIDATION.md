@@ -12,7 +12,7 @@ repository or this report.
 - `npm run verify`: 14/14 TypeScript tests passed. Coverage includes a real
   `pi-agent-core` Agent, a Pi `AgentSession`, AGENT/LLM/TOOL hierarchy,
   traceparent propagation, content controls, and OTLP transport.
-- `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen pytest agents/pi/tests -q`:
+- `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen --package ageneval-task-agent-pi pytest agents/pi/tests -q`:
   2/2 Python tests passed. Coverage includes the authenticated binding bridge
   and A2E's flattened/nested span attribute shapes.
 

@@ -98,7 +98,7 @@ trace ID, and spans are persisted in A2E's configured database.
 
 ```bash
 cd task
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen pytest agents/pi/tests -q
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen --package ageneval-task-agent-pi pytest agents/pi/tests -q
 
 cd ../monitor/instrumentation-js/a2e-pi-monitor
 npm run verify
