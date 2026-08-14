@@ -17,6 +17,21 @@ export interface PiMonitorEnvironment extends NodeJS.ProcessEnv {
   OTEL_EXPORTER_OTLP_HEADERS?: string;
 }
 
+const DEFAULT_SPAN_ATTRIBUTE_COUNT_LIMIT = 10_000;
+
+/** Follow OTel precedence while matching A2E's shared OpenInference default. */
+export function resolveSpanAttributeCountLimit(
+  env: PiMonitorEnvironment = process.env,
+): number {
+  for (const key of ["OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT", "OTEL_ATTRIBUTE_COUNT_LIMIT"] as const) {
+    const value = env[key];
+    if (value === undefined || value.trim() === "") continue;
+    const parsed = Number(value);
+    if (Number.isSafeInteger(parsed) && parsed > 0) return parsed;
+  }
+  return DEFAULT_SPAN_ATTRIBUTE_COUNT_LIMIT;
+}
+
 function enabled(value: string | undefined, fallback: boolean): boolean {
   if (value === undefined) return fallback;
   return !["0", "false", "no", "off"].includes(value.trim().toLowerCase());
@@ -117,6 +132,10 @@ export function createA2EPiMonitor(env: PiMonitorEnvironment = process.env): PiT
       "service.name": "pi-agent",
       "service.version": "a2e-pi-monitor/0.1.0",
     }),
+    // OTel defaults to 128 attributes per span, which long coding-agent
+    // conversations exceed. Match A2E's shared OpenInference provider while
+    // preserving the standard OTel environment-variable overrides.
+    spanLimits: { attributeCountLimit: resolveSpanAttributeCountLimit(env) },
     spanProcessors: [processor],
   });
   const tracer = provider.getTracer("a2e-pi-monitor", "0.1.0");

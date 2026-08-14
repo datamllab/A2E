@@ -9,6 +9,7 @@ import {
   normalizeTraceEndpoint,
   parseHeaders,
   resolveRuntimeConfig,
+  resolveSpanAttributeCountLimit,
 } from "../src/runtime.js";
 
 describe("Pi monitor runtime configuration", () => {
@@ -48,6 +49,19 @@ describe("Pi monitor runtime configuration", () => {
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "https://otel.example/custom/traces/",
     });
     assert.equal(config.endpoint, "https://otel.example/custom/traces");
+  });
+
+  it("uses the shared OpenInference span limit and honors OTel precedence", () => {
+    assert.equal(resolveSpanAttributeCountLimit({}), 10_000);
+    assert.equal(resolveSpanAttributeCountLimit({ OTEL_ATTRIBUTE_COUNT_LIMIT: "2048" }), 2_048);
+    assert.equal(
+      resolveSpanAttributeCountLimit({
+        OTEL_ATTRIBUTE_COUNT_LIMIT: "2048",
+        OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT: "4096",
+      }),
+      4_096,
+    );
+    assert.equal(resolveSpanAttributeCountLimit({ OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT: "bad" }), 10_000);
   });
 
   it("extracts a remote W3C parent context for experiment-linked Pi spans", () => {
@@ -103,12 +117,38 @@ describe("Pi monitor runtime configuration", () => {
 
     try {
       monitor.onAgentStart("/transport-test");
-      monitor.onAgentEnd([]);
+      monitor.onContext(
+        Array.from({ length: 70 }, (_, index) => ({
+          role: index % 2 === 0 ? "assistant" : "tool",
+          content: `history-${index}`,
+          ...(index % 2 === 0
+            ? {}
+            : { toolCallId: `call-${index}`, toolName: "bash" }),
+        })),
+      );
+      monitor.onBeforeProviderRequest({ model: "attribute-limit-test" });
+      const assistant = {
+        role: "assistant",
+        model: "attribute-limit-test",
+        content: "response-after-many-context-messages",
+        usage: { input: 200, output: 5 },
+      };
+      monitor.onMessageStart(assistant);
+      monitor.onMessageEnd(assistant);
+      monitor.onAgentEnd([assistant]);
       await monitor.forceFlush();
       const request = await received;
       assert.equal(request.url, "/v1/traces");
       assert.match(request.contentType, /application\/x-protobuf/);
       assert.ok(request.body.length > 20, "expected a non-empty ExportTraceServiceRequest");
+      assert.ok(
+        request.body.includes(Buffer.from("llm.output_messages.0.message.role")),
+        "expected LLM output attributes after more than 128 input attributes",
+      );
+      assert.ok(
+        request.body.includes(Buffer.from("response-after-many-context-messages")),
+        "expected the LLM response body to survive the span attribute limit",
+      );
     } finally {
       await monitor.shutdown();
       await new Promise<void>((resolve, reject) =>
