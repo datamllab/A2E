@@ -15,7 +15,24 @@ export interface DeepSeekMonitorEnvironment extends NodeJS.ProcessEnv {
   OTEL_EXPORTER_OTLP_ENDPOINT?: string;
   OTEL_EXPORTER_OTLP_TRACES_ENDPOINT?: string;
   OTEL_EXPORTER_OTLP_HEADERS?: string;
+  OTEL_ATTRIBUTE_COUNT_LIMIT?: string;
+  OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT?: string;
   TRACEPARENT?: string;
+}
+
+const DEFAULT_SPAN_ATTRIBUTE_COUNT_LIMIT = 10_000;
+
+/** Follow OTel precedence while matching A2E's shared OpenInference default. */
+export function resolveSpanAttributeCountLimit(
+  env: DeepSeekMonitorEnvironment = process.env,
+): number {
+  for (const key of ["OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT", "OTEL_ATTRIBUTE_COUNT_LIMIT"] as const) {
+    const value = env[key];
+    if (value === undefined || value.trim() === "") continue;
+    const parsed = Number(value);
+    if (Number.isSafeInteger(parsed) && parsed > 0) return parsed;
+  }
+  return DEFAULT_SPAN_ATTRIBUTE_COUNT_LIMIT;
 }
 
 function enabled(value: string | undefined, fallback: boolean): boolean {
@@ -113,6 +130,7 @@ export function createA2EDeepSeekMonitor(
       "service.name": "deepseek-harness",
       "service.version": "a2e-deepseek-harness-monitor/0.1.0",
     }),
+    spanLimits: { attributeCountLimit: resolveSpanAttributeCountLimit(env) },
     spanProcessors: [processor],
   });
   return new DeepSeekTraceMonitor(provider.getTracer("a2e-deepseek-harness-monitor", "0.1.0"), {

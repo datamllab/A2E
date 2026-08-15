@@ -12,16 +12,18 @@ import tempfile
 import threading
 import time
 from collections.abc import Mapping
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 from ageneval.task.core import AgentBinding, AgentRunner, TaskInput, TaskTrace, ToolCall
 
 _DEFAULT_MODEL = os.environ.get("A2E_MODEL") or "deepseek-v4-flash"
 _RUN_DEADLINE = float(os.environ.get("A2E_DEEPSEEK_DEADLINE", "900"))
+_CONTAINER_PACKAGE = "/opt/a2e-harness"
 
 
 def _repo_root() -> Path:
@@ -186,6 +188,39 @@ def _parse_json_dict(value: Any) -> dict[str, Any]:
     return parsed if isinstance(parsed, dict) else {}
 
 
+def _container_endpoint(endpoint: str) -> str:
+    """Rewrite a host-loopback URL so it is reachable from Docker."""
+
+    parsed = urlsplit(endpoint)
+    if parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
+        return endpoint
+    port = f":{parsed.port}" if parsed.port else ""
+    return urlunsplit(
+        (parsed.scheme, f"host.docker.internal{port}", parsed.path, parsed.query, parsed.fragment)
+    )
+
+
+def _provider_api_key(explicit: str | None) -> str | None:
+    """Resolve credentials for Harness's DeepSeek/OpenAI-compatible route."""
+
+    return (
+        explicit
+        or os.environ.get("DEEPSEEK_API_KEY")
+        or os.environ.get("OPENAI_API_KEY")
+    )
+
+
+def _provider_api_base(explicit: str | None) -> str | None:
+    """Resolve the endpoint for Harness's DeepSeek/OpenAI-compatible route."""
+
+    return (
+        explicit
+        or os.environ.get("DEEPSEEK_BASE_URL")
+        or os.environ.get("OPENAI_API_BASE")
+        or os.environ.get("OPENAI_BASE_URL")
+    )
+
+
 @dataclass(eq=False)
 class DeepSeekHarnessAgent(AgentRunner):
     binding: AgentBinding | None = None
@@ -225,6 +260,31 @@ class DeepSeekHarnessAgent(AgentRunner):
             return resource.attributes.get("openinference.project.name")
         except Exception:
             return None
+
+    async def prepare_sandbox(self, _task: TaskInput, spec: Any) -> Any:
+        """Build/cache a task image containing Harness and this monitor."""
+
+        from ageneval.task.sandbox import prepare_node_harness_image
+
+        package_dir = (
+            _repo_root()
+            / "monitor"
+            / "instrumentation-js"
+            / "a2e-deepseek-harness-monitor"
+        )
+        setup = (
+            "corepack enable && DSH_HOME=/opt/a2e-dsh "
+            "node /opt/a2e-harness/node_modules/@deepseek-ai/dsh/lib/bin.js "
+            "plugin --profile headless add /opt/a2e-harness"
+        )
+        return await asyncio.to_thread(
+            prepare_node_harness_image,
+            spec,
+            package_dir=package_dir,
+            kind="deepseek",
+            setup_command=setup,
+            rebuild_packages=("node-pty",),
+        )
 
     async def _collect_span_stats(self, traceparent: str | None) -> tuple[int, list[ToolCall]]:
         trace_id = _trace_id_from_traceparent(traceparent)
@@ -310,7 +370,10 @@ class DeepSeekHarnessAgent(AgentRunner):
             "- id: agent-default-model\n"
             "  config:\n"
             "    provider: deepseek-official\n"
-            "    model: !!js process.env.A2E_MODEL\n",
+            "    model: !!js process.env.A2E_MODEL\n"
+            "- id: llm-deepseek\n"
+            "  config:\n"
+            "    maxTokens: !!js Number(process.env.A2E_DEEPSEEK_MAX_TOKENS || '65536')\n",
             encoding="utf-8",
         )
         prompt = f"{self.binding.render_system_prompt()}\n\nUser task:\n{task.instruction}"
@@ -326,10 +389,12 @@ class DeepSeekHarnessAgent(AgentRunner):
         env["A2E_MODEL"] = self.model
         env["DSH_PERMISSION_MODE"] = "danger-full-access"
         env.setdefault("DSH_TELEMETRY_DISABLED", "1")
-        if self.api_key:
-            env["DEEPSEEK_API_KEY"] = self.api_key
-        if self.api_base:
-            env["DEEPSEEK_BASE_URL"] = self.api_base
+        api_key = _provider_api_key(self.api_key)
+        api_base = _provider_api_base(self.api_base)
+        if api_key:
+            env["DEEPSEEK_API_KEY"] = api_key
+        if api_base:
+            env["DEEPSEEK_BASE_URL"] = api_base
         collector = os.environ.get("A2E_COLLECTOR_ENDPOINT")
         if collector:
             env["A2E_COLLECTOR_ENDPOINT"] = collector
@@ -339,9 +404,17 @@ class DeepSeekHarnessAgent(AgentRunner):
         if traceparent:
             env["TRACEPARENT"] = traceparent
 
+        tool_definitions = _binding_tool_definitions(self.binding)
+        bridge = (
+            _BindingBridge(self.binding, task.initial_state, workspace)
+            if tool_definitions
+            else nullcontext(None)
+        )
+
         try:
-            with _BindingBridge(self.binding, task.initial_state, workspace) as config_path:
-                env["A2E_DEEPSEEK_BINDING_CONFIG"] = config_path
+            with bridge as config_path:
+                if config_path:
+                    env["A2E_DEEPSEEK_BINDING_CONFIG"] = config_path
                 process = await asyncio.create_subprocess_exec(
                     *args,
                     stdout=asyncio.subprocess.PIPE,
@@ -395,3 +468,104 @@ class DeepSeekHarnessAgent(AgentRunner):
             )
         finally:
             shutil.rmtree(workspace, ignore_errors=True)
+
+    async def run_in_sandbox(self, task: TaskInput, sandbox: Any) -> TaskTrace:
+        """Run the complete Harness inside a Docker benchmark environment."""
+
+        start = time.perf_counter()
+        traceparent = self._current_traceparent()
+        patch_path = "/tmp/a2e-deepseek-runner.patch.yml"
+        sandbox.write_file(
+            patch_path,
+            "- id: agent-default-model\n"
+            "  config:\n"
+            "    provider: deepseek-official\n"
+            "    model: !!js process.env.A2E_MODEL\n"
+            "- id: llm-deepseek\n"
+            "  config:\n"
+            "    maxTokens: !!js Number(process.env.A2E_DEEPSEEK_MAX_TOKENS || '65536')\n",
+        )
+        prompt = f"{self.binding.render_system_prompt()}\n\nUser task:\n{task.instruction}"
+        command = [
+            "/usr/local/bin/node",
+            f"{_CONTAINER_PACKAGE}/node_modules/@deepseek-ai/dsh/lib/bin.js",
+            "--profile",
+            self.profile,
+            "--patch",
+            patch_path,
+            prompt,
+        ]
+        forwarded = (
+            "A2E_API_KEY",
+            "A2E_CLIENT_HEADERS",
+            "A2E_DEEPSEEK_CAPTURE_CONTENT",
+            "A2E_DEEPSEEK_DISABLE_BUILTIN_TOOLS",
+            "A2E_DEEPSEEK_MAX_ATTRIBUTE_LENGTH",
+            "A2E_DEEPSEEK_MAX_TOKENS",
+            "A2E_DEEPSEEK_MONITOR_ENABLED",
+            "HTTP_PROXY",
+            "HTTPS_PROXY",
+            "NO_PROXY",
+            "OTEL_ATTRIBUTE_COUNT_LIMIT",
+            "OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT",
+        )
+        env = {key: os.environ[key] for key in forwarded if os.environ.get(key)}
+        env.update(
+            {
+                "A2E_MODEL": self.model,
+                "DSH_HOME": "/opt/a2e-dsh",
+                "DSH_PERMISSION_MODE": "danger-full-access",
+                "DSH_TELEMETRY_DISABLED": "1",
+            }
+        )
+        api_key = _provider_api_key(self.api_key)
+        api_base = _provider_api_base(self.api_base)
+        if api_key:
+            env["DEEPSEEK_API_KEY"] = api_key
+        if api_base:
+            env["DEEPSEEK_BASE_URL"] = api_base
+        collector = os.environ.get("A2E_COLLECTOR_ENDPOINT", "http://127.0.0.1:6006")
+        env["A2E_COLLECTOR_ENDPOINT"] = _container_endpoint(collector)
+        project = self._current_project_name() or os.environ.get("A2E_PROJECT_NAME")
+        if project:
+            env["A2E_PROJECT_NAME"] = project
+        if traceparent:
+            env["TRACEPARENT"] = traceparent
+
+        try:
+            result = await asyncio.to_thread(
+                sandbox.exec,
+                command,
+                cwd=getattr(sandbox, "workdir", None),
+                env=env,
+                timeout=max(1, int(self.run_deadline)),
+            )
+            stdout = result.stdout.strip()
+            stderr = result.stderr.strip()
+            turns, tool_calls = await self._collect_span_stats(traceparent)
+            error = stderr or None
+            if not result.success and not error:
+                error = f"DeepSeek Harness exited with code {result.returncode}"
+            return TaskTrace(
+                task_id=task.task_id,
+                agent_name=self.name,
+                status="ok" if stdout and result.success else "error",
+                turns=turns,
+                tool_calls=tuple(tool_calls),
+                final_answer=stdout or None,
+                elapsed_seconds=time.perf_counter() - start,
+                trace_id=_trace_id_from_traceparent(traceparent),
+                error=error[:1000] if error else None,
+                raw={"harness_location": "sandbox"},
+            )
+        except Exception as exc:
+            return TaskTrace(
+                task_id=task.task_id,
+                agent_name=self.name,
+                status="error",
+                turns=0,
+                elapsed_seconds=time.perf_counter() - start,
+                trace_id=_trace_id_from_traceparent(traceparent),
+                error=(str(exc) or type(exc).__name__)[:1000],
+                raw={"harness_location": "sandbox"},
+            )

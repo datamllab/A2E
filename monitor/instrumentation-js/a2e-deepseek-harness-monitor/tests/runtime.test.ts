@@ -8,10 +8,21 @@ import {
   normalizeTraceEndpoint,
   parseHeaders,
   resolveRuntimeConfig,
+  resolveSpanAttributeCountLimit,
 } from "../src/runtime.js";
 import type { HarnessSession } from "../src/types.js";
 
 describe("DeepSeek monitor runtime", () => {
+  it("uses A2E's shared span limit and honors OTel precedence", () => {
+    assert.equal(resolveSpanAttributeCountLimit({}), 10_000);
+    assert.equal(resolveSpanAttributeCountLimit({ OTEL_ATTRIBUTE_COUNT_LIMIT: "2048" }), 2_048);
+    assert.equal(resolveSpanAttributeCountLimit({
+      OTEL_ATTRIBUTE_COUNT_LIMIT: "2048",
+      OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT: "4096",
+    }), 4_096);
+    assert.equal(resolveSpanAttributeCountLimit({ OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT: "bad" }), 10_000);
+  });
+
   it("normalizes A2E endpoints, headers, privacy, and trace parents", () => {
     assert.equal(normalizeTraceEndpoint("http://localhost:6006/"), "http://localhost:6006/v1/traces");
     assert.deepEqual(parseHeaders("x-one=hello%20world,bad,x-two=2"), {

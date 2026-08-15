@@ -38,6 +38,7 @@ interface ToolState {
   turn: number;
   step: number;
   name: string;
+  sourceEventSeq: number;
 }
 
 interface TurnState {
@@ -476,9 +477,15 @@ export class DeepSeekTraceMonitor {
     const turnNumber = eventNumber(event.data, "turn");
     const step = eventNumber(event.data, "step");
     const turn = state.turn;
-    const callId = typeof event.data.callId === "string" ? event.data.callId : undefined;
+    const rawCallId = typeof event.data.callId === "string" ? event.data.callId : undefined;
+    // Some OpenAI-compatible providers stream a valid tool-call id in the
+    // first delta and then replace it with an empty string in later deltas.
+    // DeepSeek Harness currently persists that final empty value. Its durable
+    // tool/result still cites this tool/call through sourceEventSeqs, so use
+    // the event sequence as a stable, session-local fallback id.
+    const callId = rawCallId || `dsh-event-${event.seq}`;
     const name = typeof event.data.name === "string" ? event.data.name : "unknown";
-    if (!turn || turnNumber === undefined || step === undefined || !callId || turn.turn !== turnNumber) return;
+    if (!turn || turnNumber === undefined || step === undefined || turn.turn !== turnNumber) return;
     const existing = turn.tools.get(callId);
     if (existing) this.finishTool(turn, callId, existing, event.time, false, "Duplicate tool/call");
     const rawArguments = typeof event.data.arguments === "string"
@@ -490,6 +497,7 @@ export class DeepSeekTraceMonitor {
       "tool.name": name,
       "agent.turn": turnNumber,
       "agent.step": step,
+      ...(rawCallId ? {} : { "tool.id.synthetic": true }),
     };
     if (this.captureContent) {
       attributes["tool.parameters"] = bounded(rawArguments, this.maxAttributeLength);
@@ -501,7 +509,7 @@ export class DeepSeekTraceMonitor {
       { attributes, startTime: eventDate(event.time) },
       childContext(turn.span),
     );
-    turn.tools.set(callId, { span, turn: turnNumber, step, name });
+    turn.tools.set(callId, { span, turn: turnNumber, step, name, sourceEventSeq: event.seq });
   }
 
   private toolResult(state: SessionState, event: HarnessEvent): void {
@@ -510,9 +518,22 @@ export class DeepSeekTraceMonitor {
     const turn = state.turn;
     const message = event.data.message;
     const source = isRecord(message) && isRecord(message.source) ? message.source : undefined;
-    const callId = source && typeof source.callId === "string" ? source.callId : undefined;
-    if (!turn || turnNumber === undefined || step === undefined || !callId || turn.turn !== turnNumber) return;
+    const rawCallId = source && typeof source.callId === "string" ? source.callId : undefined;
+    if (!turn || turnNumber === undefined || step === undefined || turn.turn !== turnNumber) return;
     turn.output.push(message);
+    let callId = rawCallId && turn.tools.has(rawCallId) ? rawCallId : undefined;
+    if (!callId && Array.isArray(event.sourceEventSeqs)) {
+      const sourceSeqs = new Set(event.sourceEventSeqs.filter((value) => Number.isSafeInteger(value)));
+      callId = [...turn.tools].find(([, candidate]) => sourceSeqs.has(candidate.sourceEventSeq))?.[0];
+    }
+    // The source-event link is part of the current durable schema. Keep an
+    // ordered fallback for older integrations that forward only event.data.
+    if (!callId) {
+      callId = [...turn.tools].find(([, candidate]) => (
+        candidate.turn === turnNumber && candidate.step === step
+      ))?.[0];
+    }
+    if (!callId) return;
     const tool = turn.tools.get(callId);
     if (!tool) return;
     const failed = toolResultIsError(message) || event.data.error !== undefined;

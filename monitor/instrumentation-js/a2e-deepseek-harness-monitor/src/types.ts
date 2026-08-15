@@ -68,6 +68,7 @@ export interface HarnessEvent {
   seq: number;
   time: number;
   data: Record<string, unknown>;
+  sourceEventSeqs?: number[];
 }
 
 export interface HarnessContext {

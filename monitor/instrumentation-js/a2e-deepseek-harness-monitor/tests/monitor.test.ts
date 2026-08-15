@@ -201,6 +201,58 @@ describe("DeepSeekTraceMonitor", () => {
     assert.match(tool?.status.message ?? "", /exit code 1/);
   });
 
+  it("pairs provider tool calls whose persisted call id is empty", () => {
+    const { emit, exporter, monitor, session } = fixture();
+    emit("turn/start", { turn: 1 });
+    emit("step/start", { turn: 1, step: 1 });
+
+    const toolCall: HarnessEvent = {
+      type: "tool/call",
+      seq: 41,
+      time: 1_700_000_000_100,
+      data: {
+        turn: 1,
+        step: 1,
+        callId: "",
+        name: "bash",
+        arguments: "{\"command\":\"pwd\"}",
+      },
+    };
+    monitor.onSessionEvent(session, toolCall);
+    monitor.onSessionEvent(session, {
+      type: "tool/result",
+      seq: 42,
+      time: 1_700_000_000_120,
+      sourceEventSeqs: [41],
+      data: {
+        turn: 1,
+        step: 1,
+        message: {
+          role: "user",
+          source: { kind: "tool", callId: "" },
+          content: [{
+            type: "tool-result",
+            toolCallId: "",
+            isError: false,
+            content: [{ type: "text", text: "/workspace" }],
+          }],
+        },
+      },
+    });
+    emit("step/end", { turn: 1, step: 1 });
+    emit("turn/end", { turn: 1, reason: { kind: "completed" } });
+
+    const tool = exporter.getFinishedSpans().find(
+      (span) => span.attributes["openinference.span.kind"] === "TOOL",
+    );
+    assert.ok(tool);
+    assert.equal(tool.attributes["tool.id"], "dsh-event-41");
+    assert.equal(tool.attributes["tool.id.synthetic"], true);
+    assert.equal(tool.attributes["tool.name"], "bash");
+    assert.equal(tool.status.code, SpanStatusCode.OK);
+    assert.match(String(tool.attributes["output.value"]), /workspace/);
+  });
+
   it("keeps operational metadata while omitting captured content", () => {
     const { emit, exporter } = fixture({ captureContent: false });
     const secret = "sensitive-secret-value";

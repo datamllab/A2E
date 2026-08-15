@@ -12,6 +12,8 @@ from ageneval.task.agents.deepseek_harness.agent import (
     _attribute,
     _binding_tool_definitions,
     _BindingBridge,
+    _provider_api_base,
+    _provider_api_key,
     _span_kind,
     _trace_id_from_traceparent,
 )
@@ -44,6 +46,15 @@ def _binding(calls: list[tuple[str, dict, dict]]) -> AgentBinding:
     )
 
 
+def _empty_binding() -> AgentBinding:
+    return AgentBinding(
+        name="no-tools",
+        tool_schemas=(),
+        tool_executor=lambda *_args: None,
+        system_prompt_builder=lambda _tools: "Answer directly.",
+    )
+
+
 def test_binding_bridge_calls_existing_executor() -> None:
     calls: list[tuple[str, dict, dict]] = []
     binding = _binding(calls)
@@ -66,6 +77,22 @@ def test_binding_bridge_calls_existing_executor() -> None:
 
     assert calls == [("add_offset", {"value": 3}, {"offset": 2})]
     assert config["tools"] == _binding_tool_definitions(binding)
+
+
+def test_empty_binding_has_no_bridge_tools() -> None:
+    assert _binding_tool_definitions(_empty_binding()) == []
+
+
+def test_provider_credentials_support_openai_compatible_environment(monkeypatch) -> None:
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    monkeypatch.delenv("DEEPSEEK_BASE_URL", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "compatible-key")
+    monkeypatch.setenv("OPENAI_API_BASE", "https://example.test/v1")
+
+    assert _provider_api_key(None) == "compatible-key"
+    assert _provider_api_base(None) == "https://example.test/v1"
+    assert _provider_api_key("explicit-key") == "explicit-key"
+    assert _provider_api_base("https://explicit.test/v1") == "https://explicit.test/v1"
 
 
 def test_span_helpers_accept_server_and_flat_shapes() -> None:
