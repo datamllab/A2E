@@ -111,6 +111,11 @@ propagation, content controls, and OTLP transport.
 
 ## Known limitations
 
+- Pi 0.84.1 exposes no CLI option for a maximum model/tool turn count. The
+  runner's effective safety bound is `A2E_PI_DEADLINE` (600 seconds by
+  default); the `max_turns` compatibility field cannot currently be enforced
+  by the subprocess CLI. Follow-up runs reached 45-54 LLM calls and completed
+  normally before that deadline.
 - Pi 0.84.1 does not expose usage data for every internal retry call, so those
   retry LLM spans can lack token counts even though their inputs are captured.
 - Binding fidelity is dataset-owned. Pi calls exactly the schemas and executor

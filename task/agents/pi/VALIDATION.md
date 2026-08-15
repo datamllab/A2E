@@ -9,7 +9,7 @@ repository or this report.
 
 ## Automated tests
 
-- `npm run verify`: 14/14 TypeScript tests passed. Coverage includes a real
+- `npm run verify`: 15/15 TypeScript tests passed. Coverage includes a real
   `pi-agent-core` Agent, a Pi `AgentSession`, AGENT/LLM/TOOL hierarchy,
   traceparent propagation, content controls, and OTLP transport.
 - `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen --package ageneval-task-agent-pi pytest agents/pi/tests -q`:
@@ -71,3 +71,43 @@ current binding exposes only five utilities (weather, calculation, unit/fact/
 currency tools), so the model made no tool call. That is a dataset-binding
 mismatch rather than missing instrumentation. Tau-bench and Tau3 demonstrate
 that native benchmark tool calls are captured and returned in `TaskTrace`.
+
+## 2026-08-15 full follow-up matrix
+
+A second pass covered all 24 registered benchmarks with `deepseek-v4-pro`.
+SWE-Pro reused the already cached official OpenLibrary image because two newly
+selected official images could not be pulled from the default Docker source.
+It is a new execution, not a new sample.
+
+| Experiment | Benchmark | LLM | TOOL | Stored evaluator result |
+| ---: | --- | ---: | ---: | --- |
+| 106 | gsm8k | 1 | 0 | `numeric_match=1` |
+| 107 | tau-bench | 9 | 8 | `tool_recall=0.75` |
+| 108 | tau2 | 10 | 9 | `tool_recall=0.75` |
+| 109 | tau3 | 1 | 0 | `tool_recall=0` |
+| 110 | mmlu | 1 | 0 | `mc_letter=0` |
+| 111 | humaneval | 1 | 0 | `substring=0` |
+| 112 | persistbench | 1 | 0 | `substring=0` |
+| 113 | traject-bench | 2 | 3 | `tool_recall=1` |
+| 136 | gdpval | 1 | 0 | `llm_judge=0` |
+| 115 | gpqa | 1 | 0 | `mc_letter=0` |
+| 116 | mmlu-pro | 1 | 0 | `mc_letter=0` |
+| 117 | arc-challenge | 1 | 0 | `mc_letter=1` |
+| 118 | truthfulqa | 1 | 0 | `mc_letter=1` |
+| 119 | bbh | 1 | 0 | `exact_match=0` |
+| 120 | agieval | 1 | 0 | `mc_letter=1` |
+| 121 | commonsenseqa | 1 | 0 | `mc_letter=1` |
+| 122 | hellaswag | 1 | 0 | `mc_letter=1` |
+| 123 | openbookqa | 1 | 0 | `mc_letter=1` |
+| 124 | math | 1 | 0 | `numeric_match=1` |
+| 125 | terminal-bench-2 | 19 | 18 | `tb_resolved=0` |
+| 130 | terminal-bench-2.1 | 45 | 44 | `tb_resolved=0` |
+| 132 | swe-bench-lite | 29 | 28 | all three SWE scores `1` |
+| 133 | swe-bench-verified | 54 | 55 | all three SWE scores `1` |
+| 134 | swe-bench-pro | 47 | 49 | `resolved=0`, `F2P=0`, `P2P=1` |
+
+All 24 selected task runs have status `ok` and together contain 493 spans.
+Every trace has exactly one `CHAIN`, one `AGENT`, at least one `LLM`, one root,
+no orphan span, and retained output attributes on every LLM span. Long runs
+contain up to 516 flattened LLM attributes, verifying the 10,000-attribute
+A2E default rather than the Node SDK's old 128-attribute truncation.
