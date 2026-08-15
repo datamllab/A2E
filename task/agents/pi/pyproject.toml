@@ -12,6 +12,7 @@ license = { text = "Apache-2.0" }
 readme = "README.md"
 dependencies = [
     "ageneval-task-core>=0.1.0",
+    "ageneval-task-sandbox>=0.1.0",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -24,13 +24,15 @@ from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 from ageneval.task.core import AgentBinding, AgentRunner, TaskInput, TaskTrace, ToolCall
 
 _DEFAULT_MODEL = os.environ.get("A2E_MODEL") or "qwen-plus"
 _MAX_TURNS = 40
 _RUN_DEADLINE = float(os.environ.get("A2E_PI_DEADLINE", "600"))
+_CONTAINER_PACKAGE = "/opt/a2e-harness"
+_CUSTOM_PROVIDER = "a2e-openai-compatible"
 
 # Pi's built-in providers read standard env vars for their API key.  When the
 # runner passes no explicit provider, guess from whichever key is present so
@@ -151,6 +153,69 @@ def _default_provider() -> str:
     return "openai"
 
 
+def _provider_api_key(explicit: str | None, provider: str) -> str | None:
+    provider_key = {
+        "openai": "OPENAI_API_KEY",
+        "deepseek": "DEEPSEEK_API_KEY",
+        "anthropic": "ANTHROPIC_API_KEY",
+    }.get(provider)
+    return (
+        explicit
+        or (os.environ.get(provider_key) if provider_key else None)
+        or os.environ.get("OPENAI_API_KEY")
+        or os.environ.get("DEEPSEEK_API_KEY")
+        or os.environ.get("ANTHROPIC_API_KEY")
+    )
+
+
+def _provider_api_base(explicit: str | None) -> str | None:
+    return (
+        explicit
+        or os.environ.get("A2E_PI_API_BASE")
+        or os.environ.get("OPENAI_API_BASE")
+        or os.environ.get("OPENAI_BASE_URL")
+        or os.environ.get("DEEPSEEK_BASE_URL")
+    )
+
+
+def _custom_models_config(model: str, api_base: str) -> dict[str, Any]:
+    """Build Pi's credential-free config for an OpenAI-compatible endpoint."""
+
+    return {
+        "providers": {
+            _CUSTOM_PROVIDER: {
+                "baseUrl": api_base,
+                "api": "openai-completions",
+                "apiKey": "$A2E_PI_PROVIDER_API_KEY",
+                "authHeader": True,
+                "compat": {
+                    "supportsDeveloperRole": False,
+                    "supportsReasoningEffort": False,
+                },
+                "models": [
+                    {
+                        "id": model,
+                        "name": model,
+                        "reasoning": False,
+                        "contextWindow": 128_000,
+                        "maxTokens": 32_768,
+                    }
+                ],
+            }
+        }
+    }
+
+
+def _container_endpoint(endpoint: str) -> str:
+    parsed = urlsplit(endpoint)
+    if parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
+        return endpoint
+    port = f":{parsed.port}" if parsed.port else ""
+    return urlunsplit(
+        (parsed.scheme, f"host.docker.internal{port}", parsed.path, parsed.query, parsed.fragment)
+    )
+
+
 def _repo_root() -> Path:
     """Return the repository root (nearest ancestor holding ``.git``)."""
     here = Path(__file__).resolve()
@@ -233,6 +298,24 @@ class PiAgent(AgentRunner):
         if self.binding is None:
             raise ValueError("PiAgent requires a binding")
         self.name = f"pi-{self.binding.name}"
+
+    async def prepare_sandbox(self, _task: TaskInput, spec: Any) -> Any:
+        """Build/cache a task image containing Pi Coding Agent and its monitor."""
+
+        from ageneval.task.sandbox import prepare_node_harness_image
+
+        package_dir = (
+            _repo_root()
+            / "monitor"
+            / "instrumentation-js"
+            / "a2e-pi-monitor"
+        )
+        return await asyncio.to_thread(
+            prepare_node_harness_image,
+            spec,
+            package_dir=package_dir,
+            kind="pi",
+        )
 
     @staticmethod
     def _current_traceparent() -> str | None:
@@ -351,8 +434,10 @@ class PiAgent(AgentRunner):
         else:
             args.append(pi_cmd)
 
+        api_base = _provider_api_base(self.api_base)
+        effective_provider = _CUSTOM_PROVIDER if api_base else self.provider
         args += [
-            "--provider", self.provider,
+            "--provider", effective_provider,
             "--model", self.model,
             "--print",
             "--no-session",
@@ -364,12 +449,8 @@ class PiAgent(AgentRunner):
             args += ["--extension", self.monitor_extension]
 
         tool_definitions = _binding_tool_definitions(self.binding)
-        if tool_definitions:
-            # Benchmark tools come from the binding extension. Disable host
-            # coding tools, especially when the real filesystem is in Docker.
+        if os.environ.get("A2E_PI_DISABLE_BUILTIN_TOOLS"):
             args.append("--no-builtin-tools")
-        else:
-            args.append("--no-tools")
         args.append(task.instruction)
 
         # ---- build env -------------------------------------------------------
@@ -379,13 +460,14 @@ class PiAgent(AgentRunner):
         # (OPENAI_API_KEY, DEEPSEEK_API_KEY, ANTHROPIC_API_KEY, etc.).
         # The user sets these in .env; pass them through unchanged.  If the
         # runner passed an explicit ``api_key``, map it to the provider's key.
-        if self.api_key:
+        api_key = _provider_api_key(self.api_key, self.provider)
+        if api_key and not api_base:
             provider_key = {
                 "openai": "OPENAI_API_KEY",
                 "deepseek": "DEEPSEEK_API_KEY",
                 "anthropic": "ANTHROPIC_API_KEY",
             }.get(self.provider, "OPENAI_API_KEY")
-            env[provider_key] = self.api_key
+            env[provider_key] = api_key
 
         # A2E collector — where Pi's OTel exporter sends traces
         collector = os.environ.get("A2E_COLLECTOR_ENDPOINT")
@@ -406,10 +488,19 @@ class PiAgent(AgentRunner):
         if traceparent:
             env["TRACEPARENT"] = traceparent
 
-        # The temporary cwd only holds Pi runtime files. Benchmark tools act
-        # on task.initial_state (including a live Docker sandbox) via the
-        # loopback bridge, so nothing is copied between host and container.
+        # The temporary cwd only holds Pi runtime files. Non-Docker benchmark
+        # bindings can still be exposed through the loopback bridge.
         workspace = tempfile.mkdtemp(prefix="a2e-pi-")
+        if api_base:
+            agent_dir = Path(workspace) / "pi-agent"
+            agent_dir.mkdir()
+            (agent_dir / "models.json").write_text(
+                json.dumps(_custom_models_config(self.model, api_base)),
+                encoding="utf-8",
+            )
+            env["PI_CODING_AGENT_DIR"] = str(agent_dir)
+            if api_key:
+                env["A2E_PI_PROVIDER_API_KEY"] = api_key
         bridge = (
             _BindingBridge(self.binding, task.initial_state, workspace)
             if tool_definitions
@@ -483,6 +574,116 @@ class PiAgent(AgentRunner):
             )
         finally:
             shutil.rmtree(workspace, ignore_errors=True)
+
+    async def run_in_sandbox(self, task: TaskInput, sandbox: Any) -> TaskTrace:
+        """Run the complete Pi Coding Agent inside a Docker benchmark image."""
+
+        start = time.perf_counter()
+        traceparent = self._current_traceparent()
+        api_base = _provider_api_base(self.api_base)
+        api_key = _provider_api_key(self.api_key, self.provider)
+        effective_provider = _CUSTOM_PROVIDER if api_base else self.provider
+        agent_dir = "/tmp/a2e-pi-agent"
+        if api_base:
+            sandbox.write_file(
+                f"{agent_dir}/models.json",
+                json.dumps(_custom_models_config(self.model, api_base)),
+            )
+
+        command = [
+            "/usr/local/bin/node",
+            f"{_CONTAINER_PACKAGE}/node_modules/@earendil-works/pi-coding-agent/dist/cli.js",
+            "--provider",
+            effective_provider,
+            "--model",
+            self.model,
+            "--print",
+            "--no-session",
+            "--thinking",
+            "off",
+            "--no-context-files",
+            "--extension",
+            f"{_CONTAINER_PACKAGE}/dist/extensions/a2e-monitor.js",
+        ]
+        if os.environ.get("A2E_PI_DISABLE_BUILTIN_TOOLS"):
+            command.append("--no-builtin-tools")
+        command.append(task.instruction)
+
+        forwarded = (
+            "A2E_API_KEY",
+            "A2E_CLIENT_HEADERS",
+            "A2E_PI_CAPTURE_CONTENT",
+            "A2E_PI_MAX_ATTRIBUTE_LENGTH",
+            "A2E_PI_MONITOR_DEBUG",
+            "A2E_PI_MONITOR_ENABLED",
+            "HTTP_PROXY",
+            "HTTPS_PROXY",
+            "NO_PROXY",
+            "OTEL_ATTRIBUTE_COUNT_LIMIT",
+            "OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT",
+        )
+        env = {key: os.environ[key] for key in forwarded if os.environ.get(key)}
+        env.update(
+            {
+                "PI_CODING_AGENT_DIR": agent_dir,
+                "PI_OFFLINE": "true",
+                "PI_SKIP_VERSION_CHECK": "true",
+            }
+        )
+        if api_base and api_key:
+            env["A2E_PI_PROVIDER_API_KEY"] = api_key
+        elif api_key:
+            provider_key = {
+                "openai": "OPENAI_API_KEY",
+                "deepseek": "DEEPSEEK_API_KEY",
+                "anthropic": "ANTHROPIC_API_KEY",
+            }.get(self.provider, "OPENAI_API_KEY")
+            env[provider_key] = api_key
+        collector = os.environ.get("A2E_COLLECTOR_ENDPOINT", "http://127.0.0.1:6006")
+        env["A2E_COLLECTOR_ENDPOINT"] = _container_endpoint(collector)
+        project = self._current_project_name() or os.environ.get("A2E_PROJECT_NAME")
+        if project:
+            env["A2E_PROJECT_NAME"] = project
+        if traceparent:
+            env["TRACEPARENT"] = traceparent
+
+        try:
+            result = await asyncio.to_thread(
+                sandbox.exec,
+                command,
+                cwd=getattr(sandbox, "workdir", None),
+                env=env,
+                timeout=max(1, int(self.run_deadline)),
+            )
+            stdout = result.stdout.strip()
+            stderr = result.stderr.strip()
+            turns, tool_calls = await self._collect_span_stats(traceparent)
+            error = stderr or None
+            if not result.success and not error:
+                error = f"Pi exited with code {result.returncode}"
+            return TaskTrace(
+                task_id=task.task_id,
+                agent_name=self.name,
+                status="ok" if stdout and result.success else "error",
+                turns=turns,
+                tool_calls=tuple(tool_calls),
+                final_answer=stdout or None,
+                elapsed_seconds=time.perf_counter() - start,
+                trace_id=_trace_id_from_traceparent(traceparent),
+                error=error[:1000] if error else None,
+                raw={"harness_location": "sandbox"},
+            )
+        except Exception as exc:
+            return TaskTrace(
+                task_id=task.task_id,
+                agent_name=self.name,
+                status="error",
+                turns=0,
+                elapsed_seconds=time.perf_counter() - start,
+                trace_id=_trace_id_from_traceparent(traceparent),
+                error=(str(exc) or type(exc).__name__)[:1000],
+                raw={"harness_location": "sandbox"},
+            )
 
 
 def _parse_json_dict(value: Any) -> dict[str, Any]:

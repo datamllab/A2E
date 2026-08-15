@@ -378,7 +378,7 @@ requires-dist = [
     { name = "ldap3" },
     { name = "numpy" },
     { name = "openinference-instrumentation", editable = "../monitor/openinference-instrumentation" },
-    { name = "openinference-instrumentation-openai", editable = "../monitor/instrumentation/openinference-instrumentation-openai" },
+    { name = "openinference-instrumentation-openai", specifier = ">=0.1.41" },
     { name = "openinference-semantic-conventions", editable = "../monitor/openinference-semantic-conventions" },
     { name = "opentelemetry-exporter-otlp" },
     { name = "opentelemetry-proto", specifier = ">=1.12.0" },
@@ -573,10 +573,14 @@ version = "0.1.0"
 source = { editable = "agents/deepseek_harness" }
 dependencies = [
     { name = "ageneval-task-core" },
+    { name = "ageneval-task-sandbox" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ageneval-task-core", editable = "packages/ageneval-task-core" }]
+requires-dist = [
+    { name = "ageneval-task-core", editable = "packages/ageneval-task-core" },
+    { name = "ageneval-task-sandbox", editable = "packages/ageneval-task-sandbox" },
+]
 
 [[package]]
 name = "ageneval-task-agent-google-adk"
@@ -645,10 +649,14 @@ version = "0.1.0"
 source = { editable = "agents/pi" }
 dependencies = [
     { name = "ageneval-task-core" },
+    { name = "ageneval-task-sandbox" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ageneval-task-core", editable = "packages/ageneval-task-core" }]
+requires-dist = [
+    { name = "ageneval-task-core", editable = "packages/ageneval-task-core" },
+    { name = "ageneval-task-sandbox", editable = "packages/ageneval-task-sandbox" },
+]
 
 [[package]]
 name = "ageneval-task-agent-smolagents"
@@ -6669,7 +6677,8 @@ requires-dist = [
 
 [[package]]
 name = "openinference-instrumentation-openai"
-source = { editable = "../monitor/instrumentation/openinference-instrumentation-openai" }
+version = "0.1.51"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-instrumentation" },
     { name = "openinference-semantic-conventions" },
@@ -6679,19 +6688,10 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "wrapt" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "openai", marker = "extra == 'instruments'", specifier = ">=2.8.0" },
-    { name = "openinference-instrumentation", editable = "../monitor/openinference-instrumentation" },
-    { name = "openinference-semantic-conventions", editable = "../monitor/openinference-semantic-conventions" },
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-semantic-conventions" },
-    { name = "typing-extensions" },
-    { name = "wrapt" },
+sdist = { url = "https://files.pythonhosted.org/packages/b8/70/c606ead9bcffa294eab31313f3ddf78caea66fc0fa23a0b0c103eff62bd8/openinference_instrumentation_openai-0.1.51.tar.gz", hash = "sha256:2d3d2779bc71fb49374334b8214e38f3eeb30f97ff1a30a8da1bef3b3951b72a", size = 23013, upload-time = "2026-06-05T19:54:26.892Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/12/07/c60a4c8fc6cdf45a7e34077d091052affba770a23441f44aaccb7cd5d77e/openinference_instrumentation_openai-0.1.51-py3-none-any.whl", hash = "sha256:f15d9804a6d2290a06c93f0cdcdc051d8ddd3e3b989be8ad87c90063517eae14", size = 30454, upload-time = "2026-06-05T19:54:25.774Z" },
 ]
-provides-extras = ["instruments"]
 
 [[package]]
 name = "openinference-instrumentation-openai-agents"
