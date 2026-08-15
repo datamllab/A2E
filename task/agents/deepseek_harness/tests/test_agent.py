@@ -84,14 +84,18 @@ def test_empty_binding_has_no_bridge_tools() -> None:
 
 
 def test_provider_credentials_support_openai_compatible_environment(monkeypatch) -> None:
-    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "deepseek-key")
     monkeypatch.delenv("DEEPSEEK_BASE_URL", raising=False)
     monkeypatch.setenv("OPENAI_API_KEY", "compatible-key")
     monkeypatch.setenv("OPENAI_API_BASE", "https://example.test/v1")
 
-    assert _provider_api_key(None) == "compatible-key"
+    assert _provider_api_key(None) == "deepseek-key"
+    assert (
+        _provider_api_key(None, api_base="https://example.test/v1")
+        == "compatible-key"
+    )
     assert _provider_api_base(None) == "https://example.test/v1"
-    assert _provider_api_key("explicit-key") == "explicit-key"
+    assert _provider_api_key("explicit-key", api_base="https://example.test/v1") == "explicit-key"
     assert _provider_api_base("https://explicit.test/v1") == "https://explicit.test/v1"
 
 

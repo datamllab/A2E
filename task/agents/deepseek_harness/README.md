@@ -1,84 +1,76 @@
 # ageneval-task-agent-deepseek-harness
 
-This package makes the official DeepSeek Harness available as the normal A2E
-`--agent deepseek-harness` runner. Harness owns the model/tool loop; A2E only
-supplies the selected dataset binding and experiment context.
+This package registers the official DeepSeek Harness as A2E's
+`--agent deepseek-harness` runner. DSH owns the model loop and native tools;
+A2E supplies tasks, trace context, storage, and evaluation.
 
-## Data flow
+## Execution model
+
+- Non-sandbox QA/tool datasets run DSH on the host. Dataset `AgentBinding`
+  tools, when present, are exposed through a short-lived authenticated
+  loopback bridge.
+- Terminal-Bench and SWE-Bench run the complete headless DSH profile inside a
+  cached derived benchmark image. DSH's native tools operate on the container
+  working tree; the host bridge is not used.
+- Built-in tools are enabled by default because they are part of the Harness
+  under evaluation. Set `A2E_DEEPSEEK_DISABLE_BUILTIN_TOOLS=1` only for an
+  explicit ablation.
+
+The Cordis monitor reads DSH's durable event stream and emits:
 
 ```text
-A2E CHAIN span
-  -> Python runner starts dsh --profile headless
-  -> loopback bridge registers AgentBinding tools in Harness
-  -> a2e-deepseek-harness-monitor observes Harness events
-  -> AGENT / LLM / TOOL spans are exported to the same A2E trace
+[CHAIN] Task: task_fn
+  [AGENT] deepseek-harness.agent
+    [LLM]  deepseek-harness.llm <model>
+    [TOOL] deepseek-harness.tool <name>
 ```
 
-The bridge listens on `127.0.0.1`, uses a random bearer token, and exists for
-one task. Dataset tool execution remains in Python, so Terminal-Bench and
-SWE-bench tools operate on their live Docker sandbox rather than the host.
+Empty DSH `callId` values are replaced by stable IDs derived from source event
+sequences, and tool results are paired through `sourceEventSeqs`. This retains
+complete and correctly ordered TOOL spans without changing Harness execution.
 
-## Setup
+## Images and native modules
 
-```bash
-cd monitor/instrumentation-js/a2e-deepseek-harness-monitor
-npm install
-npm run build
-npx dsh plugin --profile headless add "$PWD"
-```
+The Node Harness runtime is content-addressed separately from each benchmark
+base image, so `npm ci` runs once per Harness revision. Composition checks
+native modules in the final task image. If a base image uses an older glibc,
+`node-pty` is rebuilt against that base with Node 22 headers; the final image
+does not retain the temporary build toolchain.
 
-Configure DeepSeek Harness normally with `DEEPSEEK_API_KEY` and optionally
-`DEEPSEEK_BASE_URL`. The runner also accepts `--model`, `--api-key`, and
-`--api-base` from A2E's experiment CLI.
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `A2E_DEEPSEEK_DEADLINE` | `900` | whole-run deadline in seconds |
+| `A2E_DEEPSEEK_PROFILE` | `headless` | DSH profile |
+| `A2E_DEEPSEEK_DISABLE_BUILTIN_TOOLS` | unset | disable DSH built-ins when nonempty |
+| `A2E_HARNESS_NODE_IMAGE` | `node:22-bullseye-slim` | Linux runtime builder |
 
-## Run one stored benchmark task
+The runner accepts `--model`, `--api-key`, and `--api-base`. Explicit API keys
+win. With a custom OpenAI-compatible base URL, `OPENAI_API_KEY` is preferred;
+the default DeepSeek route prefers `DEEPSEEK_API_KEY`.
+
+## Run
 
 ```bash
 cd task
+A2E_TB2_TASK=fix-git \
 uv run --frozen python examples/run_experiment.py \
-  --dataset gsm8k \
+  --dataset terminal-bench-2 \
   --agent deepseek-harness \
-  --model deepseek-v4-flash \
-  --evaluators numeric_match \
+  --model qwen3.6-plus \
+  --api-base https://dashscope.aliyuncs.com/compatible-mode/v1 \
+  --evaluators tb_resolved \
   --n 1
 ```
 
-The dataset, experiment output, evaluator result, trace ID, and complete span
-tree are stored in the configured A2E database.
-
-Harness does not currently expose a stable headless `max_turns` option. The
-runner therefore uses `A2E_DEEPSEEK_DEADLINE` as a wall-clock safety limit
-(900 seconds by default) and otherwise leaves Harness's model/tool loop
-unchanged. This is intentional: the monitor must not cancel a normal Harness
-run merely to enforce an A2E-side step recommendation.
-
-## Live benchmark verification
-
-On 2026-08-14, one real task from every registered A2E dataset was run with
-`deepseek-v4-flash` through this runner and stored in A2E: 15 QA datasets,
-four tool-use datasets, Terminal-Bench 2/2.1, and SWE-Bench Lite, Verified,
-and Pro (24 experiments total). All 24 task runs completed with status `ok`.
-The projects contained 652 spans in total; every project had exactly one
-CHAIN, one AGENT, at least one LLM, and one trace ID. The three SWE variants
-also completed their official graders and stored all three SWE evaluator
-scores. Evaluator score is model/task quality, not monitor health, so a score
-of zero is still a valid integration result when the run and trace are stored.
-
-See [VALIDATION.md](./VALIDATION.md) for the per-dataset experiment IDs, span
-counts, evaluator results, reproducible commands, and known limitations.
-
-The official `swebench` Python package imports Unix's `resource` module and
-does not import natively on Windows. The Windows validation used a local,
-untracked compatibility shim only for loading the grader. No Windows-specific
-change is part of this package; normal Linux CI and benchmark images use the
-official dependency directly.
-
-## Test
+## Tests
 
 ```bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --package \
-  ageneval-task-agent-deepseek-harness pytest agents/deepseek_harness/tests -q
+cd task
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen pytest agents/deepseek_harness/tests -q
 
 cd ../monitor/instrumentation-js/a2e-deepseek-harness-monitor
 npm run verify
 ```
+
+See [VALIDATION.md](./VALIDATION.md) for stored real-task results and Windows
+grader notes.

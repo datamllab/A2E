@@ -14,7 +14,8 @@ from ageneval.task.sandbox.spec import SandboxSpec
 _SAFE_IMAGE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/@:+-]*$")
 _SAFE_KIND = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 _IGNORED_PARTS = {".git", "dist", "node_modules", "test-dist", "__pycache__"}
-_BUILD_FORMAT_VERSION = "2"
+_RUNTIME_FORMAT_VERSION = "3"
+_COMPOSE_FORMAT_VERSION = "2"
 
 
 class HarnessImageError(RuntimeError):
@@ -24,7 +25,6 @@ class HarnessImageError(RuntimeError):
 def _source_digest(
     package_dir: Path,
     *,
-    base_image: str,
     builder_image: str,
     kind: str,
     setup: str,
@@ -33,7 +33,7 @@ def _source_digest(
     digest = hashlib.sha256()
     digest.update(
         (
-            f"{_BUILD_FORMAT_VERSION}\0{base_image}\0{builder_image}\0{kind}\0{setup}\0"
+            f"{_RUNTIME_FORMAT_VERSION}\0{builder_image}\0{kind}\0{setup}\0"
             f"{' '.join(rebuild_packages)}\0"
         ).encode()
     )
@@ -78,8 +78,11 @@ def prepare_node_harness_image(
 ) -> SandboxSpec:
     """Return a Docker spec whose image contains the supplied harness package.
 
-    The build is content-addressed and cached by Docker. ``npm ci`` and the
-    TypeScript build happen in Linux, so Windows host ``node_modules`` are
+    The harness runtime and its composition with a benchmark base image are
+    content-addressed separately. ``npm ci`` therefore runs once per harness
+    source revision rather than once per benchmark image. Native modules are
+    checked in the final task base and rebuilt there only when its libc is not
+    compatible with the cached runtime. Windows host ``node_modules`` are
     never copied into benchmark containers.
     """
 
@@ -99,15 +102,59 @@ def prepare_node_harness_image(
     if not (source / "package.json").is_file() or not (source / "package-lock.json").is_file():
         raise HarnessImageError(f"harness package is incomplete: {source}")
 
-    digest = _source_digest(
+    harness_digest = _source_digest(
         source,
-        base_image=base_image,
         builder_image=builder_image,
         kind=kind,
         setup=setup_command,
         rebuild_packages=rebuild_packages,
     )
-    image = f"a2e-local/{kind}-harness:{digest}"
+    runtime_image = f"a2e-local/{kind}-harness-runtime:{harness_digest}"
+    runtime_inspected = subprocess.run(
+        ["docker", "image", "inspect", runtime_image],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if runtime_inspected.returncode != 0:
+        setup = f"RUN {setup_command}\n" if setup_command else ""
+        rebuild = (
+            f"RUN npm rebuild {' '.join(rebuild_packages)}\n" if rebuild_packages else ""
+        )
+        runtime_dockerfile = (
+            "# syntax=docker/dockerfile:1\n"
+            f"FROM {builder_image}\n"
+            "WORKDIR /opt/a2e-harness\n"
+            "COPY package.json package-lock.json ./\n"
+            "RUN --mount=type=cache,target=/root/.npm "
+            "npm ci --ignore-scripts --fetch-retries=5 "
+            "--fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000\n"
+            f"{rebuild}"
+            "COPY . .\n"
+            "RUN npm run build\n"
+            "RUN mkdir -p /opt/a2e-dsh\n"
+            f"{setup}"
+        )
+        _run(
+            [
+                "docker",
+                "build",
+                "--pull=false",
+                "--tag",
+                runtime_image,
+                "--file",
+                "-",
+                ".",
+            ],
+            cwd=source,
+            input=runtime_dockerfile,
+        )
+
+    image_digest = hashlib.sha256(
+        f"{_COMPOSE_FORMAT_VERSION}\0{base_image}\0{runtime_image}".encode()
+    ).hexdigest()[:16]
+    image = f"a2e-local/{kind}-harness:{image_digest}"
     inspected = subprocess.run(
         ["docker", "image", "inspect", image],
         capture_output=True,
@@ -116,25 +163,40 @@ def prepare_node_harness_image(
         errors="replace",
     )
     if inspected.returncode != 0:
-        setup = f"RUN {setup_command}\n" if setup_command else ""
-        rebuild = (
-            f"RUN npm rebuild {' '.join(rebuild_packages)}\n" if rebuild_packages else ""
-        )
-        dockerfile = (
-            f"FROM {builder_image} AS a2e-harness-build\n"
-            "WORKDIR /opt/a2e-harness\n"
-            "COPY package.json package-lock.json ./\n"
-            "RUN npm ci --ignore-scripts\n"
-            f"{rebuild}"
-            "COPY . .\n"
-            "RUN npm run build\n"
-            "RUN mkdir -p /opt/a2e-dsh\n"
-            f"{setup}"
-            f"FROM {base_image}\n"
-            "COPY --from=a2e-harness-build /usr/local/bin/node /usr/local/bin/node\n"
-            "COPY --from=a2e-harness-build /opt/a2e-harness /opt/a2e-harness\n"
-            "COPY --from=a2e-harness-build /opt/a2e-dsh /opt/a2e-dsh\n"
-        )
+        if rebuild_packages:
+            packages = " ".join(rebuild_packages)
+            checks = " && ".join(
+                f'node -e "require(\'/opt/a2e-harness/node_modules/{package}\')"'
+                for package in rebuild_packages
+            )
+            dockerfile = (
+                f"FROM {runtime_image} AS a2e-harness-build\n"
+                f"FROM {builder_image} AS a2e-node-toolchain\n"
+                f"FROM {base_image} AS a2e-task-build\n"
+                "COPY --from=a2e-harness-build /usr/local/bin/node /usr/local/bin/node\n"
+                "COPY --from=a2e-harness-build /opt/a2e-harness /opt/a2e-harness\n"
+                "COPY --from=a2e-harness-build /opt/a2e-dsh /opt/a2e-dsh\n"
+                "COPY --from=a2e-node-toolchain /usr/local/include/node "
+                "/usr/local/include/node\n"
+                "COPY --from=a2e-node-toolchain /usr/local/lib/node_modules/npm "
+                "/usr/local/lib/node_modules/npm\n"
+                f"RUN ({checks}) || (cd /opt/a2e-harness && "
+                "npm_config_nodedir=/usr/local "
+                "/usr/local/bin/node /usr/local/lib/node_modules/npm/bin/npm-cli.js "
+                f"rebuild {packages})\n"
+                f"FROM {base_image}\n"
+                "COPY --from=a2e-task-build /usr/local/bin/node /usr/local/bin/node\n"
+                "COPY --from=a2e-task-build /opt/a2e-harness /opt/a2e-harness\n"
+                "COPY --from=a2e-task-build /opt/a2e-dsh /opt/a2e-dsh\n"
+            )
+        else:
+            dockerfile = (
+                f"FROM {runtime_image} AS a2e-harness-build\n"
+                f"FROM {base_image}\n"
+                "COPY --from=a2e-harness-build /usr/local/bin/node /usr/local/bin/node\n"
+                "COPY --from=a2e-harness-build /opt/a2e-harness /opt/a2e-harness\n"
+                "COPY --from=a2e-harness-build /opt/a2e-dsh /opt/a2e-dsh\n"
+            )
         _run(
             ["docker", "build", "--pull=false", "--tag", image, "--file", "-", "."],
             cwd=source,

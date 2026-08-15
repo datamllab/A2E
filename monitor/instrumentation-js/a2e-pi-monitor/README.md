@@ -27,11 +27,12 @@ The shared event-to-span implementation has two public adapters:
   prompt, context, provider-response, working-directory, and session lifecycle
   data.
 
-When this package is launched by A2E's `--agent pi` runner, a second extension
-registers the selected dataset's `AgentBinding` tools. Tool execution crosses a
-token-protected loopback bridge back to the existing Python executor, so Pi's
-native tool events are traced without changing dataset interfaces. Direct Pi
-users who do not set `A2E_PI_BINDING_CONFIG` are unaffected.
+For a non-sandbox A2E task, the runner can load a second extension that adapts
+the selected dataset's `AgentBinding` tools through a token-protected loopback
+bridge. For Terminal/SWE tasks, A2E instead runs the complete Pi CLI and this
+monitor inside the benchmark container; Pi's own tools operate directly on the
+task working tree and no Python bridge is loaded. Direct Pi users are
+unaffected by both runner-only paths.
 
 The coding-agent extension reuses the same core event dispatcher. Do not attach
 `instrumentPiAgent()` to the same underlying Agent while the extension is
@@ -144,6 +145,7 @@ with `-e`, make sure `npm run build` has produced `dist/` first.
 | `A2E_PI_MAX_ATTRIBUTE_LENGTH` | `262144` | Per-attribute safety limit in characters |
 | `A2E_PI_MONITOR_ENABLED` | `true` | Set to `false` to disable the extension |
 | `A2E_PI_MONITOR_DEBUG` | `false` | Log tracing failures to stderr |
+| `A2E_PI_DISABLE_BUILTIN_TOOLS` | unset | Runner-only ablation flag; native tools are enabled by default |
 
 Standard `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`, `OTEL_EXPORTER_OTLP_ENDPOINT`, and
 `OTEL_EXPORTER_OTLP_HEADERS` are also supported. A2E variables take precedence,
@@ -242,10 +244,9 @@ uv run --frozen python examples/run_experiment.py \
   --model deepseek-v4-pro --evaluators tb_resolved --n 1
 ```
 
-Pi stays on the host while its registered `bash` and editor tools execute
-through the dataset binding in the live Docker container. The official verifier
-runs before container cleanup. On 2026-08-13, Terminal-Bench 2.1 `fix-git`
-completed with reward `1`; A2E stored one trace containing one CHAIN, one AGENT,
-ten LLM, and nine TOOL spans, with the Pi AGENT parented to the experiment
-CHAIN. The experiment run, score, trace ID, and all spans were persisted to the
-same SQLite database used by the A2E UI.
+For Docker benchmarks the complete Pi Harness now runs inside the live task
+container and the official verifier runs before container cleanup. On
+2026-08-15 this path was validated on Terminal-Bench 2/2.1 and SWE-Bench Lite,
+Verified, and Pro. The stored traces contain Pi-native `bash`, `read`, `edit`,
+and `write` spans parented beneath the experiment CHAIN. See the runner's
+`VALIDATION.md` for experiment IDs and evaluator results.

@@ -1,21 +1,18 @@
-"""SandboxScoringRunner — wrap any AgentRunner with a per-task sandbox.
+"""Run and score an AgentRunner against a per-task sandbox.
 
 Flow for one sandbox task:
 
-    1. resolve the sandbox spec from ``TaskInput.sandbox`` and start the
-       environment (temp dir / container);
-    2. optional ``setup_fn(task, sandbox)`` prepares the environment (e.g. a
-       local fixture does ``git init``; a docker SWE-bench image needs nothing);
-    3. inject the *live* sandbox into ``initial_state["__sandbox__"]`` so the
-       agent's (unchanged) ``binding.tool_executor`` reaches it, then run the
-       inner agent — it edits code inside the sandbox via bash / editor tools;
-    4. extract the model's diff (``git diff`` in the sandbox's working dir);
-    5. while the sandbox is still alive, run the dataset's ``score_fn`` (apply
-       patch + run tests) and stash ``resolved`` / report into ``TaskTrace.raw``.
+    1. resolve the sandbox spec from ``TaskInput.sandbox``;
+    2. let a coding harness optionally prepare a derived task image;
+    3. start the environment and run optional dataset setup;
+    4. run a harness-provided ``run_in_sandbox`` implementation when present;
+       otherwise run the legacy host agent with the live sandbox injected into
+       ``initial_state["__sandbox__"]`` for dataset binding tools;
+    5. extract the model diff and invoke the official scorer while the edited
+       sandbox is still alive.
 
-This is the seam that lets every existing agent work on code-execution
-datasets without a single change: the agent only ever calls
-``binding.tool_executor``; the sandbox arrives through ``state["__sandbox__"]``.
+The optional hooks keep complete coding harnesses and their native tools inside
+Docker benchmark containers without changing existing SDK-agent behaviour.
 """
 
 from __future__ import annotations

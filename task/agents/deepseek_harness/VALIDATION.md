@@ -1,111 +1,70 @@
 # DeepSeek Harness validation
 
-Validation date: 2026-08-14
+Validation date: 2026-08-15. The headless DeepSeek Harness ran with
+`qwen3.6-plus` through the DashScope OpenAI-compatible endpoint. Credentials
+were loaded externally and are not stored in the repository or database.
 
-The official `@deepseek-ai/dsh` `0.1.0-rc.6` headless profile was run with
-`deepseek-v4-flash` against one task from every dataset registered by A2E.
-Each dataset, task output, evaluator annotation, and trace was stored by the
-local A2E server in its normal database. No API credential is recorded here.
+## Container-native benchmark results
 
-## Reproduce one run
+The complete DSH profile and monitor ran inside every published task image
+with native tools enabled. Results and traces are stored in
+`F:\A2E\.a2e-data-containerized\a2e.db` by the A2E server used on port 6106.
 
-Start A2E on port 6006, install the monitor into the headless profile as
-described in the package README, and configure `DEEPSEEK_API_KEY` and
-`DEEPSEEK_BASE_URL`. Then run, for example:
+| Experiment | Benchmark / task | LLM | TOOL | Official result |
+| --- | --- | ---: | ---: | --- |
+| `RXhwZXJpbWVudDoyMg==` | Terminal-Bench 2 / `fix-git` | 9 | 12 | reward 0 |
+| `RXhwZXJpbWVudDo2` | Terminal-Bench 2.1 / `fix-git` | 10 | 13 | reward 1; 2/2 tests |
+| `RXhwZXJpbWVudDoxNA==` | SWE-Bench Lite / `django__django-12915` | 41 | 40 | `RESOLVED_FULL`; F2P 3/3; P2P 8/8 |
+| `RXhwZXJpbWVudDoxNw==` | SWE-Bench Verified / `django__django-11292` | 30 | 29 | `RESOLVED_FULL`; F2P 1/1; P2P 31/31 |
+| `RXhwZXJpbWVudDoyMA==` | SWE-Bench Pro / OpenLibrary | 25 | 30 | unresolved; F2P 0/3; P2P 104/104 |
+
+Every valid row contains one CHAIN, one AGENT, LLM children, and DSH-native
+TOOL children. Observed tools include `bash`, `read`, `edit`,
+`str_replace_editor`, and `todo_write`. ERROR tool spans are retained and the
+Agent can recover. Zero rewards are model/task outcomes, not monitor failures:
+the task run has `status=ok` and its full trace is stored.
+
+## Defects found by the matrix
+
+- DSH/Qwen sometimes emits an empty `callId`. Pairing now uses durable source
+  event sequence links and stable synthetic IDs instead of collapsing tools.
+- With an explicit OpenAI-compatible `--api-base`, the runner now selects the
+  matching OpenAI-compatible key before a separately configured DeepSeek key.
+- The SWE-Pro Debian 11 image exposed a `GLIBC_2.34` mismatch in `node-pty`.
+  The image composer now checks native modules in the final base and rebuilds
+  incompatible ones there.
+- `run_experiment.py` can exit zero even when a task output has `status=error`;
+  acceptance therefore checks stored run output, evaluator result, and span
+  tree rather than process exit code alone.
+
+## Reproduce
 
 ```bash
 cd task
+A2E_SWE_INSTANCE=django__django-12915 \
+A2E_DEEPSEEK_DEADLINE=1800 \
 uv run --frozen python examples/run_experiment.py \
-  --dataset traject-bench \
+  --dataset swe-bench-lite \
   --agent deepseek-harness \
-  --model deepseek-v4-flash \
-  --evaluators tool_recall \
-  --n 1 \
-  --run-id deepseek-harness-traject-bench-smoke
-```
-
-Sandbox datasets use the same command with their official evaluators. For
-example:
-
-```bash
-uv run --frozen python examples/run_experiment.py \
-  --dataset swe-bench-verified \
-  --agent deepseek-harness \
-  --model deepseek-v4-flash \
+  --model qwen3.6-plus \
+  --api-base https://dashscope.aliyuncs.com/compatible-mode/v1 \
+  --endpoint http://127.0.0.1:6106 \
   --evaluators swe_resolved,swe_fail_to_pass,swe_pass_to_pass \
-  --n 1
+  --n 1 --sample-seed 20260815
 ```
 
-## Stored results
+On Windows only, the official `swebench` package imports Unix's `resource`
+module. Validation used an untracked `PYTHONPATH` shim only for the host-side
+spec loader. The Harness and official evaluation script still ran in Linux
+Docker. No Windows-only code is part of the deliverable.
 
-Every row below had one `CHAIN`, one `AGENT`, one trace ID, one successful
-task run, and the listed model/tool children. A zero evaluator score means the
-model did not solve that sampled task; it does not mean tracing or storage
-failed.
+## Deterministic verification
 
-| Experiment | Dataset | LLM | TOOL | Stored evaluator result |
-| ---: | --- | ---: | ---: | --- |
-| 57 | gsm8k | 1 | 0 | `numeric_match=1` |
-| 58 | traject-bench | 9 | 9 | `tool_recall=1` |
-| 59 | mmlu | 1 | 0 | `mc_letter=0` |
-| 60 | humaneval | 1 | 0 | `substring=0` |
-| 61 | persistbench | 1 | 0 | `substring=0` |
-| 62 | gdpval | 8 | 15 | `llm_judge=0` |
-| 63 | gpqa | 1 | 0 | `mc_letter=1` |
-| 64 | mmlu-pro | 1 | 0 | `mc_letter=1` |
-| 65 | arc-challenge | 1 | 0 | `mc_letter=1` |
-| 66 | truthfulqa | 1 | 0 | `mc_letter=1` |
-| 67 | bbh | 1 | 0 | `exact_match=1` |
-| 68 | agieval | 1 | 0 | `mc_letter=1` |
-| 69 | commonsenseqa | 1 | 0 | `mc_letter=1` |
-| 70 | hellaswag | 1 | 0 | `mc_letter=1` |
-| 71 | openbookqa | 1 | 0 | `mc_letter=1` |
-| 72 | math | 1 | 0 | `numeric_match=1` |
-| 73 | tau-bench | 17 | 18 | `tool_recall=1` |
-| 74 | tau2 | 1 | 0 | `tool_recall=0` |
-| 75 | tau3 | 1 | 0 | `tool_recall=0` |
-| 76 | terminal-bench-2 | 13 | 12 | `tb_resolved=0` |
-| 77 | terminal-bench-2.1 | 15 | 14 | `tb_resolved=0` |
-| 78 | swe-bench-lite | 114 | 114 | all three SWE scores `1`; `RESOLVED_FULL` |
-| 79 | swe-bench-verified | 59 | 58 | all three SWE scores `1`; `RESOLVED_FULL` |
-| 80 | swe-bench-pro | 53 | 60 | all three SWE scores `1`; `resolved` |
+- DeepSeek monitor: `npm run verify` — 10 tests passed.
+- DeepSeek Python runner: 5 tests passed.
+- Sandbox hook/image framework: 5 tests passed.
+- Targeted Ruff checks passed.
 
-Totals: 24 experiments and 652 spans. All 24 task outputs had status `ok`.
-The three SWE runs passed every sampled Fail-to-Pass and Pass-to-Pass test.
-
-Five TOOL spans across four long runs had an error status. They are expected,
-recoverable Agent operations captured by the monitor: an out-of-range read, a
-search timeout, a Windows permission error during glob, and two attempts to
-use Harness's host `read` tool with a Linux container path. The Agent recovered
-with the A2E sandbox `bash` tool; all four root traces completed successfully.
-
-The Lite task output initially summarized `turns=0` and no tool calls even
-though its stored trace contained 114 LLM and 114 TOOL spans. The cause was a
-transient timeout while reading a large project response after the run. The
-runner now allows 30 seconds per read, retries individual failed polls, and has
-a regression test for this case. The already stored span tree and evaluator
-result were never missing.
-
-## Deterministic tests
-
-- JavaScript monitor: 8 tests passed.
-- Python runner: 3 tests passed.
-- Ruff check for `task/agents/deepseek_harness`: passed.
-- A2E registry discovery: `deepseek-harness` present.
-
-The JavaScript suite covers event-to-span conversion, complete multi-step
-history, tool success/error capture, hierarchy, privacy mode, W3C parent
-context, and a real OTLP protobuf POST. The Python suite covers the authenticated
-loopback binding bridge, span parsing, and transient collector-read retries.
-
-## Known limits
-
-- The JavaScript OpenTelemetry provider keeps the standard 128 attributes per
-  span. Long flattened histories can exceed it; this cross-agent policy is
-  documented but intentionally not changed by this adapter alone.
-- Official Harness headless currently exposes no stable step-count limit. The
-  runner uses `A2E_DEEPSEEK_DEADLINE` (default 900 seconds) as its safety bound
-  and does not make the observer cancel a normal Harness run.
-- The official `swebench` Python package imports Unix's `resource` module. The
-  Windows-only validation used an untracked loader shim; no Windows-specific
-  compatibility code is included in the deliverable.
+Earlier host-side QA and dataset-tool runs remain valid. The corrected
+architecture only changes Docker datasets; non-sandbox datasets continue to
+run DSH on the host.

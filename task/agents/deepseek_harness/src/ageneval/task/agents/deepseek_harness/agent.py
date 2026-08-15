@@ -200,14 +200,18 @@ def _container_endpoint(endpoint: str) -> str:
     )
 
 
-def _provider_api_key(explicit: str | None) -> str | None:
+def _provider_api_key(
+    explicit: str | None,
+    *,
+    api_base: str | None = None,
+) -> str | None:
     """Resolve credentials for Harness's DeepSeek/OpenAI-compatible route."""
 
-    return (
-        explicit
-        or os.environ.get("DEEPSEEK_API_KEY")
-        or os.environ.get("OPENAI_API_KEY")
-    )
+    if explicit:
+        return explicit
+    if api_base:
+        return os.environ.get("OPENAI_API_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+    return os.environ.get("DEEPSEEK_API_KEY") or os.environ.get("OPENAI_API_KEY")
 
 
 def _provider_api_base(explicit: str | None) -> str | None:
@@ -389,8 +393,8 @@ class DeepSeekHarnessAgent(AgentRunner):
         env["A2E_MODEL"] = self.model
         env["DSH_PERMISSION_MODE"] = "danger-full-access"
         env.setdefault("DSH_TELEMETRY_DISABLED", "1")
-        api_key = _provider_api_key(self.api_key)
         api_base = _provider_api_base(self.api_base)
+        api_key = _provider_api_key(self.api_key, api_base=api_base)
         if api_key:
             env["DEEPSEEK_API_KEY"] = api_key
         if api_base:
@@ -518,8 +522,8 @@ class DeepSeekHarnessAgent(AgentRunner):
                 "DSH_TELEMETRY_DISABLED": "1",
             }
         )
-        api_key = _provider_api_key(self.api_key)
         api_base = _provider_api_base(self.api_base)
+        api_key = _provider_api_key(self.api_key, api_base=api_base)
         if api_key:
             env["DEEPSEEK_API_KEY"] = api_key
         if api_base:

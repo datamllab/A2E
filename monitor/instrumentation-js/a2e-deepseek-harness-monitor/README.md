@@ -27,10 +27,20 @@ adapter therefore retains the latest header but takes a fresh
 `Session.deriveMessages()` snapshot at every `step/start`; later model calls
 retain their complete inputs, including preceding tool results.
 
+Some DSH/provider combinations emit empty tool `callId` values. The adapter
+uses durable `sourceEventSeqs` links to pair calls/results and assigns stable
+event-sequence IDs, so separate calls are not collapsed into one TOOL span.
+
 If `TRACEPARENT` is present, each turn's AGENT span is parented to that remote
 context. This lets an A2E experiment attach the Harness trajectory below its
 existing CHAIN span. Otherwise the run is stored as an independent trace under
 `A2E_PROJECT_NAME`.
+
+When selected through A2E, non-sandbox datasets run Harness on the host and
+may expose dataset `AgentBinding` tools through an authenticated loopback
+bridge. Terminal/SWE datasets run the complete headless Harness profile and
+this plugin inside the task container with native tools enabled. Set
+`A2E_DEEPSEEK_DISABLE_BUILTIN_TOOLS=1` only for a deliberate ablation.
 
 ## Install in a Harness profile
 
@@ -86,7 +96,8 @@ uses tools, `TOOL` children sharing its trace ID.
 | `A2E_DEEPSEEK_MONITOR_ENABLED` | `true` | Set to `false` to disable the Cordis plugin |
 | `A2E_DEEPSEEK_CAPTURE_CONTENT` | `true` | Set to `false` to omit prompts, tool arguments/results, and error text |
 | `A2E_DEEPSEEK_MAX_ATTRIBUTE_LENGTH` | `262144` | Per-attribute character safety limit |
-| `A2E_DEEPSEEK_BINDING_CONFIG` | unset | Runner-owned file that exposes A2E `AgentBinding` tools |
+| `A2E_DEEPSEEK_BINDING_CONFIG` | unset | Host-runner file that exposes A2E `AgentBinding` tools |
+| `A2E_DEEPSEEK_DISABLE_BUILTIN_TOOLS` | unset | Runner-only ablation flag; native tools are enabled by default |
 
 Standard `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`,
 `OTEL_EXPORTER_OTLP_ENDPOINT`, and `OTEL_EXPORTER_OTLP_HEADERS` are also
@@ -97,15 +108,14 @@ Complete content capture is enabled because trajectory evaluation needs model
 and tool content. Disable it for sensitive tasks. API credentials are not part
 of Harness session events and are never read by this plugin.
 
-### Known attribute-count limit
+### Attribute-count limit
 
-The JavaScript OpenTelemetry provider currently keeps its standard default of
-128 attributes per span, matching the provider behavior used by the other A2E
-agent paths. Long model histories are flattened into message attributes and can
-therefore exceed this count; later attributes may be omitted by the SDK. The
-cross-agent limit should be agreed and changed centrally rather than raised by
-this adapter alone. `A2E_DEEPSEEK_MAX_ATTRIBUTE_LENGTH` only bounds the length
-of each individual value and does not change the 128-attribute count.
+The JavaScript provider defaults to 10,000 attributes per span, matching A2E's
+shared Python OpenInference provider so long flattened histories retain their
+later model outputs. Standard OpenTelemetry overrides are honored in order:
+`OTEL_SPAN_ATTRIBUTE_COUNT_LIMIT`, then `OTEL_ATTRIBUTE_COUNT_LIMIT`, then the
+A2E default. `A2E_DEEPSEEK_MAX_ATTRIBUTE_LENGTH` independently bounds each
+individual value.
 
 ## Verification
 

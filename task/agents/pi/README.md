@@ -1,32 +1,23 @@
 # ageneval-task-agent-pi
 
-A dataset-agnostic A2E runner for the Pi coding-agent CLI.
+This package registers Pi Coding Agent as A2E's `--agent pi` runner. Pi owns
+the model loop and its tools; A2E supplies the task, parent trace context,
+collector configuration, storage, and evaluator.
 
-## Architecture
+## Execution model
 
-The integration has three layers:
+- For non-sandbox datasets (QA and host-side tool tasks), Pi runs on the host.
+  If the dataset exposes `AgentBinding` tools, a short-lived authenticated
+  loopback bridge adapts those dataset APIs into Pi function tools.
+- For Docker datasets (Terminal-Bench and SWE-Bench), A2E builds a cached
+  derived task image and runs the complete Pi CLI inside that container. Pi's
+  native `bash`, `read`, `edit`, and `write` tools operate directly on the
+  benchmark working tree. No host tool bridge is used for this path.
+- Native tools are enabled by default because they are part of the evaluated
+  Harness. Set `A2E_PI_DISABLE_BUILTIN_TOOLS=1` only for controlled comparison
+  runs.
 
-```text
-task/agents/pi/agent.py
-  PiAgent: launches Pi and adapts A2E AgentBinding tools
-
-monitor/instrumentation-js/a2e-pi-monitor/
-  Pi extensions: AGENT / LLM / TOOL spans -> OTLP -> A2E
-
-task/runners/.../registry.py
-  registers --agent pi for the normal experiment CLI
-```
-
-Pi owns the model loop and native function calls. The Python runner exposes the
-selected dataset's existing `AgentBinding` tools through a short-lived,
-token-protected loopback bridge. Span capture remains inside Pi, so the runner
-uses `framework="none"` and needs no Python model instrumentor.
-
-## Trace and experiment linking
-
-`run_experiment.py` wraps each sample in an A2E `CHAIN` span. `PiAgent` passes
-that span's W3C `traceparent` and experiment project name to the Pi subprocess.
-The monitor uses them when it creates the Pi `AGENT` span:
+The monitor extension emits the hierarchy A2E already understands:
 
 ```text
 [CHAIN] Task: task_fn
@@ -35,90 +26,58 @@ The monitor uses them when it creates the Pi `AGENT` span:
     [TOOL] pi.tool <name>
 ```
 
-After Pi exits, the runner polls the experiment project until the trace's span
-set is stable. It then returns the LLM count and tool calls in `TaskTrace`, with
-the same trace ID that A2E stores on the experiment run. This avoids returning a
-partial trajectory when the collector exposes the root span before its
-children.
+The runner propagates the experiment's W3C `traceparent` into Pi and waits for
+the collector's span set to stabilize before returning `TaskTrace`. Monitor
+and export failures are isolated from Pi so observation does not alter the
+Agent run.
 
-## AgentBinding and Docker tools
+## Provider configuration
 
-When a binding declares tools, the runner writes their OpenAI-style schemas to
-a temporary config. The package's `a2e-binding-tools` extension registers them
-as native Pi function tools and forwards each call to a loopback-only Python
-server. That server calls the existing contract:
-
-```python
-binding.tool_executor(name, arguments, task.initial_state)
-```
-
-The bridge listens only on `127.0.0.1`, uses a random bearer token, exists for
-one task, and never contains provider credentials.
-
-For Terminal-Bench, `task.initial_state` contains the live Docker sandbox. Its
-`bash` and `str_replace_editor` binding tools therefore operate directly in the
-published Linux image. Pi stays on the host because the images need not contain
-Node.js; benchmark files are not copied to the host. The official held-out
-verifier scores the same container before cleanup.
-
-## Configuration
+The runner accepts `--model`, `--api-key`, and `--api-base`. A custom OpenAI-
+compatible base URL is represented by a temporary Pi `models.json`; the API
+key is passed through an environment placeholder and is never written to the
+repository or persisted in A2E.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `A2E_PI_CLI` | `pi` or the vendored CLI | Pi executable or command |
-| `A2E_PI_MONITOR` | vendored monitor path | Pi extension package |
+| `A2E_PI_CLI` | vendored Pi CLI | Pi executable override |
 | `A2E_PI_DEADLINE` | `600` | whole-run deadline in seconds |
-| `PI_PROVIDER` | inferred from API-key env vars | Pi provider |
-| `A2E_MODEL` | `qwen-plus` | model when `--model` is omitted |
+| `A2E_PI_DISABLE_BUILTIN_TOOLS` | unset | disable Pi built-ins when nonempty |
+| `A2E_HARNESS_NODE_IMAGE` | `node:22-bullseye-slim` | Linux runtime builder |
 
-Provider credentials use Pi's normal variables such as `DEEPSEEK_API_KEY`,
-`OPENAI_API_KEY`, and `ANTHROPIC_API_KEY`.
+Pi 0.84.1 has no stable CLI maximum-turn option, so the wall-clock deadline is
+the safety bound.
 
-## Run
+## Run a stored Docker benchmark
 
-Start A2E with the intended working directory/database, then use the normal
-experiment CLI:
+Start A2E, then run from `task/`:
 
 ```bash
-cd task
-DEEPSEEK_API_KEY=... \
+A2E_TB2_TASK=fix-git \
 uv run --frozen python examples/run_experiment.py \
-  --dataset terminal-bench-2.1 \
+  --dataset terminal-bench-2 \
   --agent pi \
-  --model deepseek-v4-pro \
+  --model qwen3.6-plus \
+  --api-base https://dashscope.aliyuncs.com/compatible-mode/v1 \
   --evaluators tb_resolved \
   --n 1
 ```
 
-Open `http://localhost:6006/datasets` to view the experiment and its complete
-span tree. The isolated dataset, experiment, run output, evaluator annotation,
-trace ID, and spans are persisted in A2E's configured database.
+The isolated dataset, experiment run, evaluator result, trace ID, and complete
+span tree are stored in the configured A2E database.
 
-## Test
+## Tests
 
 ```bash
 cd task
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen --package ageneval-task-agent-pi pytest agents/pi/tests -q
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen pytest agents/pi/tests -q
 
 cd ../monitor/instrumentation-js/a2e-pi-monitor
 npm run verify
 ```
 
-The Python tests cover the token-protected binding bridge and both flattened
-and nested A2E span attribute shapes. The TypeScript suite covers standalone
-`pi-agent-core`, Pi `AgentSession`, AGENT/LLM/TOOL hierarchy, traceparent
-propagation, content controls, and OTLP transport.
-
-## Known limitations
-
-- Pi 0.84.1 exposes no CLI option for a maximum model/tool turn count. The
-  runner's effective safety bound is `A2E_PI_DEADLINE` (600 seconds by
-  default); the `max_turns` compatibility field cannot currently be enforced
-  by the subprocess CLI. Follow-up runs reached 45-54 LLM calls and completed
-  normally before that deadline.
-- Pi 0.84.1 does not expose usage data for every internal retry call, so those
-  retry LLM spans can lack token counts even though their inputs are captured.
-- Binding fidelity is dataset-owned. Pi calls exactly the schemas and executor
-  supplied by the dataset; incomplete stubs or a mismatch between an upstream
-  sample and its binding can produce a low score without implying a missing
-  monitor span.
+The Python suite covers runner credential/config handling, the authenticated
+host binding bridge, and A2E span parsing. The TypeScript suite exercises both
+`pi-agent-core` and a real Pi coding-agent `AgentSession`, including model and
+native tool spans. See [VALIDATION.md](./VALIDATION.md) for stored real-task
+results.
