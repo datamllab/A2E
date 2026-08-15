@@ -21,7 +21,7 @@ faux.setResponses([
     fauxToolCall("read", { path: "package.json" }, { id: "core-smoke-read" }),
     { stopReason: "toolUse" },
   ),
-  fauxAssistantMessage("The package name is a2e-pi-monitor."),
+  fauxAssistantMessage("The package name is openinference-instrumentation-pi."),
 ]);
 
 const ReadParameters = Type.Object({ path: Type.String() });
@@ -32,7 +32,7 @@ const readTool: AgentTool<typeof ReadParameters, { path: string }> = {
   parameters: ReadParameters,
   async execute(_toolCallId, params) {
     return {
-      content: [{ type: "text", text: '{"name":"a2e-pi-monitor"}' }],
+      content: [{ type: "text", text: '{"name":"openinference-instrumentation-pi"}' }],
       details: { path: params.path },
     };
   },

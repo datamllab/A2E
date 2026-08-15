@@ -4,7 +4,7 @@ Dataset-agnostic: consumes an ``AgentBinding`` and drives any benchmark by
 spawning the Pi CLI as a subprocess. A loopback bridge registers the binding's
 tools as native Pi function tools and delegates execution back to Python.
 
-Pi's ``a2e-pi-monitor`` extension (loaded via ``--extension``) captures
+Pi's ``openinference-instrumentation-pi`` extension (loaded via ``--extension``) captures
 AGENT / LLM / TOOL spans and exports them via OTLP to A2E independently.
 """
 
@@ -235,7 +235,7 @@ def _resolve_pi_cli() -> str:
     Checks, in order:
     1. ``A2E_PI_CLI`` env var (absolute path or full command).
     2. ``pi`` on PATH.
-    3. Falls back to the vendored CLI under the a2e-pi-monitor node_modules.
+    3. Falls back to the vendored CLI under the Pi instrumentation node_modules.
     """
     custom = os.environ.get("A2E_PI_CLI")
     if custom:
@@ -245,7 +245,12 @@ def _resolve_pi_cli() -> str:
         return "pi"
 
     # Vendored fallback: relative to the monitor package
-    monitor_root = _repo_root() / "monitor" / "instrumentation-js" / "a2e-pi-monitor"
+    monitor_root = (
+        _repo_root()
+        / "monitor"
+        / "instrumentation-js"
+        / "openinference-instrumentation-pi"
+    )
     cli_js = monitor_root / "node_modules" / "@earendil-works" / "pi-coding-agent" / "dist" / "cli.js"
     if cli_js.is_file():
         return f"node {cli_js}"
@@ -253,12 +258,12 @@ def _resolve_pi_cli() -> str:
     raise RuntimeError(
         "Pi CLI not found. Set A2E_PI_CLI to the pi binary path, "
         "install pi globally (npm install -g @earendil-works/pi-coding-agent), "
-        "or ensure the a2e-pi-monitor devDependencies are installed."
+        "or ensure the Pi instrumentation devDependencies are installed."
     )
 
 
 def _resolve_monitor_extension() -> str | None:
-    """Return the absolute path to the a2e-pi-monitor package directory.
+    """Return the absolute path to the Pi instrumentation package directory.
 
     Required so Pi loads the monitor extension and exports traces to A2E.
     """
@@ -266,7 +271,12 @@ def _resolve_monitor_extension() -> str | None:
     if custom:
         return custom
 
-    monitor_root = _repo_root() / "monitor" / "instrumentation-js" / "a2e-pi-monitor"
+    monitor_root = (
+        _repo_root()
+        / "monitor"
+        / "instrumentation-js"
+        / "openinference-instrumentation-pi"
+    )
     if monitor_root.is_dir():
         return str(monitor_root)
 
@@ -279,7 +289,7 @@ class PiAgent(AgentRunner):
 
     Pi is a Node.js agent harness.  This runner spawns ``pi`` (or a vendored
     CLI) as a subprocess and captures its stdout as the final answer.  Pi's
-    own ``a2e-pi-monitor`` extension handles OTel trace export — no Python
+    own ``openinference-instrumentation-pi`` extension handles OTel trace export — no Python
     instrumentor is needed (``framework="none"``).
     """
 
@@ -308,7 +318,7 @@ class PiAgent(AgentRunner):
             _repo_root()
             / "monitor"
             / "instrumentation-js"
-            / "a2e-pi-monitor"
+            / "openinference-instrumentation-pi"
         )
         return await asyncio.to_thread(
             prepare_node_harness_image,
@@ -359,7 +369,7 @@ class PiAgent(AgentRunner):
     async def _collect_span_stats(self, traceparent: str | None) -> tuple[int, list[ToolCall]]:
         """Return ``(turns, tool_calls)`` by reading Pi's spans back from A2E.
 
-        Pi's ``a2e-pi-monitor`` extension already exports AGENT / LLM / TOOL
+        Pi's ``openinference-instrumentation-pi`` extension already exports AGENT / LLM / TOOL
         spans to A2E. Rather than duplicating that bookkeeping in the Python
         runner, query the spans API for this trace and count LLM spans as
         ``turns`` and TOOL spans as ``tool_calls``.

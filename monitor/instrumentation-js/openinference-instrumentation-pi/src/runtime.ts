@@ -130,7 +130,7 @@ export function createA2EPiMonitor(env: PiMonitorEnvironment = process.env): PiT
     resource: resourceFromAttributes({
       "openinference.project.name": config.projectName,
       "service.name": "pi-agent",
-      "service.version": "a2e-pi-monitor/0.1.0",
+      "service.version": "openinference-instrumentation-pi/0.1.0",
     }),
     // OTel defaults to 128 attributes per span, which long coding-agent
     // conversations exceed. Match A2E's shared OpenInference provider while
@@ -138,7 +138,7 @@ export function createA2EPiMonitor(env: PiMonitorEnvironment = process.env): PiT
     spanLimits: { attributeCountLimit: resolveSpanAttributeCountLimit(env) },
     spanProcessors: [processor],
   });
-  const tracer = provider.getTracer("a2e-pi-monitor", "0.1.0");
+  const tracer = provider.getTracer("openinference-instrumentation-pi", "0.1.0");
   return new PiTraceMonitor(tracer, {
     captureContent: config.captureContent,
     maxAttributeLength: config.maxAttributeLength,

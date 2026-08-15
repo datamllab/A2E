@@ -12,7 +12,7 @@ export default class A2EDeepSeekHarnessMonitorPlugin {
       try {
         operation();
       } catch (error) {
-        ctx.logger.warn(`a2e-deepseek-harness-monitor: ${String(error)}`);
+        ctx.logger.warn(`openinference-instrumentation-deepseek-harness: ${String(error)}`);
       }
     };
 
@@ -38,7 +38,9 @@ export default class A2EDeepSeekHarnessMonitorPlugin {
       try {
         await monitor.shutdown();
       } catch (error) {
-        ctx.logger.warn(`a2e-deepseek-harness-monitor: shutdown failed: ${String(error)}`);
+        ctx.logger.warn(
+          `openinference-instrumentation-deepseek-harness: shutdown failed: ${String(error)}`,
+        );
       }
     }, "A2E DeepSeek Harness monitor");
   }

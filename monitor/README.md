@@ -10,8 +10,9 @@
 - `instrumentation/openinference-instrumentation-*` — **L3** 各框架/SDK 的自动埋点
   (claude-agent-sdk / langchain / openai / smolagents / crewai / llama-index /
   google-adk / agno / autogen-agentchat / anthropic / openai-agents)
-- `instrumentation-js/a2e-pi-monitor/` — Pi Agent 的 TypeScript 扩展埋点；生成同一套
-  OpenInference span 并通过 OTLP/HTTP 写入 A2E
+- `instrumentation-js/openinference-instrumentation-pi/` — Pi Agent 的 TypeScript 扩展埋点
+- `instrumentation-js/openinference-instrumentation-deepseek-harness/` — DeepSeek Harness 的 TypeScript
+  Cordis 插件埋点；二者都生成 OpenInference span 并通过 OTLP/HTTP 写入 A2E
 
 ---
 
@@ -22,7 +23,7 @@
 ### 2026-08-10 — Pi Agent 轨迹采集
 
 Pi 是 Node.js/TypeScript Agent Harness，因此不使用 Python monkey patch，而通过其官方事件 API
-接入。`instrumentation-js/a2e-pi-monitor` 分为两层：底层通过 `pi-agent-core` 的
+接入。`instrumentation-js/openinference-instrumentation-pi` 分为两层：底层通过 `pi-agent-core` 的
 `Agent.subscribe()` 监听公共 agent/message/tool 生命周期；上层以 Pi Package 扩展形式通过
 `pi-coding-agent` 的 `ExtensionAPI.on()` 复用这些事件并补充 prompt、context、provider 和 session
 信息，生成 `AGENT` 根 span 以及 `LLM`、`TOOL` 子 span。
@@ -44,7 +45,7 @@ Pi 是 Node.js/TypeScript Agent Harness，因此不使用 Python monkey patch，
   父子关系与状态正确，token、工具输入输出和最终答案齐全；凭据未写入仓库。
 
 安装、配置、验证命令和 smoke test 见
-[`instrumentation-js/a2e-pi-monitor/README.md`](./instrumentation-js/a2e-pi-monitor/README.md)。
+[`instrumentation-js/openinference-instrumentation-pi/README.md`](./instrumentation-js/openinference-instrumentation-pi/README.md)。
 
 ### 2026-06-29 — SKILL span 扩展到 agno
 

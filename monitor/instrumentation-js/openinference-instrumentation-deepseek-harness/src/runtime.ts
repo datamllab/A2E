@@ -128,18 +128,21 @@ export function createA2EDeepSeekMonitor(
     resource: resourceFromAttributes({
       "openinference.project.name": config.projectName,
       "service.name": "deepseek-harness",
-      "service.version": "a2e-deepseek-harness-monitor/0.1.0",
+      "service.version": "openinference-instrumentation-deepseek-harness/0.1.0",
     }),
     spanLimits: { attributeCountLimit: resolveSpanAttributeCountLimit(env) },
     spanProcessors: [processor],
   });
-  return new DeepSeekTraceMonitor(provider.getTracer("a2e-deepseek-harness-monitor", "0.1.0"), {
-    captureContent: config.captureContent,
-    maxAttributeLength: config.maxAttributeLength,
-    ...(parentContext ? { parentContext } : {}),
-    lifecycle: {
-      forceFlush: () => provider.forceFlush(),
-      shutdown: () => provider.shutdown(),
+  return new DeepSeekTraceMonitor(
+    provider.getTracer("openinference-instrumentation-deepseek-harness", "0.1.0"),
+    {
+      captureContent: config.captureContent,
+      maxAttributeLength: config.maxAttributeLength,
+      ...(parentContext ? { parentContext } : {}),
+      lifecycle: {
+        forceFlush: () => provider.forceFlush(),
+        shutdown: () => provider.shutdown(),
+      },
     },
-  });
+  );
 }

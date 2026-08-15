@@ -45,7 +45,7 @@ def _resolve_dsh_command() -> list[str]:
         _repo_root()
         / "monitor"
         / "instrumentation-js"
-        / "a2e-deepseek-harness-monitor"
+        / "openinference-instrumentation-deepseek-harness"
         / "node_modules"
         / "@deepseek-ai"
         / "dsh"
@@ -274,7 +274,7 @@ class DeepSeekHarnessAgent(AgentRunner):
             _repo_root()
             / "monitor"
             / "instrumentation-js"
-            / "a2e-deepseek-harness-monitor"
+            / "openinference-instrumentation-deepseek-harness"
         )
         setup = (
             "corepack enable && DSH_HOME=/opt/a2e-dsh "

@@ -438,7 +438,7 @@ def _build_pi(*, binding: Any, **kw: Any):
     """Build the generic PiAgent for any binding.
 
     Pi is a Node.js coding-agent harness; this runner spawns its CLI as a
-    subprocess. Pi's own ``a2e-pi-monitor`` extension handles OTel trace
+    subprocess. Pi's own ``openinference-instrumentation-pi`` extension handles OTel trace
     export, so no Python instrumentor is needed (framework="none").
     """
     from ageneval.task.agents.pi import PiAgent

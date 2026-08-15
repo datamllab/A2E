@@ -72,7 +72,7 @@ span tree are stored in the configured A2E database.
 cd task
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen pytest agents/pi/tests -q
 
-cd ../monitor/instrumentation-js/a2e-pi-monitor
+cd ../monitor/instrumentation-js/openinference-instrumentation-pi
 npm run verify
 ```
 

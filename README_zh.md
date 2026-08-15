@@ -191,7 +191,8 @@ OpenTelemetry / OpenInference 轨迹写入 server。对已支持的 harness，�
 | <a id="harness-autogen-agentchat"></a>`autogen-agentchat` | `task/agents/autogen_agentchat` | `monitor/instrumentation/openinference-instrumentation-autogen-agentchat` |
 | <a id="harness-claude-sdk"></a>`claude-sdk` | `task/agents/claude_sdk` | `monitor/instrumentation/openinference-instrumentation-anthropic` |
 | <a id="harness-openai-agents"></a>`openai-agents` | `task/agents/openai_agents` | `monitor/instrumentation/openinference-instrumentation-openai-agents` |
-| <a id="harness-pi"></a>`pi` | `task/agents/pi` | `monitor/instrumentation-js/a2e-pi-monitor` |
+| <a id="harness-pi"></a>`pi` | `task/agents/pi` | `monitor/instrumentation-js/openinference-instrumentation-pi` |
+| <a id="harness-deepseek-harness"></a>`deepseek-harness` | `task/agents/deepseek_harness` | `monitor/instrumentation-js/openinference-instrumentation-deepseek-harness` |
 
 Pi 同时支持两种接入：裸 `pi-agent-core` 通过公开的 `Agent.subscribe()` API
 进行打桩，完整 `pi-coding-agent` 则通过非侵入式 Package 扩展进行监控。

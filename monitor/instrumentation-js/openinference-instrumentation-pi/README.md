@@ -61,7 +61,7 @@ the core Agent. Then attach and shut down the instrumentation explicitly:
 
 ```ts
 import { Agent } from "@earendil-works/pi-agent-core";
-import { instrumentPiAgent } from "a2e-pi-monitor";
+import { instrumentPiAgent } from "openinference-instrumentation-pi";
 
 const agent = new Agent({ /* model, streamFn, tools, ... */ });
 const tracing = instrumentPiAgent(agent, { cwd: process.cwd() });
@@ -86,7 +86,7 @@ and session shutdown.
    script automatically):
 
    ```bash
-   cd monitor/instrumentation-js/a2e-pi-monitor
+   cd monitor/instrumentation-js/openinference-instrumentation-pi
    npm install --ignore-scripts
    npm run build
    ```
@@ -100,14 +100,14 @@ and session shutdown.
 3. Install this local Pi Package (use the absolute path on your machine):
 
    ```bash
-   pi install /absolute/path/to/A2E/monitor/instrumentation-js/a2e-pi-monitor
+   pi install /absolute/path/to/A2E/monitor/instrumentation-js/openinference-instrumentation-pi
    ```
 
    To enable it only for the current project, add `-l`. To try it for one run
    without changing Pi settings, use:
 
    ```bash
-   pi -e /absolute/path/to/A2E/monitor/instrumentation-js/a2e-pi-monitor
+   pi -e /absolute/path/to/A2E/monitor/instrumentation-js/openinference-instrumentation-pi
    ```
 
 4. Configure the collector and run Pi:
@@ -159,7 +159,7 @@ sensitive.
 ## Development verification
 
 ```bash
-cd monitor/instrumentation-js/a2e-pi-monitor
+cd monitor/instrumentation-js/openinference-instrumentation-pi
 npm install --ignore-scripts
 npm run verify
 ```

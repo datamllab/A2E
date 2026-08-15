@@ -68,3 +68,35 @@ Docker. No Windows-only code is part of the deliverable.
 Earlier host-side QA and dataset-tool runs remain valid. The corrected
 architecture only changes Docker datasets; non-sandbox datasets continue to
 run DSH on the host.
+
+## Host QA matrix
+
+On 2026-08-15, all 15 datasets whose registry kind is `qa` were rerun on the
+host with `deepseek-v4-pro`, one reproducibly sampled task per dataset
+(`sample_seed=20260816`). Every result has `task_output.status=ok`, one CHAIN,
+one closed AGENT root, and the listed child spans in
+`F:\A2E\.a2e-data-containerized\a2e.db`.
+
+| Dataset | Experiment row | LLM | TOOL | Evaluator result |
+| --- | ---: | ---: | ---: | --- |
+| MMLU | 36 | 1 | 0 | `mc_letter=1` |
+| GSM8K | 59 | 1 | 0 | `numeric_match=1` |
+| HumanEval | 60 | 1 | 0 | `substring=0` |
+| PersistBench | 61 | 1 | 0 | `substring=0` |
+| GDPVal | 73 | 29 | 29 | `llm_judge=0` |
+| GPQA | 62 | 1 | 0 | `mc_letter=0` |
+| MMLU-Pro | 63 | 1 | 0 | `mc_letter=1` |
+| ARC-Challenge | 64 | 1 | 0 | `mc_letter=1` |
+| TruthfulQA | 65 | 1 | 0 | `mc_letter=1` |
+| BBH | 66 | 1 | 0 | `exact_match=1` |
+| AGIEval | 67 | 1 | 0 | `mc_letter=1` |
+| CommonsenseQA | 68 | 1 | 0 | `mc_letter=1` |
+| HellaSwag | 69 | 1 | 0 | `mc_letter=1` |
+| OpenBookQA | 70 | 1 | 0 | `mc_letter=1` |
+| MATH | 71 | 1 | 0 | `numeric_match=0` |
+
+GDPVal is registry-classified as QA but exercises the Harness as a long,
+multi-step artifact agent. It completed with `A2E_DEEPSEEK_DEADLINE=1200` and
+used native host tools; two failed tool attempts were retained as ERROR TOOL
+spans while the overall AGENT completed successfully. Evaluator scores measure
+the sampled model's answer quality, not monitor correctness.

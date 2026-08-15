@@ -41,7 +41,7 @@ describe("pi-agent-core integration", () => {
         fauxToolCall("read", { path: "package.json" }, { id: "core-read-1" }),
         { stopReason: "toolUse" },
       ),
-      fauxAssistantMessage("The package name is a2e-pi-monitor."),
+      fauxAssistantMessage("The package name is openinference-instrumentation-pi."),
     ]);
 
     const ReadParameters = Type.Object({ path: Type.String() });
@@ -52,7 +52,7 @@ describe("pi-agent-core integration", () => {
       parameters: ReadParameters,
       async execute(_toolCallId, params) {
         return {
-          content: [{ type: "text", text: '{"name":"a2e-pi-monitor"}' }],
+          content: [{ type: "text", text: '{"name":"openinference-instrumentation-pi"}' }],
           details: { path: params.path },
         };
       },
@@ -128,7 +128,10 @@ describe("pi-agent-core integration", () => {
     assert.equal(llmSpans[0]?.attributes["llm.input_messages.1.message.role"], "user");
     assert.equal(toolSpan.attributes["tool.id"], "core-read-1");
     assert.equal(toolSpan.attributes["tool.name"], "read");
-    assert.match(String(toolSpan.attributes["output.value"]), /a2e-pi-monitor/);
+    assert.match(
+      String(toolSpan.attributes["output.value"]),
+      /openinference-instrumentation-pi/,
+    );
     assert.equal(toolSpan.parentSpanContext?.spanId, agentSpan.spanContext().spanId);
     for (const llmSpan of llmSpans) {
       assert.equal(llmSpan.parentSpanContext?.spanId, agentSpan.spanContext().spanId);

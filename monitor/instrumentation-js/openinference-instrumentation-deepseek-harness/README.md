@@ -47,7 +47,7 @@ this plugin inside the task container with native tools enabled. Set
 Build the local package:
 
 ```bash
-cd monitor/instrumentation-js/a2e-deepseek-harness-monitor
+cd monitor/instrumentation-js/openinference-instrumentation-deepseek-harness
 npm install --ignore-scripts
 npm run build
 ```
@@ -57,10 +57,17 @@ package's `dsh.bundle.patch` declaration makes the CLI add the Cordis plugin to
 the profile automatically:
 
 ```bash
-dsh plugin --profile headless add /absolute/path/to/A2E/monitor/instrumentation-js/a2e-deepseek-harness-monitor
+dsh plugin --profile headless add /absolute/path/to/A2E/monitor/instrumentation-js/openinference-instrumentation-deepseek-harness
 ```
 
-Confirm the composed profile contains `a2e-deepseek-harness-monitor`:
+If the profile previously installed this adapter under its pre-alignment name,
+remove the stale dependency once before adding the renamed package:
+
+```bash
+dsh plugin --profile headless remove a2e-deepseek-harness-monitor
+```
+
+Confirm the composed profile contains `openinference-instrumentation-deepseek-harness`:
 
 ```bash
 dsh --profile headless --dump-config

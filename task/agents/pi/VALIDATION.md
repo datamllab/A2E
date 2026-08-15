@@ -58,3 +58,37 @@ The same runner was previously exercised against all non-Docker A2E datasets.
 Those host-side QA/tool runs remain valid because the corrected architecture
 changes only sandbox datasets: host datasets stay on the host, while complete
 coding Harnesses move into Docker for Terminal/SWE tasks.
+
+## Host QA matrix
+
+On 2026-08-15, all 15 datasets whose registry kind is `qa` were rerun on the
+host with `deepseek-v4-pro`, one reproducibly sampled task per dataset
+(`sample_seed=20260816`). Every selected result below has `task_output.status=ok`,
+one CHAIN, one closed AGENT root, and the listed child spans in
+`F:\A2E\.a2e-data-containerized\a2e.db`.
+
+| Dataset | Experiment row | LLM | TOOL | Evaluator result |
+| --- | ---: | ---: | ---: | --- |
+| MMLU | 32 | 1 | 0 | `mc_letter=1` |
+| GSM8K | 45 | 1 | 0 | `numeric_match=1` |
+| HumanEval | 46 | 1 | 0 | `substring=0` |
+| PersistBench | 47 | 2 | 1 | `substring=0` |
+| GDPVal | 72 | 28 | 29 | `llm_judge=0` |
+| GPQA | 49 | 1 | 0 | `mc_letter=0` |
+| MMLU-Pro | 50 | 1 | 0 | `mc_letter=0` |
+| ARC-Challenge | 51 | 1 | 0 | `mc_letter=1` |
+| TruthfulQA | 52 | 1 | 0 | `mc_letter=1` |
+| BBH | 53 | 1 | 0 | `exact_match=0` |
+| AGIEval | 54 | 1 | 0 | `mc_letter=1` |
+| CommonsenseQA | 55 | 1 | 0 | `mc_letter=1` |
+| HellaSwag | 56 | 1 | 0 | `mc_letter=1` |
+| OpenBookQA | 57 | 1 | 0 | `mc_letter=1` |
+| MATH | 58 | 1 | 0 | `numeric_match=0` |
+
+GDPVal is registry-classified as QA but is a long, multi-step artifact task.
+The default 600-second run (experiment row 48) timed out after exporting 20
+LLM and 20 TOOL children, before the AGENT root could flush. Repeating the same
+sample with `A2E_PI_DEADLINE=1200` completed in 28 turns and produced the valid
+row 72 above. The retained failed row documents timeout behavior; it is not
+counted as the acceptance result. Evaluator scores measure the sampled model's
+answer quality, not monitor correctness.

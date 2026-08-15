@@ -68,7 +68,7 @@ uv run --frozen python examples/run_experiment.py \
 cd task
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --frozen pytest agents/deepseek_harness/tests -q
 
-cd ../monitor/instrumentation-js/a2e-deepseek-harness-monitor
+cd ../monitor/instrumentation-js/openinference-instrumentation-deepseek-harness
 npm run verify
 ```
 

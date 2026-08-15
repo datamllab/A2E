@@ -1,5 +1,5 @@
 {
-  "name": "a2e-pi-monitor",
+  "name": "openinference-instrumentation-pi",
   "version": "0.1.0",
   "description": "A2E OpenInference tracing for pi-agent-core and the Pi coding agent",
   "type": "module",

@@ -6,7 +6,7 @@ import { createA2EPiMonitor } from "../src/runtime.js";
 
 function debug(error: unknown): void {
   if (["1", "true", "yes", "on"].includes((process.env.A2E_PI_MONITOR_DEBUG ?? "").toLowerCase())) {
-    console.warn("[a2e-pi-monitor] tracing error (Pi execution continues):", error);
+    console.warn("[openinference-instrumentation-pi] tracing error (Pi execution continues):", error);
   }
 }
 

@@ -55,7 +55,7 @@
   disabled: !!js Boolean(process.env.A2E_DEEPSEEK_DISABLE_BUILTIN_TOOLS)
 
 - insert:
-    - id: a2e-deepseek-harness-monitor
-      name: a2e-deepseek-harness-monitor
+    - id: openinference-instrumentation-deepseek-harness
+      name: openinference-instrumentation-deepseek-harness
       inject: [sessions, tools]
       disabled: !!js "['0', 'false', 'no', 'off'].includes((process.env.A2E_DEEPSEEK_MONITOR_ENABLED ?? 'true').trim().toLowerCase())"

@@ -1,5 +1,5 @@
 {
-  "name": "a2e-deepseek-harness-monitor",
+  "name": "openinference-instrumentation-deepseek-harness",
   "version": "0.1.0",
   "description": "A2E OpenInference tracing for DeepSeek Harness",
   "type": "module",

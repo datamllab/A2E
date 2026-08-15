@@ -66,7 +66,7 @@ node --env-file=C:\Users\you\.a2e-pi-test.env scripts\live-smoke.mjs
 For an interactive exploratory test instead, launch Pi with the local package:
 
 ```bash
-pi -e /absolute/path/to/A2E/monitor/instrumentation-js/a2e-pi-monitor
+pi -e /absolute/path/to/A2E/monitor/instrumentation-js/openinference-instrumentation-pi
 ```
 
 Ask Pi to perform both a model-only response and a tool action, for example:
