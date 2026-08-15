@@ -25,6 +25,7 @@ members = [
     "ageneval-task-agent-google-adk",
     "ageneval-task-agent-llama-index",
     "ageneval-task-agent-openai-agents",
+    "ageneval-task-agent-pi",
     "ageneval-task-agent-smolagents",
     "ageneval-task-claude-sdk-agent",
     "ageneval-task-core",
@@ -637,6 +638,17 @@ requires-dist = [
     { name = "openai-agents", specifier = ">=0.2.6" },
     { name = "openinference-instrumentation-openai-agents", editable = "../monitor/instrumentation/openinference-instrumentation-openai-agents" },
 ]
+
+[[package]]
+name = "ageneval-task-agent-pi"
+version = "0.1.0"
+source = { editable = "agents/pi" }
+dependencies = [
+    { name = "ageneval-task-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "ageneval-task-core", editable = "packages/ageneval-task-core" }]
 
 [[package]]
 name = "ageneval-task-agent-smolagents"

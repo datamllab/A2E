@@ -434,6 +434,18 @@ def _build_crewai(*, binding: Any, **kw: Any):
     return CrewAIAgent(binding=binding, **{k: v for k, v in kw.items() if k in accepted})
 
 
+def _build_pi(*, binding: Any, **kw: Any):
+    """Build the generic PiAgent for any binding.
+
+    Pi is a Node.js coding-agent harness; this runner spawns its CLI as a
+    subprocess. Pi's own ``a2e-pi-monitor`` extension handles OTel trace
+    export, so no Python instrumentor is needed (framework="none").
+    """
+    from ageneval.task.agents.pi import PiAgent
+    accepted = {"model", "api_base", "api_key", "max_turns"}
+    return PiAgent(binding=binding, **{k: v for k, v in kw.items() if k in accepted})
+
+
 def _build_autogen(*, binding: Any, **kw: Any):
     """Build the generic AutogenAgentChatAgent for any binding.
 
@@ -476,6 +488,7 @@ AGENTS: Dict[str, Dict[str, Any]] = {
     "crewai":        {"build": _build_crewai,        "framework": "crewai",        "supports_any_binding": True},
     "autogen-agentchat": {"build": _build_autogen,   "framework": "autogen_agentchat", "supports_any_binding": True, "isolated": True},
     "deepseek-harness": {"build": _build_deepseek_harness, "framework": "none", "supports_any_binding": True},
+    "pi":              {"build": _build_pi,        "framework": "none",              "supports_any_binding": True},
 }
 
 
@@ -491,6 +504,7 @@ _AGENT_GROUP: Dict[str, str] = {
     "claude-sdk": "Vendor agent SDKs",
     "openai-agents": "Vendor agent SDKs",
     "deepseek-harness": "Agent harnesses",
+    "pi": "Agent harnesses",
 }
 
 
