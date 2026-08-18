@@ -1,0 +1,183 @@
+{
+  "task_id": "tau3-demo-colab",
+  "description": "Synthetic tau3-style pair inspired by campaign case study (efficient vs verbose harness).",
+  "runs": [
+    {
+      "label": "langgraph (efficient)",
+      "harness": "langgraph",
+      "example_id": "demo-langgraph",
+      "benchmark": "tau3",
+      "input": {
+        "instruction": "Check whether MMS is enabled on the device and report can_send_mms.",
+        "available_tools": [
+          {"name": "get_device_settings", "description": "Read device network settings"},
+          {"name": "send_test_mms", "description": "Send a test MMS message"}
+        ]
+      },
+      "expected": {
+        "expected_actions": [
+          {"name": "get_device_settings"},
+          {"name": "send_test_mms"}
+        ]
+      },
+      "output": {
+        "task_output": {
+          "status": "ok",
+          "final_answer": "{\"can_send_mms\": true}",
+          "turns": 3
+        }
+      },
+      "spans": [
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:01Z",
+          "attributes": {
+            "llm.token_count.prompt": 820,
+            "llm.token_count.completion": 120,
+            "llm.token_count.total": 940
+          }
+        },
+        {
+          "span_kind": "TOOL",
+          "start_time": "2026-01-01T00:00:02Z",
+          "attributes": {
+            "tool": {"name": "get_device_settings"},
+            "input": {"value": "{}"},
+            "output": {"value": "{\"mms_enabled\": true}"}
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:03Z",
+          "attributes": {
+            "llm.token_count.prompt": 900,
+            "llm.token_count.completion": 90,
+            "llm.token_count.total": 990
+          }
+        },
+        {
+          "span_kind": "TOOL",
+          "start_time": "2026-01-01T00:00:04Z",
+          "attributes": {
+            "tool": {"name": "send_test_mms"},
+            "input": {"value": "{\"to\": \"+1555\"}"},
+            "output": {"value": "{\"sent\": true}"}
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:05Z",
+          "attributes": {
+            "llm.token_count.prompt": 950,
+            "llm.token_count.completion": 40,
+            "llm.token_count.total": 990
+          }
+        }
+      ]
+    },
+    {
+      "label": "crewai (verbose)",
+      "harness": "crewai",
+      "example_id": "demo-crewai",
+      "benchmark": "tau3",
+      "input": {
+        "instruction": "Check whether MMS is enabled on the device and report can_send_mms.",
+        "available_tools": [
+          {"name": "get_device_settings", "description": "Read device network settings"},
+          {"name": "send_test_mms", "description": "Send a test MMS message"}
+        ]
+      },
+      "expected": {
+        "expected_actions": [
+          {"name": "get_device_settings"},
+          {"name": "send_test_mms"}
+        ]
+      },
+      "output": {
+        "task_output": {
+          "status": "ok",
+          "final_answer": "{\"can_send_mms\": true}",
+          "turns": 9
+        }
+      },
+      "spans": [
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:01Z",
+          "attributes": {
+            "llm.token_count.total": 8200
+          }
+        },
+        {
+          "span_kind": "TOOL",
+          "start_time": "2026-01-01T00:00:02Z",
+          "attributes": {
+            "tool": {"name": "get_device_settings"},
+            "input": {"value": "{}"},
+            "output": {"value": "{\"mms_enabled\": true}"}
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:03Z",
+          "attributes": {
+            "llm.token_count.total": 9100
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:04Z",
+          "attributes": {
+            "llm.token_count.total": 8800
+          }
+        },
+        {
+          "span_kind": "TOOL",
+          "start_time": "2026-01-01T00:00:05Z",
+          "attributes": {
+            "tool": {"name": "get_device_settings"},
+            "input": {"value": "{}"},
+            "output": {"value": "{\"mms_enabled\": true}"}
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:06Z",
+          "attributes": {
+            "llm.token_count.total": 8700
+          }
+        },
+        {
+          "span_kind": "TOOL",
+          "start_time": "2026-01-01T00:00:07Z",
+          "attributes": {
+            "tool": {"name": "send_test_mms"},
+            "input": {"value": "{\"to\": \"+1555\"}"},
+            "output": {"value": "{\"sent\": true}"}
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:08Z",
+          "attributes": {
+            "llm.token_count.total": 8600
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:09Z",
+          "attributes": {
+            "llm.token_count.total": 8500
+          }
+        },
+        {
+          "span_kind": "LLM",
+          "start_time": "2026-01-01T00:00:10Z",
+          "attributes": {
+            "llm.token_count.total": 8400
+          }
+        }
+      ]
+    }
+  ]
+}

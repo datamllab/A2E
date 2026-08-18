@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2608.07346"><img src="https://img.shields.io/badge/Paper-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white" alt="Paper"/></a>
   <a href="https://github.com/datamllab/A2E"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
-  <a href="https://colab.research.google.com/github/stevewithjobs/AEP/blob/yuchenyue/notebooks/a2e_quickstart.ipynb"><img src="https://img.shields.io/badge/Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Colab"/></a>
+  <a href="https://https://colab.research.google.com/github/datamllab/A2E/blob/main/notebooks/a2e_quickstart.ipynb"><img src="https://img.shields.io/badge/Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Colab"/></a>
   <a href="https://huggingface.co/papers/2608.07346"><img src="https://img.shields.io/badge/HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="HuggingFace"/></a>
 </p>
 
@@ -42,7 +42,7 @@ A<sup>2</sup>E 与 harness、模型厂商无关，对主流 agent SDK（[OpenAI 
 ## 🎉 更新日志
 
 - **2026-08-12** — 🤗 论文页面已上线 [Hugging Face](https://huggingface.co/papers/2608.07346)。
-- **2026-08-11** — 📓 [Colab quickstart notebook](https://colab.research.google.com/github/stevewithjobs/AEP/blob/yuchenyue/notebooks/a2e_quickstart.ipynb) 已发布，可在浏览器中端到端跑通 A<sup>2</sup>E。
+- **2026-08-11** — 📓 [Colab quickstart notebook](https://https://colab.research.google.com/github/datamllab/A2E/blob/main/notebooks/a2e_quickstart.ipynb) 已发布，可在浏览器中端到端跑通 A<sup>2</sup>E。
 - **2026-08-10** — ✨✨ A<sup>2</sup>E 完整代码库已发布。
 - **2026-08-07** — 📄 A<sup>2</sup>E 预印本已发布于 [arXiv](https://arxiv.org/abs/2608.07346)。
 
