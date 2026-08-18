@@ -42,34 +42,7 @@ Verify (must return **200**):
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" \
-  "https://api.github.com/repos/datamllab/A2E/contents/notebooks/a2e_quickstart.ipynb?ref=main"
+  "https://raw.githubusercontent.com/datamllab/A2E/main/notebooks/a2e_quickstart.ipynb"
 ```
 
----
-
-# Colab 快速上手（公开仓库）
-
-公开仓库 [`datamllab/A2E`](https://github.com/datamllab/A2E) 的 **`main`** 分支。
-
-**Colab 链接（外部用户可直接打开，无需 GitHub 登录）：**
-
-https://colab.research.google.com/github/datamllab/A2E/blob/main/notebooks/a2e_quickstart.ipynb
-
-**第 1 节**自包含 demo，不需要 clone / token / OpenAI。
-
-## 运行
-
-1. 打开上方链接或 README 里的 Colab 徽章  
-2. **运行时 → 全部运行**
-
-## 仍然 404？
-
-说明 `main` 上还没有 `notebooks/` — 维护者执行：
-
-```bash
-bash scripts/publish_colab_datamllab_main.sh
-```
-
-## 备用 — 上传 notebook
-
-`bash scripts/package_colab_share.sh` 打 zip，Colab 里 **上传笔记本** 即可。
+(GitHub REST API may return **403** from rate limits; raw URL **200** is enough.)
