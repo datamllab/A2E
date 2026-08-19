@@ -1,0 +1,65 @@
+{
+  "name": "openinference-instrumentation-pi",
+  "version": "0.1.0",
+  "description": "A2E OpenInference tracing for pi-agent-core and the Pi coding agent",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "pi-package",
+    "opentelemetry",
+    "openinference",
+    "a2e"
+  ],
+  "pi": {
+    "extensions": [
+      "./dist/extensions/a2e-binding-tools.js",
+      "./dist/extensions/a2e-monitor.js"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "test": "npm run build && tsc --outDir test-dist --noEmit false && node --test test-dist/tests/*.test.js",
+    "smoke:core": "npm run build && tsc --outDir test-dist --noEmit false && node test-dist/examples/core-agent.js",
+    "smoke:pi": "npm run build && tsc --outDir test-dist --noEmit false && node test-dist/examples/faux-agent.js",
+    "smoke:live": "node scripts/live-smoke.mjs",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.221.0",
+    "@opentelemetry/resources": "^2.10.0",
+    "@opentelemetry/sdk-trace-base": "^2.10.0",
+    "typebox": "1.3.7"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-agent-core": "0.84.1",
+    "@earendil-works/pi-coding-agent": "0.84.1",
+    "@earendil-works/pi-ai": "0.84.1",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  }
+}

@@ -193,6 +193,12 @@ Supported auto-instrumented agent harnesses:
 | <a id="harness-autogen-agentchat"></a>`autogen-agentchat` | `task/agents/autogen_agentchat` | `monitor/instrumentation/openinference-instrumentation-autogen-agentchat` |
 | <a id="harness-claude-sdk"></a>`claude-sdk`               | `task/agents/claude_sdk`        | `monitor/instrumentation/openinference-instrumentation-anthropic`         |
 | <a id="harness-openai-agents"></a>`openai-agents`         | `task/agents/openai_agents`     | `monitor/instrumentation/openinference-instrumentation-openai-agents`     |
+| <a id="harness-pi"></a>`pi`                               | `task/agents/pi`                | `monitor/instrumentation-js/openinference-instrumentation-pi`             |
+| <a id="harness-deepseek-harness"></a>`deepseek-harness`   | `task/agents/deepseek_harness`  | `monitor/instrumentation-js/openinference-instrumentation-deepseek-harness` |
+
+Pi supports both standalone `pi-agent-core` instrumentation through the public
+`Agent.subscribe()` API and full `pi-coding-agent` monitoring through a
+non-invasive package extension. See the [Pi integration guide](./task/agents/pi/README.md).
 
 Shared OpenInference plumbing also lives under `monitor/openinference-instrumentation`
 and `monitor/openinference-semantic-conventions`. Wiring is selected via

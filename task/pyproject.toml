@@ -92,6 +92,8 @@ members = [
   "agents/agno",
   "agents/llama_index",
   "agents/crewai",
+  "agents/deepseek_harness",
+  "agents/pi",
   "runners",
 ]
 
@@ -142,6 +144,8 @@ ageneval-task-agent-google-adk = { workspace = true }
 ageneval-task-agent-agno = { workspace = true }
 ageneval-task-agent-llama-index = { workspace = true }
 ageneval-task-agent-crewai = { workspace = true }
+ageneval-task-agent-deepseek-harness = { workspace = true }
+ageneval-task-agent-pi = { workspace = true }
 ageneval-task-runners = { workspace = true }
 
 # ─── lint / type / test ──────────────────────────────────────────────────────

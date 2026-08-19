@@ -14,8 +14,8 @@ import os
 import shlex
 import subprocess
 import tempfile
+from collections.abc import Mapping, Sequence
 from pathlib import PurePosixPath
-from typing import Mapping, Sequence
 
 from ageneval.task.sandbox.environment import ExecResult, SandboxEnvironment
 from ageneval.task.sandbox.registry import sandboxenv
@@ -79,7 +79,16 @@ class DockerSandboxEnvironment(SandboxEnvironment):
         # Label every A2E sandbox container so leak-sweep can find them later
         # (see cleanup.sweep_sandbox_containers). Belt-and-suspenders on top of
         # the per-container ``--rm`` + cleanup() finally.
-        run_cmd = ["docker", "run", "-d", "--rm", "--label", A2E_SANDBOX_LABEL]
+        run_cmd = [
+            "docker",
+            "run",
+            "-d",
+            "--rm",
+            "--label",
+            A2E_SANDBOX_LABEL,
+            "--add-host",
+            "host.docker.internal:host-gateway",
+        ]
         if self.user:
             run_cmd += ["--user", self.user]
         if self.entrypoint:

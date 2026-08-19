@@ -19,10 +19,12 @@ dependencies = [
 claude = ["ageneval-task-claude-sdk-agent>=0.1.0"]
 langgraph = ["ageneval-task-langgraph-agent>=0.1.0"]
 smolagents = ["ageneval-task-agent-smolagents>=0.1.0"]
+deepseek-harness = ["ageneval-task-agent-deepseek-harness>=0.1.0"]
 all = [
     "ageneval-task-claude-sdk-agent>=0.1.0",
     "ageneval-task-langgraph-agent>=0.1.0",
     "ageneval-task-agent-smolagents>=0.1.0",
+    "ageneval-task-agent-deepseek-harness>=0.1.0",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -1,29 +1,28 @@
-"""SandboxScoringRunner — wrap any AgentRunner with a per-task sandbox.
+"""Run and score an AgentRunner against a per-task sandbox.
 
 Flow for one sandbox task:
 
-    1. resolve the sandbox spec from ``TaskInput.sandbox`` and start the
-       environment (temp dir / container);
-    2. optional ``setup_fn(task, sandbox)`` prepares the environment (e.g. a
-       local fixture does ``git init``; a docker SWE-bench image needs nothing);
-    3. inject the *live* sandbox into ``initial_state["__sandbox__"]`` so the
-       agent's (unchanged) ``binding.tool_executor`` reaches it, then run the
-       inner agent — it edits code inside the sandbox via bash / editor tools;
-    4. extract the model's diff (``git diff`` in the sandbox's working dir);
-    5. while the sandbox is still alive, run the dataset's ``score_fn`` (apply
-       patch + run tests) and stash ``resolved`` / report into ``TaskTrace.raw``.
+    1. resolve the sandbox spec from ``TaskInput.sandbox``;
+    2. let a coding harness optionally prepare a derived task image;
+    3. start the environment and run optional dataset setup;
+    4. run a harness-provided ``run_in_sandbox`` implementation when present;
+       otherwise run the legacy host agent with the live sandbox injected into
+       ``initial_state["__sandbox__"]`` for dataset binding tools;
+    5. extract the model diff and invoke the official scorer while the edited
+       sandbox is still alive.
 
-This is the seam that lets every existing agent work on code-execution
-datasets without a single change: the agent only ever calls
-``binding.tool_executor``; the sandbox arrives through ``state["__sandbox__"]``.
+The optional hooks keep complete coding harnesses and their native tools inside
+Docker benchmark containers without changing existing SDK-agent behaviour.
 """
 
 from __future__ import annotations
 
+import inspect
 import logging
 import time
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
-from typing import TYPE_CHECKING, Any, Callable, Mapping, Sequence
+from typing import TYPE_CHECKING, Any
 
 from ageneval.task.core.agent import AgentRunner
 from ageneval.task.core.dataset import TaskInput
@@ -34,7 +33,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# (task, sandbox) -> None  ；  (task, sandbox, model_patch) -> report dict
+# (task, sandbox) -> None; (task, sandbox, model_patch) -> report dict
 SetupFn = Callable[[TaskInput, "SandboxEnvironment"], None]
 ScoreFn = Callable[[TaskInput, "SandboxEnvironment", str], Mapping[str, Any]]
 
@@ -68,6 +67,13 @@ class SandboxScoringRunner(AgentRunner):
             )
 
         try:
+            # Full coding harnesses may augment the task image with their
+            # runtime before it starts. Existing SDK agents do not implement
+            # this optional hook and retain the binding-tool path below.
+            prepare_sandbox = getattr(self.inner, "prepare_sandbox", None)
+            if callable(prepare_sandbox):
+                prepared = prepare_sandbox(task, spec)
+                spec = await prepared if inspect.isawaitable(prepared) else prepared
             with sandbox_session(spec) as sb:
                 if self.setup_fn is not None:
                     self.setup_fn(task, sb)
@@ -75,14 +81,18 @@ class SandboxScoringRunner(AgentRunner):
                     task,
                     initial_state={**dict(task.initial_state), "__sandbox__": sb},
                 )
-                trace = await self.inner.run(inner_task)
+                run_in_sandbox = getattr(self.inner, "run_in_sandbox", None)
+                if callable(run_in_sandbox):
+                    trace = await run_in_sandbox(inner_task, sb)
+                else:
+                    trace = await self.inner.run(inner_task)
                 model_patch = sb.exec(list(self.patch_cmd)).stdout
                 try:
                     report = dict(self.score_fn(task, sb, model_patch))
-                except Exception as exc:  # noqa: BLE001 — scoring must not crash the run
+                except Exception as exc:
                     logger.exception("scorer failed on %s", task.task_id)
                     report = {"resolved": False, "score_error": str(exc)[:500]}
-        except Exception as exc:  # noqa: BLE001 — sandbox provisioning failure
+        except Exception as exc:
             logger.exception("sandbox failed on %s", task.task_id)
             return TaskTrace(
                 task_id=task.task_id,

@@ -13,6 +13,7 @@ from ageneval.task.sandbox.cleanup import sweep_sandbox_containers
 from ageneval.task.sandbox.context import sandbox, sandbox_session
 from ageneval.task.sandbox.docker import DockerSandboxEnvironment
 from ageneval.task.sandbox.environment import ExecResult, SandboxEnvironment
+from ageneval.task.sandbox.harness_image import HarnessImageError, prepare_node_harness_image
 from ageneval.task.sandbox.local import LocalSandboxEnvironment
 from ageneval.task.sandbox.registry import create_sandbox, find_sandboxenv, sandboxenv
 from ageneval.task.sandbox.spec import SandboxSpec
@@ -20,11 +21,13 @@ from ageneval.task.sandbox.spec import SandboxSpec
 __all__ = [
     "DockerSandboxEnvironment",
     "ExecResult",
+    "HarnessImageError",
     "LocalSandboxEnvironment",
     "SandboxEnvironment",
     "SandboxSpec",
     "create_sandbox",
     "find_sandboxenv",
+    "prepare_node_harness_image",
     "sandbox",
     "sandbox_session",
     "sandboxenv",

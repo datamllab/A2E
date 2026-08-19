@@ -10,12 +10,42 @@
 - `instrumentation/openinference-instrumentation-*` — **L3** 各框架/SDK 的自动埋点
   (claude-agent-sdk / langchain / openai / smolagents / crewai / llama-index /
   google-adk / agno / autogen-agentchat / anthropic / openai-agents)
+- `instrumentation-js/openinference-instrumentation-pi/` — Pi Agent 的 TypeScript 扩展埋点
+- `instrumentation-js/openinference-instrumentation-deepseek-harness/` — DeepSeek Harness 的 TypeScript
+  Cordis 插件埋点；二者都生成 OpenInference span 并通过 OTLP/HTTP 写入 A2E
 
 ---
 
 ## 变更记录(按日期)
 
 > 新增内容请按日期在本区块顶部追加一个 `### YYYY-MM-DD` 小节。
+
+### 2026-08-10 — Pi Agent 轨迹采集
+
+Pi 是 Node.js/TypeScript Agent Harness，因此不使用 Python monkey patch，而通过其官方事件 API
+接入。`instrumentation-js/openinference-instrumentation-pi` 分为两层：底层通过 `pi-agent-core` 的
+`Agent.subscribe()` 监听公共 agent/message/tool 生命周期；上层以 Pi Package 扩展形式通过
+`pi-coding-agent` 的 `ExtensionAPI.on()` 复用这些事件并补充 prompt、context、provider 和 session
+信息，生成 `AGENT` 根 span 以及 `LLM`、`TOOL` 子 span。
+
+- 模型轨迹包含 system/user/assistant 消息、tool-call intent、provider/API/model、token/cache/cost
+  和错误状态；
+- 工具轨迹按 `toolCallId` 区分并发调用，包含名称、参数、结果与错误状态；
+- 属性沿用 A2E 已支持的 OpenInference 约定，可由 server 直接入库，并可通过项目 spans API
+  读取；当前前端只在 experiment sample 引用了 trace 时展示 span tree，尚无独立原始 trace 浏览入口；
+- 使用独立的 OTel provider，不修改 Pi 的全局 tracer；扩展与导出异常不会传回 Pi 执行路径；
+- 测试除使用内存 exporter 校验父子关系、字段映射、并发、失败与未完成 span 清理外，还会
+  分别使用官方 Pi 0.84.1 裸 `Agent`（core）和完整 `AgentSession`（coding-agent）+ Faux Provider
+  实跑两次模型响应和一次 `read` 工具。
+- 另有完整 coding-agent 多步任务测试：通过真实 `write` 创建临时产物，再用真实 `read` 读回
+  验证，并检查三轮模型调用与两次工具调用均进入 OTLP 轨迹；隐私测试确保关闭内容采集后不
+  保留 prompt、provider payload、工具参数/结果或敏感错误文本。
+- 2026-08-12 使用真实 DashScope `qwen-plus` 完成 coding-agent 验收：Pi 实际发起两次模型调用并
+  执行内置 `read package.json`；A2E 入库恰好 1 个 `AGENT`、2 个 `LLM`、1 个 `TOOL` span，
+  父子关系与状态正确，token、工具输入输出和最终答案齐全；凭据未写入仓库。
+
+安装、配置、验证命令和 smoke test 见
+[`instrumentation-js/openinference-instrumentation-pi/README.md`](./instrumentation-js/openinference-instrumentation-pi/README.md)。
 
 ### 2026-06-29 — SKILL span 扩展到 agno
 
