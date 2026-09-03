@@ -87,10 +87,6 @@
   max-width: 112px;
   margin-left: auto;
 }
-.opencompass-logo-boundary {
-  height: 27px;
-  max-width: 145px;
-}
 .welcome-eyebrow {
   margin: 0 0 22px;
   color: var(--accent);
@@ -339,7 +335,7 @@
 }
 .capability-boundary-overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(400px, 520px);
+  grid-template-columns: minmax(0, 1fr) minmax(460px, 620px);
   align-items: center;
   gap: clamp(36px, 4vw, 60px);
   margin: 16px 0 34px;
@@ -381,7 +377,7 @@
 .capability-flower {
   min-width: 0;
   width: 100%;
-  max-width: 520px;
+  max-width: 620px;
   margin: 0;
   justify-self: end;
 }
