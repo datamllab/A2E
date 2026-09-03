@@ -3,6 +3,7 @@ import { listExperiments } from "./api/experiments";
 import type { ExperimentSummary } from "./api/types";
 import { Deck } from "./components/Deck";
 import capabilityFlower from "./assets/capability-flower.jpeg";
+import openCompassLogo from "./assets/opencompass.png";
 
 type AppView = "home" | "workspace" | "capability-boundary";
 
@@ -72,7 +73,7 @@ function CapabilityBoundary({ onBack }: { onBack: () => void }) {
           Home
         </button>
         <div className="capability-boundary-brand">
-          <span>OpenCompass</span>
+          <img className="opencompass-logo opencompass-logo-header" src={openCompassLogo} alt="OpenCompass" />
           <div className="brand-product-line">
             <strong>A²E</strong>
             <small>· Evaluation Results</small>
@@ -183,7 +184,7 @@ export default function App() {
       <main className="welcome-screen">
         <div className="welcome-grid" aria-hidden="true" />
         <div className="welcome-content">
-          <p className="welcome-eyebrow">OpenCompass</p>
+          <img className="opencompass-logo opencompass-logo-home" src={openCompassLogo} alt="OpenCompass" />
           <div className="welcome-title-line">
             <h1>A²E</h1>
             <p className="welcome-subtitle">· Evaluation Results</p>

@@ -72,6 +72,21 @@
   width: min(1080px, calc(100% - 48px));
   padding: clamp(28px, 6vw, 72px) 0;
 }
+.opencompass-logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+}
+.opencompass-logo-home {
+  height: 24px;
+  max-width: 128px;
+  margin: 0 0 22px;
+}
+.opencompass-logo-header {
+  height: 21px;
+  max-width: 112px;
+  margin-left: auto;
+}
 .welcome-eyebrow {
   margin: 0 0 22px;
   color: var(--accent);

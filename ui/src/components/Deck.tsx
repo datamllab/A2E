@@ -13,6 +13,7 @@ import { BenchmarkTree } from "./BenchmarkTree";
 import { EvalPanel } from "./EvalPanel";
 import { TraceControls } from "./TraceControls";
 import { TracePanel } from "./TracePanel";
+import openCompassLogo from "../assets/opencompass.png";
 
 interface Props {
   experiments: ExperimentSummary[];
@@ -137,7 +138,7 @@ export function Deck({ experiments, onBack }: Props) {
             />
           ) : null}
           <div className="topbar-brand">
-            <span>OpenCompass</span>
+            <img className="opencompass-logo opencompass-logo-header" src={openCompassLogo} alt="OpenCompass" />
             <div className="brand-product-line">
               <strong>A²E</strong>
               <small>· Evaluation Results</small>
