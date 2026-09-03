@@ -87,6 +87,10 @@
   max-width: 112px;
   margin-left: auto;
 }
+.opencompass-logo-boundary {
+  height: 27px;
+  max-width: 145px;
+}
 .welcome-eyebrow {
   margin: 0 0 22px;
   color: var(--accent);
@@ -336,7 +340,7 @@
 .capability-boundary-overview {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(400px, 520px);
-  align-items: start;
+  align-items: center;
   gap: clamp(36px, 4vw, 60px);
   margin: 16px 0 34px;
 }
@@ -344,7 +348,6 @@
   min-width: 0;
   max-width: 760px;
   align-self: center;
-  transform: translateY(24px);
 }
 .capability-boundary-intro {
   margin: 0;

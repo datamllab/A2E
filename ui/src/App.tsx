@@ -73,7 +73,7 @@ function CapabilityBoundary({ onBack }: { onBack: () => void }) {
           Home
         </button>
         <div className="capability-boundary-brand">
-          <img className="opencompass-logo opencompass-logo-header" src={openCompassLogo} alt="OpenCompass" />
+          <img className="opencompass-logo opencompass-logo-header opencompass-logo-boundary" src={openCompassLogo} alt="OpenCompass" />
           <div className="brand-product-line">
             <strong>A²E</strong>
             <small>· Evaluation Results</small>
