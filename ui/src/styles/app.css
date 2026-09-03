@@ -345,6 +345,9 @@
   max-width: 760px;
   align-self: center;
 }
+.capability-boundary-title {
+  margin: 0;
+}
 .capability-boundary-intro {
   margin: 0;
   color: var(--text-2);
