@@ -335,7 +335,7 @@
 }
 .capability-boundary-overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(460px, 620px);
+  grid-template-columns: minmax(0, 1fr) minmax(480px, 660px);
   align-items: center;
   gap: clamp(36px, 4vw, 60px);
   margin: 16px 0 34px;
@@ -377,7 +377,7 @@
 .capability-flower {
   min-width: 0;
   width: 100%;
-  max-width: 620px;
+  max-width: 660px;
   margin: 0;
   justify-self: end;
 }
