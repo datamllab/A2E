@@ -106,7 +106,7 @@
 }
 .welcome-title-line {
   display: flex;
-  align-items: center;
+  align-items: start;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -336,7 +336,7 @@
 .capability-boundary-overview {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(520px, 700px);
-  align-items: center;
+  align-items: start;
   gap: clamp(36px, 4vw, 60px);
   margin: 16px 0 34px;
 }
