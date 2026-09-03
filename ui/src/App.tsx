@@ -207,7 +207,7 @@ export default function App() {
               <small>Source</small>
             </a>
             <a
-              href="https://colab.research.google.com/github/stevewithjobs/AEP/blob/yuchenyue/notebooks/a2e_quickstart.ipynb"
+              href="https://colab.research.google.com/github/datamllab/A2E/blob/main/notebooks/a2e_quickstart.ipynb"
               target="_blank"
               rel="noreferrer"
             >
