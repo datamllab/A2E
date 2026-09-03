@@ -329,13 +329,13 @@
 }
 .capability-boundary-content h1 {
   margin: 0;
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(32px, 4vw, 54px);
   line-height: 1.05;
   letter-spacing: 0;
 }
 .capability-boundary-overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(480px, 660px);
+  grid-template-columns: minmax(0, 1fr) minmax(520px, 700px);
   align-items: center;
   gap: clamp(36px, 4vw, 60px);
   margin: 16px 0 34px;
@@ -377,7 +377,7 @@
 .capability-flower {
   min-width: 0;
   width: 100%;
-  max-width: 660px;
+  max-width: 700px;
   margin: 0;
   justify-self: end;
 }

@@ -81,10 +81,10 @@ function CapabilityBoundary({ onBack }: { onBack: () => void }) {
         </div>
       </header>
       <section className="capability-boundary-content">
-        <p className="capability-boundary-eyebrow">A²E Evaluation Results</p>
-        <h1>Agent Capability Boundary</h1>
         <div className="capability-boundary-overview">
           <div className="capability-boundary-copy">
+            <p className="capability-boundary-eyebrow">A²E Evaluation Results</p>
+            <h1>Agent Capability Boundary</h1>
             <p className="capability-boundary-intro">
               This table demonstrates A²E’s ability to run, evaluate, and compare diverse agent harnesses across
               benchmarks and LLMs within a unified pipeline. A²E currently supports 23 benchmarks, with
