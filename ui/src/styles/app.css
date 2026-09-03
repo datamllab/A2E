@@ -106,7 +106,7 @@
 }
 .welcome-title-line {
   display: flex;
-  align-items: start;
+  align-items: center;
   flex-wrap: wrap;
   gap: 10px;
 }
