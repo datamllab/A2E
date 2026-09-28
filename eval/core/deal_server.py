@@ -86,6 +86,12 @@ from process_values.plan_eval import (
     make_plan_hallucination,
     make_reasoning_coherence,
 )
+from process_values.jev_dimension import (
+    make_plan_constraint_adherence_jev,
+    make_repeated_tool_call_rate_jev,
+    make_tool_invocation_jev,
+    make_tool_selection_jev,
+)
 from process_values.tool_eval import (
     make_repeated_tool_call_rate,
     make_self_correction_rate,
@@ -101,6 +107,27 @@ from core.span_store import fetch_spans_by_trace_ids, sqlite_database_path
 LOGGER = logging.getLogger("deal_server")
 
 TARGET_METRICS = ALL_METRICS
+
+# Original names stay LLM-as-judge. These extra names are the Jev dimension.
+JEV_DIMENSION_METRICS = (
+    "tool_invocation",
+    "tool_selection",
+    "plan_constraint_adherence",
+    "repeated_tool_call_rate",
+)
+
+
+def _with_jev_dimension(metric_names: Sequence[str]) -> list[str]:
+    expanded = list(metric_names)
+    requested = set(expanded)
+    full_matrix = set(TARGET_METRICS).issubset(requested)
+    for name in JEV_DIMENSION_METRICS:
+        twin = f"{name}_jev"
+        if twin in requested:
+            continue
+        if name in requested or (full_matrix and name == "tool_selection"):
+            expanded.append(twin)
+    return expanded
 
 LLM_METRICS = {
     "conciseness",
@@ -208,6 +235,10 @@ SPAN_BACKED_METRICS = frozenset(
         "tool_call_count",
         "tool_execution_error_rate",
         "tool_invocation",
+        "tool_invocation_jev",
+        "tool_selection_jev",
+        "plan_constraint_adherence_jev",
+        "repeated_tool_call_rate_jev",
         "tool_recall",
     }
 )
@@ -630,6 +661,22 @@ def _build_evaluators(
             evaluators[metric] = create_evaluator(kind="LLM", name=metric)(
                 make_repeated_tool_call_rate(llm, spans_by_example_id)
             )
+        elif metric == "tool_invocation_jev":
+            evaluators[metric] = create_evaluator(kind="LLM", name=metric)(
+                make_tool_invocation_jev(spans_by_example_id)
+            )
+        elif metric == "tool_selection_jev":
+            evaluators[metric] = create_evaluator(kind="LLM", name=metric)(
+                make_tool_selection_jev(spans_by_example_id)
+            )
+        elif metric == "plan_constraint_adherence_jev":
+            evaluators[metric] = create_evaluator(kind="LLM", name=metric)(
+                make_plan_constraint_adherence_jev(spans_by_example_id)
+            )
+        elif metric == "repeated_tool_call_rate_jev":
+            evaluators[metric] = create_evaluator(kind="LLM", name=metric)(
+                make_repeated_tool_call_rate_jev(spans_by_example_id)
+            )
         elif metric == "redcode_risky_operation_count":
             evaluators[metric] = create_evaluator(kind="CODE", name=metric)(
                 _make_enriching_code_evaluator(
@@ -775,10 +822,13 @@ def main() -> None:
     args = parse_args()
     logging.basicConfig(level=getattr(logging, args.log_level.upper(), logging.INFO), format="%(message)s")
 
-    metric_names = [name.strip() for name in args.metrics.split(",") if name.strip()]
-    unknown = sorted(set(metric_names) - set(TARGET_METRICS))
+    metric_names = _with_jev_dimension(
+        [name.strip() for name in args.metrics.split(",") if name.strip()]
+    )
+    allowed = set(TARGET_METRICS) | {f"{name}_jev" for name in JEV_DIMENSION_METRICS}
+    unknown = sorted(set(metric_names) - allowed)
     if unknown:
-        raise ValueError(f"Unsupported metric(s): {unknown}. Supported: {list(TARGET_METRICS)}")
+        raise ValueError(f"Unsupported metric(s): {unknown}. Supported: {sorted(allowed)}")
 
     client = Client(base_url=args.base_url)
     experiment_id = args.experiment_id or _discover_experiment_id(
