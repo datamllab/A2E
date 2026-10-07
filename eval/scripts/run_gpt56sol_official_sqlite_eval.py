@@ -34,8 +34,10 @@ if str(EVAL_ROOT) not in sys.path:
 from a2e.evals.executors import SyncExecutor
 
 from core.deal_server import (
+    JEV_DIMENSION_METRICS,
     TARGET_METRICS,
     _build_evaluators,
+    _with_jev_dimension,
     _create_llm,
     _metrics_require_llm,
     _metrics_require_spans,
@@ -406,12 +408,13 @@ def main(argv: list[str] | None = None) -> None:
     _load_env_file(None)
     logging.basicConfig(level=getattr(logging, args.log_level.upper(), logging.INFO), format="%(message)s")
 
-    metric_names = (
+    metric_names = _with_jev_dimension(
         [m.strip() for m in args.metrics.split(",") if m.strip()]
         if args.metrics
         else list(metrics_for_parts(args.part))
     )
-    unknown = sorted(set(metric_names) - set(TARGET_METRICS))
+    allowed = set(TARGET_METRICS) | {f"{name}_jev" for name in JEV_DIMENSION_METRICS}
+    unknown = sorted(set(metric_names) - allowed)
     if unknown:
         raise ValueError(f"Unsupported metric(s): {unknown}")
 

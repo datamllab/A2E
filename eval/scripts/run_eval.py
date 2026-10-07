@@ -17,6 +17,7 @@ if str(EVAL_ROOT) not in sys.path:
     sys.path.insert(0, str(EVAL_ROOT))
 
 import core.deal_server as deal_server
+from core.deal_server import _with_jev_dimension
 from core.metric_groups import METRIC_GROUPS, metrics_for_parts
 
 
@@ -64,7 +65,7 @@ def main(argv: list[str] | None = None) -> None:
         deal_server.main()
         return
 
-    selected_metrics = metrics_for_parts(selected_parts)
+    selected_metrics = _with_jev_dimension(list(metrics_for_parts(selected_parts)))
     print(f"Selected parts: {','.join(selected_parts)}")
     print(f"Selected metrics ({len(selected_metrics)}): {','.join(selected_metrics)}")
     if args.print_only:
