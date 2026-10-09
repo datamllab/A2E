@@ -54,6 +54,10 @@ uv run python ../eval/scripts/run_eval.py \
 The `<experiment_id>` should correspond to an existing experiment stored in the
 A<sup>2</sup>E database.
 
+`--part all` also writes four extra Jev scores (`*_jev`) next to the original
+LLM annotations. Export `OPENROUTER_API_KEY` or `A2E_JEV_API_KEY` first. See
+[Jev as judge](#jev-as-judge).
+
 ## Run Specific Evaluations
 
 A<sup>2</sup>E supports evaluation across multiple dimensions of agent behavior:
@@ -112,6 +116,27 @@ Jev (TypeSafe System One) is an extra score next to the existing LLM judge. It d
 Implementation: `eval/process_values/jev_dimension.py`. The client is `eval/core/jev_judge.py`. The key is read from `OPENROUTER_API_KEY` or `A2E_JEV_API_KEY`. It is not stored in the repo.
 
 Terminal-Bench 2.1 experiment means for `gpt-5.6-sol` are in `metrics_catalog.json` under `jev_dimension.tb21_results`.
+
+### How to use
+
+Jev is not a separate runner. Start the A<sup>2</sup>E server, export a key that can call OpenRouter System One (`jev-latest`), then use the same `run_eval.py` command as above.
+
+```bash
+export OPENROUTER_API_KEY=...   # or A2E_JEV_API_KEY
+```
+
+`--part all` attaches the four `*_jev` names automatically. `--part plan` and `--part tool` attach the matching twins (`plan_constraint_adherence_jev`, `tool_invocation_jev`, `repeated_tool_call_rate_jev`). To score only Jev:
+
+```bash
+cd server
+
+uv run python ../eval/scripts/run_eval.py \
+  --base-url http://localhost:6006 \
+  --experiment-id <experiment_id> \
+  --metrics tool_invocation_jev,tool_selection_jev,plan_constraint_adherence_jev,repeated_tool_call_rate_jev
+```
+
+Each finished run stores a second annotation under `<metric>_jev`. The original LLM annotation is unchanged. Without a key, the `*_jev` metrics fail. `A2E_JEV_URL` overrides the default `https://openrouter.ai/api/v1/systemone`.
 
 ### Why only these four
 
