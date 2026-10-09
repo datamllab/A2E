@@ -41,6 +41,7 @@ A<sup>2</sup>E 与 harness、模型厂商无关，对主流 agent SDK（[OpenAI 
 
 ## 🎉 更新日志
 
+- **2026-10-09** — ⚖️ 新增 Jev as Judge，为完整评测流水线补充 4 个 Jev 配套分数（`*_jev`）。
 - **2026-08-12** — 🤗 论文页面已上线 [Hugging Face](https://huggingface.co/papers/2608.07346)。
 - **2026-08-11** — 📓 [Colab quickstart notebook](https://colab.research.google.com/github/stevewithjobs/AEP/blob/yuchenyue/notebooks/a2e_quickstart.ipynb) 已发布，可在浏览器中端到端跑通 A<sup>2</sup>E。
 - **2026-08-10** — ✨✨ A<sup>2</sup>E 完整代码库已发布。
@@ -219,6 +220,8 @@ uv run python ../eval/scripts/run_eval.py \
   --part all
 ```
 
+`--part all` 还会在原有 LLM 评测注释旁写入 4 个额外的 Jev 分数（`*_jev`）。运行前请先导出 `OPENROUTER_API_KEY` 或 `A2E_JEV_API_KEY`，然后继续使用同一个 `run_eval.py` 命令——Jev 不需要单独的 runner。详情见 [Jev as Judge](eval/README.md#jev-as-judge)。
+
 ### 跑某一组指标
 
 | 部分 | 评测内容 |
@@ -267,7 +270,7 @@ cd ui && pnpm install && pnpm dev   # http://127.0.0.1:5173  （/v1 代理到 :6
 ## 项目结构
 
 ```
-AEP/
+A2E/
 ├── scripts/             # 一键安装并启动服务
 ├── task/                # 构建实验（数据集、agent、runners）
 ├── monitor/             # 捕获轨迹（自动打桩）

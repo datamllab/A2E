@@ -272,7 +272,7 @@ Or use `a2e serve --dev` for Vite HMR via the server templates.
 ## Project layout
 
 ```
-AEP/
+A2E/
 ├── scripts/             # One-click install + server start
 ├── task/                # Build experiments (datasets, agents, runners)
 ├── monitor/             # Capture trajectories (auto-instrumentation)
