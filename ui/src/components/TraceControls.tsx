@@ -68,9 +68,10 @@ export function TraceControls({
 }: Props) {
   const lockRef = useRef(false);
 
-  const runLabels = runOptions.map((item) => item.label);
+  const experimentLabels = runOptions.map((item) => displayExperimentId(item.exp.id));
   const selectedRunIndex = runOptions.findIndex((item) => item.exp.id === selectedExperimentId);
   const runIndex = Math.max(0, selectedRunIndex);
+  const selectedRunLabel = runOptions[runIndex]?.label ?? "—";
   const agentLabels = agentOptions.map((item) => item.agent.label);
   const selectedAgentIndex = agentOptions.findIndex((item) => item.agent.id === selectedAgent?.id);
   const agentIndex = Math.max(0, selectedAgentIndex);
@@ -98,9 +99,9 @@ export function TraceControls({
           <span>Benchmark</span>
           <strong>{benchmark.name}</strong>
         </div>
-        <div className="trace-select-field trace-experiment-id" title={selectedExperimentId ?? "—"}>
-          <span>Experiment ID</span>
-          <strong>{displayExperimentId(selectedExperimentId)}</strong>
+        <div className="trace-select-field trace-experiment-id" title={selectedRunLabel}>
+          <span>Run</span>
+          <strong>{selectedRunLabel}</strong>
         </div>
         {agentOptions.length ? (
           <div
@@ -131,7 +132,7 @@ export function TraceControls({
           <div
             className="trace-select-field trace-wheel trace-select-run"
             tabIndex={0}
-            aria-label="Scroll to select evaluation run"
+            aria-label="Scroll to select experiment ID"
             onWheel={(e) => {
               cycleByWheel(e, e.currentTarget, (dir) => {
                 const idx = Math.max(0, selectedRunIndex);
@@ -146,9 +147,9 @@ export function TraceControls({
               e.currentTarget.dispatchEvent(new WheelEvent("wheel", { deltaY: dir, bubbles: true, cancelable: true }));
             }}
           >
-            <span>Run</span>
+            <span>Experiment ID</span>
             <div className="trace-wheel-window">
-              <div className="trace-wheel-track">{wheelItems(runLabels, runIndex)}</div>
+              <div className="trace-wheel-track">{wheelItems(experimentLabels, runIndex)}</div>
             </div>
           </div>
         ) : null}

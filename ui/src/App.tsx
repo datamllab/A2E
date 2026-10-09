@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { listExperiments } from "./api/experiments";
 import type { ExperimentSummary } from "./api/types";
 import { Deck } from "./components/Deck";
-import capabilityFlower from "./assets/capability-flower.jpeg";
+import capabilityFlower from "../flower.jpeg";
+import openCompassLogo from "./assets/opencompass.png";
 
 type AppView = "home" | "workspace" | "capability-boundary";
 
@@ -72,18 +73,20 @@ function CapabilityBoundary({ onBack }: { onBack: () => void }) {
           Home
         </button>
         <div className="capability-boundary-brand">
-          <span>OpenCompass</span>
+          <img className="opencompass-logo opencompass-logo-header" src={openCompassLogo} alt="OpenCompass" />
           <div className="brand-product-line">
             <strong>A²E</strong>
-            <small>· Evaluation Results</small>
+            <small>· Evaluation · Auditing</small>
           </div>
         </div>
       </header>
       <section className="capability-boundary-content">
-        <p className="capability-boundary-eyebrow">A²E Evaluation Results</p>
-        <h1>Agent Capability Boundary</h1>
         <div className="capability-boundary-overview">
           <div className="capability-boundary-copy">
+            <div className="capability-boundary-title">
+              <p className="capability-boundary-eyebrow">A²E Evaluation Results</p>
+              <h1>Agent Capability Boundary</h1>
+            </div>
             <p className="capability-boundary-intro">
               This table demonstrates A²E’s ability to run, evaluate, and compare diverse agent harnesses across
               benchmarks and LLMs within a unified pipeline. A²E currently supports 23 benchmarks, with
@@ -183,18 +186,18 @@ export default function App() {
       <main className="welcome-screen">
         <div className="welcome-grid" aria-hidden="true" />
         <div className="welcome-content">
-          <p className="welcome-eyebrow">OpenCompass</p>
+          <img className="opencompass-logo opencompass-logo-home" src={openCompassLogo} alt="OpenCompass" />
           <div className="welcome-title-line">
             <h1>A²E</h1>
-            <p className="welcome-subtitle">· Evaluation Results</p>
+            <p className="welcome-subtitle">· Evaluation · Auditing</p>
           </div>
           <p className="welcome-overview">
-            This interface presents standardized execution traces and multidimensional evaluation results produced
-            by A²E (Agent Auditing Engine).
+            A²E is a lightweight engine that provides comprehensive evaluation and trajectory-level auditing for
+            models and agents.
           </p>
           <p className="welcome-intro">
-            Choose a benchmark, agent, and run to inspect sample-level trajectories and compare evaluation results
-            across correctness, safety, and efficiency.
+            Choose a dataset, agent, and model, and A²E will evaluate their performance across correctness, safety,
+            and cost-effectiveness.
           </p>
           <nav className="welcome-resources" aria-label="Project resources">
             <a href="https://arxiv.org/abs/2608.07346" target="_blank" rel="noreferrer">
@@ -206,7 +209,7 @@ export default function App() {
               <small>Source</small>
             </a>
             <a
-              href="https://colab.research.google.com/github/stevewithjobs/AEP/blob/yuchenyue/notebooks/a2e_quickstart.ipynb"
+              href="https://colab.research.google.com/github/datamllab/A2E/blob/main/notebooks/a2e_quickstart.ipynb"
               target="_blank"
               rel="noreferrer"
             >

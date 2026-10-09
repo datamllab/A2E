@@ -271,7 +271,7 @@ export function TracePanel({
   const vpRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
   const scrollReportedSampleRef = useRef(activeSample);
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(records.length ? activeSample : null);
   const [braceH, setBraceH] = useState(64);
 
   const syncBraces = useCallback(() => {
@@ -290,7 +290,7 @@ export function TracePanel({
   }, [records.length, openIndex, syncBraces]);
 
   useEffect(() => {
-    setOpenIndex(null);
+    setOpenIndex(records.length ? 0 : null);
     scrollReportedSampleRef.current = 0;
     vpRef.current?.scrollTo({ top: 0 });
   }, [records]);

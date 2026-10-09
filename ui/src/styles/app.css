@@ -72,6 +72,21 @@
   width: min(1080px, calc(100% - 48px));
   padding: clamp(28px, 6vw, 72px) 0;
 }
+.opencompass-logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+}
+.opencompass-logo-home {
+  height: 24px;
+  max-width: 128px;
+  margin: 0 0 22px;
+}
+.opencompass-logo-header {
+  height: 21px;
+  max-width: 112px;
+  margin-left: auto;
+}
 .welcome-eyebrow {
   margin: 0 0 22px;
   color: var(--accent);
@@ -314,13 +329,13 @@
 }
 .capability-boundary-content h1 {
   margin: 0;
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(32px, 4vw, 54px);
   line-height: 1.05;
   letter-spacing: 0;
 }
 .capability-boundary-overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(400px, 520px);
+  grid-template-columns: minmax(0, 1fr) minmax(520px, 700px);
   align-items: start;
   gap: clamp(36px, 4vw, 60px);
   margin: 16px 0 34px;
@@ -329,7 +344,11 @@
   min-width: 0;
   max-width: 760px;
   align-self: center;
-  transform: translateY(24px);
+}
+.capability-boundary-title {
+  margin: 0 0 56px;
+  position: relative;
+  top: -24px;
 }
 .capability-boundary-intro {
   margin: 0;
@@ -363,7 +382,7 @@
 .capability-flower {
   min-width: 0;
   width: 100%;
-  max-width: 520px;
+  max-width: 700px;
   margin: 0;
   justify-self: end;
 }
