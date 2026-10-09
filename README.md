@@ -41,6 +41,7 @@ A<sup>2</sup>E is harness and vendor agnostic, with out-of-the-box support for p
 
 ## 🎉 Updates
 
+- **2026-10-09** — ⚖️ Added Jev as Judge, extending the full evaluation pipeline with four companion Jev scores (`*_jev`).
 - **2026-08-12** — 🤗 Paper page live on [Hugging Face](https://huggingface.co/papers/2608.07346).
 - **2026-08-11** — 📓 [Colab quickstart notebook](https://colab.research.google.com/github/stevewithjobs/AEP/blob/yuchenyue/notebooks/a2e_quickstart.ipynb) published — run A<sup>2</sup>E end to end in the browser.
 - **2026-08-10** — ✨✨ Full codebase of A<sup>2</sup>E released.
