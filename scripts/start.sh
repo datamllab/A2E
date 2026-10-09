@@ -25,5 +25,12 @@ set -a; source .env; set +a
 export no_proxy="127.0.0.1,localhost,${no_proxy:-}"
 export NO_PROXY="$no_proxy"
 
+# Keep A2E's PID files in a project-owned directory. A shared
+# /tmp/.a2e-server may have been created by another user or a container and
+# therefore be unwritable by the current process.
+A2E_RUNTIME_TMPDIR="${A2E_RUNTIME_TMPDIR:-$ROOT/.a2e-data/tmp}"
+mkdir -p "$A2E_RUNTIME_TMPDIR"
+export TMPDIR="$A2E_RUNTIME_TMPDIR"
+
 cd server
 exec uv run a2e serve
