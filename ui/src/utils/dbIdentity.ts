@@ -1,10 +1,11 @@
 import type { AgentInfo, ExperimentContext, ExperimentRecord, ExperimentSummary, SpanNode } from "../api/types";
 
-const AGENT_KEYS = ["agent", "agent_name", "agent_id", "agent_framework", "framework", "sdk"] as const;
-const FRAMEWORK_KEYS = ["agent_framework", "framework", "sdk"] as const;
+const AGENT_KEYS = ["agent", "agent_name", "agent_id", "harness", "agent_framework", "framework", "sdk"] as const;
+const FRAMEWORK_KEYS = ["harness", "agent_framework", "framework", "sdk"] as const;
 const MODEL_KEYS = [
   "model",
   "model_name",
+  "model_profile",
   "llm_model",
   "llm_model_name",
   "task_model",
@@ -23,6 +24,7 @@ const TESTED_AGENT_MODEL_KEYS = [
   "answer_model",
   "completion_model",
   "chat_model",
+  "model_profile",
   "model",
   "model_name",
 ] as const;

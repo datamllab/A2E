@@ -538,6 +538,8 @@ class CampaignController:
         return summary
 
     async def _ensure_server_objects(self, sink: A2ESink) -> dict[str, Any]:
+        from ageneval.task.runners import framework_for_agent
+
         assert self.plan is not None
         state = dict(self.lock.get("server") or {"datasets": {}, "cells": {}})
         state.setdefault("datasets", {})
@@ -567,6 +569,12 @@ class CampaignController:
             metadata = {
                 "campaign_id": self.plan.campaign_id,
                 "cell_id": cell.cell_id,
+                # Standard experiment identity consumed by the UI and generic
+                # downstream analysis. Keep the Campaign-specific dimensions
+                # below as provenance rather than making consumers infer them.
+                "agent_framework": cell.harness,
+                "sdk": framework_for_agent(cell.harness),
+                "model": self.profiles[cell.model].model,
                 "model_profile": cell.model,
                 "model_profile_digest": cell.profile_digest,
                 "benchmark": cell.benchmark,

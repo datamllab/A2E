@@ -47,6 +47,67 @@ def test_locked_dataset_mapping_must_match_current_server() -> None:
     asyncio.run(scenario())
 
 
+def test_ensure_dataset_reuses_existing_dataset_without_uploading() -> None:
+    class Datasets:
+        async def get_dataset(self, **kwargs):
+            assert kwargs == {"dataset": "dataset-name"}
+            return SimpleNamespace(
+                id="dataset-1",
+                version_id="version-1",
+                examples=[{"id": "example-1", "metadata": {"task_id": "task-1"}}],
+            )
+
+        async def create_dataset(self, **_kwargs):
+            raise AssertionError("an existing dataset must not be uploaded again")
+
+    async def scenario() -> None:
+        sink = A2ESink.__new__(A2ESink)
+        sink.client = SimpleNamespace(datasets=Datasets())
+        dataset, examples = await sink.ensure_dataset(
+            name="dataset-name",
+            description="description",
+            examples=[],
+            expected_task_ids=["task-1"],
+        )
+        assert dataset.id == "dataset-1"
+        assert examples == {"task-1": "example-1"}
+
+    asyncio.run(scenario())
+
+
+def test_ensure_dataset_uploads_when_name_is_missing() -> None:
+    class Datasets:
+        async def get_dataset(self, **kwargs):
+            assert kwargs == {"dataset": "dataset-name"}
+            raise ValueError("Dataset not found: dataset-name")
+
+        async def create_dataset(self, **kwargs):
+            assert kwargs == {
+                "name": "dataset-name",
+                "examples": [{"input": {"task": "task-1"}, "output": {}}],
+                "dataset_description": "description",
+            }
+            return SimpleNamespace(
+                id="dataset-1",
+                version_id="version-1",
+                examples=[{"id": "example-1", "metadata": {"task_id": "task-1"}}],
+            )
+
+    async def scenario() -> None:
+        sink = A2ESink.__new__(A2ESink)
+        sink.client = SimpleNamespace(datasets=Datasets())
+        dataset, examples = await sink.ensure_dataset(
+            name="dataset-name",
+            description="description",
+            examples=[{"input": {"task": "task-1"}, "output": {}}],
+            expected_task_ids=["task-1"],
+        )
+        assert dataset.id == "dataset-1"
+        assert examples == {"task-1": "example-1"}
+
+    asyncio.run(scenario())
+
+
 def test_experiment_recovery_uses_stable_metadata() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/v1/datasets/dataset-1/experiments"

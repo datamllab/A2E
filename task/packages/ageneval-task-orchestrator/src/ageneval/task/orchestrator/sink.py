@@ -76,15 +76,23 @@ class A2ESink:
         expected_task_ids: Iterable[str],
     ) -> tuple[Any, dict[str, str]]:
         try:
+            dataset = await self.client.datasets.get_dataset(dataset=name)
+        except ValueError as exc:
+            if not str(exc).startswith("Dataset not found:"):
+                raise
             dataset = await self.client.datasets.create_dataset(
                 name=name,
                 examples=examples,
                 dataset_description=description,
             )
         except httpx.HTTPStatusError as exc:
-            if exc.response.status_code != 409:
+            if exc.response.status_code not in {404, 422}:
                 raise
-            dataset = await self.client.datasets.get_dataset(dataset=name)
+            dataset = await self.client.datasets.create_dataset(
+                name=name,
+                examples=examples,
+                dataset_description=description,
+            )
         expected = list(expected_task_ids)
         by_task_id = {
             str(example.get("metadata", {}).get("task_id")): example["id"]
