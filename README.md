@@ -224,6 +224,8 @@ uv run python ../eval/scripts/run_eval.py \
   --part all
 ```
 
+`--part all` also writes four extra Jev scores (`*_jev`) next to the original LLM annotations. Export `OPENROUTER_API_KEY` or `A2E_JEV_API_KEY` first, then use the same `run_eval.py` command — Jev is not a separate runner. See [Jev as judge](eval/README.md#jev-as-judge).
+
 ### Run one metric group
 
 | Part           | What it scores                       |
