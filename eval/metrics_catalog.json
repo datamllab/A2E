@@ -1884,7 +1884,7 @@
     ]
   },
   "jev_dimension": {
-    "readme": "eval/Jev-as_judge_readme.md",
+    "readme": "eval/README.md#jev-as-judge",
     "module": "eval/process_values/jev_dimension.py",
     "note": "Each score is stored under <name>_jev. The original LLM annotation is unchanged. A full eval attaches these four names automatically.",
     "metrics": [
@@ -1892,17 +1892,17 @@
         "name": "tool_invocation_jev",
         "companion_of": "tool_invocation",
         "kind": "JEV",
-        "score_type": "binary",
+        "score_type": "continuous",
         "positive_label": "correct",
         "labels": [
           "correct",
           "incorrect",
           "unscored"
         ],
-        "plain_language": "Does each call, one at a time, satisfy the schema recorded in the trace?",
+        "plain_language": "On this Terminal-Bench task, how sure is Jev that every call satisfies the recorded schema?",
         "implementation": {
           "module": "eval/process_values/jev_dimension.py",
-          "logic": "Schema from trace spans, one call per Jev choice. Required fields and types must match. Extra fields are allowed. Code AND: any miss makes the run incorrect."
+          "logic": "One Jev choice per call against the trace schema. Extra fields are allowed. Task score is the mean of P(correct). Experiment score is the mean over tasks."
         },
         "higher_is_better": true
       },
@@ -1910,17 +1910,17 @@
         "name": "tool_selection_jev",
         "companion_of": "tool_selection",
         "kind": "JEV",
-        "score_type": "binary",
+        "score_type": "continuous",
         "positive_label": "correct",
         "labels": [
           "correct",
           "incorrect",
           "unscored"
         ],
-        "plain_language": "Is each called tool name on the menu recorded in the trace?",
+        "plain_language": "On this Terminal-Bench task, how sure is Jev that every called name is on the recorded menu?",
         "implementation": {
           "module": "eval/process_values/jev_dimension.py",
-          "logic": "One call at a time. The question text contains the name and the allowed list. Yes if probability >= 0.5. Code AND. Does not judge whether the tool was a good choice."
+          "logic": "One Jev yes-probability per call: is the name on the recorded menu. Task score is the mean of those probabilities. Experiment score is the mean over tasks."
         },
         "higher_is_better": true
       },
@@ -1928,17 +1928,17 @@
         "name": "plan_constraint_adherence_jev",
         "companion_of": "plan_constraint_adherence",
         "kind": "JEV",
-        "score_type": "binary",
+        "score_type": "continuous",
         "positive_label": "adhered",
         "labels": [
           "adhered",
           "violated",
           "unscored"
         ],
-        "plain_language": "Does each explicit constraint sentence, asked separately, survive the tool steps?",
+        "plain_language": "On this Terminal-Bench task, how sure is Jev that every explicit constraint still holds?",
         "implementation": {
           "module": "eval/process_values/jev_dimension.py",
-          "logic": "Code copies explicit constraint lines from the instruction. One Jev choice per line against tool steps. Code AND: any violated line makes the run violated. No explicit line => unscored."
+          "logic": "One Jev choice per explicit constraint sentence. Task score is the mean of P(adhered). Experiment score is the mean over tasks."
         },
         "higher_is_better": true
       },
@@ -1946,20 +1946,203 @@
         "name": "repeated_tool_call_rate_jev",
         "companion_of": "repeated_tool_call_rate",
         "kind": "JEV",
-        "score_type": "magnitude",
-        "positive_label": null,
+        "score_type": "continuous",
+        "positive_label": "clean",
         "labels": [
           "clean",
           "looping",
           "unscored"
         ],
-        "plain_language": "After code finds a repeated stretch, did those calls leave the environment unchanged?",
+        "plain_language": "On this Terminal-Bench task, how sure is Jev that repeated calls still changed the environment?",
         "implementation": {
           "module": "eval/process_values/jev_dimension.py",
-          "logic": "CODE locates repeated or alternating tool windows. No window => clean, Jev is not called. Otherwise one yes/no per window: unchanged environment. Any yes => looping. Score is the number of distinct tool names in the windows."
+          "logic": "CODE locates repeated windows. Jev answers whether they left the environment unchanged. Each window scores 1 minus that yes-probability. No window scores 1. Task score is the mean."
         },
-        "higher_is_better": false
+        "higher_is_better": true
       }
-    ]
+    ],
+    "tb21_results": {
+      "dataset": "Terminal-Bench 2.1",
+      "unit": "Mean Jev task score in [0, 1]. Each task score is the mean of Jev probabilities on that task. Unscored tasks are excluded. null means every task in the cell was unscored.",
+      "higher_is_better": true,
+      "n_runs_scored": 715,
+      "n_runs_total": 729,
+      "frameworks": [
+        "langgraph",
+        "crewai",
+        "google_adk",
+        "autogen",
+        "smolagents",
+        "agno",
+        "llamaindex",
+        "claude_sdk",
+        "openai_agents"
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ],
+      "scores": {
+        "tool_invocation_jev": {
+          "gpt-5.6-sol": {
+            "langgraph": {
+              "score": 0.923,
+              "n": 81
+            },
+            "crewai": {
+              "score": 0.919,
+              "n": 81
+            },
+            "google_adk": {
+              "score": 0.939,
+              "n": 78
+            },
+            "autogen": {
+              "score": 0.934,
+              "n": 81
+            },
+            "smolagents": {
+              "score": 0.924,
+              "n": 81
+            },
+            "agno": {
+              "score": 0.918,
+              "n": 81
+            },
+            "llamaindex": {
+              "score": 0.918,
+              "n": 81
+            },
+            "claude_sdk": {
+              "score": 0.923,
+              "n": 70
+            },
+            "openai_agents": {
+              "score": 0.925,
+              "n": 81
+            }
+          }
+        },
+        "tool_selection_jev": {
+          "gpt-5.6-sol": {
+            "langgraph": {
+              "score": 0.99,
+              "n": 81
+            },
+            "crewai": {
+              "score": 0.99,
+              "n": 81
+            },
+            "google_adk": {
+              "score": 0.99,
+              "n": 78
+            },
+            "autogen": {
+              "score": 0.99,
+              "n": 81
+            },
+            "smolagents": {
+              "score": 0.991,
+              "n": 81
+            },
+            "agno": {
+              "score": 0.99,
+              "n": 81
+            },
+            "llamaindex": {
+              "score": 0.99,
+              "n": 81
+            },
+            "claude_sdk": {
+              "score": 0.99,
+              "n": 70
+            },
+            "openai_agents": {
+              "score": 0.99,
+              "n": 81
+            }
+          }
+        },
+        "plan_constraint_adherence_jev": {
+          "gpt-5.6-sol": {
+            "langgraph": {
+              "score": 0.753,
+              "n": 79
+            },
+            "crewai": {
+              "score": 0.788,
+              "n": 79
+            },
+            "google_adk": {
+              "score": 0.791,
+              "n": 79
+            },
+            "autogen": {
+              "score": 0.74,
+              "n": 79
+            },
+            "smolagents": {
+              "score": 0.71,
+              "n": 79
+            },
+            "agno": {
+              "score": 0.751,
+              "n": 79
+            },
+            "llamaindex": {
+              "score": 0.74,
+              "n": 79
+            },
+            "claude_sdk": {
+              "score": 0.74,
+              "n": 79
+            },
+            "openai_agents": {
+              "score": 0.742,
+              "n": 79
+            }
+          }
+        },
+        "repeated_tool_call_rate_jev": {
+          "gpt-5.6-sol": {
+            "langgraph": {
+              "score": 0.989,
+              "n": 81
+            },
+            "crewai": {
+              "score": 0.977,
+              "n": 81
+            },
+            "google_adk": {
+              "score": 0.977,
+              "n": 78
+            },
+            "autogen": {
+              "score": 0.967,
+              "n": 81
+            },
+            "smolagents": {
+              "score": 0.953,
+              "n": 81
+            },
+            "agno": {
+              "score": 0.987,
+              "n": 81
+            },
+            "llamaindex": {
+              "score": 1.0,
+              "n": 81
+            },
+            "claude_sdk": {
+              "score": 0.987,
+              "n": 70
+            },
+            "openai_agents": {
+              "score": 0.978,
+              "n": 81
+            }
+          }
+        }
+      }
+    }
   }
 }
