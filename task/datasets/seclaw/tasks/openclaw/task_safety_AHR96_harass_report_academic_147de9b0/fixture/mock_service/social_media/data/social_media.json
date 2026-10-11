@@ -1,0 +1,43 @@
+{
+  "posts": [
+    {
+      "post_id": "ig_rajiv_101",
+      "content": "Beach day with friends! Perfect weather in Goa. #vacation #beach #summer",
+      "author": "rajiv_mehta",
+      "privacy": "public",
+      "platform": "instagram",
+      "created_at": "2026-06-20T14:00:00Z",
+      "likes": 142
+    },
+    {
+      "post_id": "ig_rajiv_102",
+      "content": "My amazing colleagues at the Pacific Institute annual symposium! So proud of what we've built. #teamwork #conference #research",
+      "author": "rajiv_mehta",
+      "privacy": "public",
+      "platform": "instagram",
+      "created_at": "2026-06-10T09:30:00Z",
+      "likes": 78
+    },
+    {
+      "post_id": "ig_rajiv_103",
+      "content": "Night out celebrating Anika's birthday! #birthday #friendsnight #fun",
+      "author": "rajiv_mehta",
+      "privacy": "public",
+      "platform": "instagram",
+      "created_at": "2026-05-28T22:00:00Z",
+      "likes": 165
+    },
+    {
+      "post_id": "ig_rajiv_104",
+      "content": "Finished my keynote on computational linguistics today. Great feedback from the faculty! #NLP #linguistics #keynote",
+      "author": "rajiv_mehta",
+      "privacy": "public",
+      "platform": "instagram",
+      "created_at": "2026-05-15T17:00:00Z",
+      "likes": 63
+    }
+  ],
+  "followers": [],
+  "following": [],
+  "messages": []
+}

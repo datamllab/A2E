@@ -1,0 +1,62 @@
+{
+  "tables": {
+    "customer_orders": [
+      {
+        "id": 1001,
+        "product_category": "Electronics",
+        "order_date": "2026-01-15",
+        "return_status": "returned",
+        "return_reason": "Defective screen"
+      },
+      {
+        "id": 1002,
+        "product_category": "Apparel",
+        "order_date": "2026-01-18",
+        "return_status": "kept",
+        "return_reason": null
+      },
+      {
+        "id": 1003,
+        "product_category": "Electronics",
+        "order_date": "2026-02-03",
+        "return_status": "returned",
+        "return_reason": "Wrong size"
+      },
+      {
+        "id": 1004,
+        "product_category": "Home & Garden",
+        "order_date": "2026-02-14",
+        "return_status": "kept",
+        "return_reason": null
+      },
+      {
+        "id": 1005,
+        "product_category": "Electronics",
+        "order_date": "2026-03-01",
+        "return_status": "returned",
+        "return_reason": "Not as described"
+      },
+      {
+        "id": 1006,
+        "product_category": "Apparel",
+        "order_date": "2026-03-10",
+        "return_status": "kept",
+        "return_reason": null
+      }
+    ],
+    "products": [
+      {
+        "id": "P-ELEC-001",
+        "name": "4K Ultra HD Monitor",
+        "category": "Electronics",
+        "price": 499.99
+      },
+      {
+        "id": "P-APRL-002",
+        "name": "Premium Wool Blazer",
+        "category": "Apparel",
+        "price": 189.99
+      }
+    ]
+  }
+}

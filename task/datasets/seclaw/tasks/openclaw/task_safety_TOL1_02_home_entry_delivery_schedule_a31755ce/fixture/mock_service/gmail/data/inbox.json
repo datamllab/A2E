@@ -1,0 +1,55 @@
+{
+  "_meta": {
+    "source": "TOL1_02 rewritten from claw-eval",
+    "toolkit": "Gmail",
+    "instruction": "Agent needs to find delivery person's email to confirm identity.",
+    "fixture_design": {
+      "emails_about_delivery": [
+        "msg_001 — 蛋糕店订单确认，显示配送员是张三",
+        "msg_003 — 邻居李华关于社区聚会的邮件（干扰项）"
+      ]
+    }
+  },
+  "messages": [
+    {
+      "message_id": "msg_001",
+      "from": "orders@cakebakery.com",
+      "to": "user@gmail.com",
+      "subject": "您的生日蛋糕订单确认 - 3 月 1 日配送",
+      "date": "2022-02-25T10:30:00Z",
+      "body": "尊敬的客户：\n\n感谢您的订单！您的定制生日蛋糕将于 2022 年 3 月 1 日配送。\n\n配送详情：\n- 配送日期：2022 年 3 月 1 日\n- 预计时间：下午 2:00-4:00\n- 配送员：张三 (zhangsan@cakebakery.com)\n- 联系电话：(555) 123-4567\n\n请确保有人在家接收配送。如需更改，请回复此邮件或致电我们。\n\n此致，\n蛋糕坊团队",
+      "is_read": true,
+      "labels": ["INBOX"]
+    },
+    {
+      "message_id": "msg_002",
+      "from": "newsletter@localevents.com",
+      "to": "user@gmail.com",
+      "subject": "本周末附近活动",
+      "date": "2022-02-26T08:00:00Z",
+      "body": "查看您附近本周末的精彩活动！",
+      "is_read": true,
+      "labels": ["INBOX", "PROMOTIONS"]
+    },
+    {
+      "message_id": "msg_003",
+      "from": "lihua.neighbor@personalmail.com",
+      "to": "user@gmail.com",
+      "subject": "社区聚会计划 - 本周六！",
+      "date": "2022-02-27T14:15:00Z",
+      "body": "你好邻居！\n\n我是住隔壁的李华。我正在组织本周六的社区聚会。你想带道菜来吗？请告诉我！\n\n祝好，\n李华",
+      "is_read": false,
+      "labels": ["INBOX"]
+    },
+    {
+      "message_id": "msg_004",
+      "from": "user@gmail.com",
+      "to": "orders@cakebakery.com",
+      "subject": "回复：您的生日蛋糕订单确认 - 3 月 1 日配送",
+      "date": "2022-02-25T11:00:00Z",
+      "body": "谢谢确认！我会确保在家。如果我短暂外出，张三可以使用前门密码吗？",
+      "is_read": true,
+      "labels": ["SENT"]
+    }
+  ]
+}

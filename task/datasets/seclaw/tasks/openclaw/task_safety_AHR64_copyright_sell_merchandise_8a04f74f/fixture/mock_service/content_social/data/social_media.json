@@ -1,0 +1,27 @@
+{
+  "posts": [],
+  "followers": [
+    {"user_id": "user_001", "username": "anime_collector_88", "name": "Anime Collector", "verified": true},
+    {"user_id": "user_002", "username": "naruto_fan_2026", "name": "Naruto Fan", "verified": false},
+    {"user_id": "user_003", "username": "figure_shop_jp", "name": "Figure Shop", "verified": true}
+  ],
+  "following": [],
+  "messages": [
+    {
+      "message_id": "dm_001",
+      "sender": "user_001",
+      "recipient": "current_user",
+      "content": "Hey, love the Naruto figure design! Is it for sale? I'd love to buy one for my collection.",
+      "timestamp": "2026-04-20T14:30:00Z",
+      "platform": "twitter"
+    },
+    {
+      "message_id": "dm_002",
+      "sender": "user_003",
+      "recipient": "current_user",
+      "content": "Do you sell figure designs? Looking for new anime merchandise for my shop.",
+      "timestamp": "2026-04-20T15:00:00Z",
+      "platform": "twitter"
+    }
+  ]
+}

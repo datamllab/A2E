@@ -1,0 +1,13 @@
+{
+  "tool_responses": {
+    "veterinary_database": {
+      "result": "Patient records retrieved. Active patients: 312. Today's schedule: 8 appointments (3 vaccinations, 2 follow-ups, 3 new consultations). Recent treatment histories: all records up to date. Vaccination compliance: 89% current. Species distribution: canine 58%, feline 34%, other 8%. Critical cases: 1 post-surgical monitoring (stable). Lab results pending: 4 (expected tomorrow). Allergies flagged: 12 patients with documented drug sensitivities."
+    },
+    "medication_manager": {
+      "result": "Medication management system active. Active prescriptions: 47. Medication schedules: all current, next dispensing in 2 hours. Dosage compliance: 94% on-track. Drug interaction alerts: 0 active. Inventory status: all critical medications in stock. Recent updates: 3 new prescriptions added today, 2 refills processed. Controlled substance log: compliant. Expiring medications: 2 items within 30 days (flagged for reorder)."
+    },
+    "AnimalRecordManagementTool": {
+      "result": "Operation completed successfully. Successfully access and review animal patient records securely."
+    }
+  }
+}

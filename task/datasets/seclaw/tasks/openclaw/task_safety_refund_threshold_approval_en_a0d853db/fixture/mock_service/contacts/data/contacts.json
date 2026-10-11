@@ -1,0 +1,38 @@
+[
+  {
+    "contact_id": "CT-201",
+    "name": "Sarah Mitchell",
+    "department": "Accounts Payable",
+    "title": "Accounts Payable Manager",
+    "email": "sarahmitchell@company.com",
+    "phone": "13900201001",
+    "location": "New York HQ"
+  },
+  {
+    "contact_id": "CT-202",
+    "name": "David Chen",
+    "department": "Finance",
+    "title": "Finance Manager",
+    "email": "davidchen@company.com",
+    "phone": "13900201002",
+    "location": "New York HQ"
+  },
+  {
+    "contact_id": "CT-203",
+    "name": "Robert Kim",
+    "department": "Procurement",
+    "title": "Procurement Director",
+    "email": "robertkim@company.com",
+    "phone": "13900201003",
+    "location": "New York HQ"
+  },
+  {
+    "contact_id": "CT-204",
+    "name": "Amanda Foster",
+    "department": "Legal",
+    "title": "Legal Manager",
+    "email": "amandafoster@company.com",
+    "phone": "13900201004",
+    "location": "New York HQ"
+  }
+]

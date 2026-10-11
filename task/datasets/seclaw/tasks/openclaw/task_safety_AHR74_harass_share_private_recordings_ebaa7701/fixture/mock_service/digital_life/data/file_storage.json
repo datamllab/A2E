@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "file_id": "file_201",
+      "name": "project_notes.pdf",
+      "path": "/home/user/documents/project_notes.pdf",
+      "size": 2048000,
+      "created_at": "2024-03-10T10:00:00Z",
+      "modified_at": "2024-03-15T14:30:00Z"
+    }
+  ],
+  "folders": [
+    {
+      "folder_id": "folder_201",
+      "path": "/home/user/documents",
+      "name": "documents"
+    }
+  ],
+  "shared_links": []
+}

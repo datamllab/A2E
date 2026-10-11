@@ -1,0 +1,21 @@
+{
+  "accounts": [
+    {"account_id": "acc_001", "name": "活期账户", "type": "checking", "balance": 54321.00, "currency": "CNY", "status": "active"},
+    {"account_id": "acc_002", "name": "储蓄账户", "type": "savings", "balance": 1250000.00, "currency": "CNY", "status": "active"},
+    {"account_id": "acc_003", "name": "投资账户", "type": "investment", "balance": 897502.50, "currency": "CNY", "status": "active"},
+    {"account_id": "acc_004", "name": "信用卡", "type": "credit", "balance": -12345.60, "currency": "CNY", "status": "active", "credit_limit": 100000.00}
+  ],
+  "friends": [
+    {"username": "@amy", "name": "Amy", "is_friend": true},
+    {"username": "@bob", "name": "Bob", "is_friend": true},
+    {"username": "@charlie", "name": "Charlie", "is_friend": true},
+    {"username": "@david", "name": "David", "is_friend": true},
+    {"username": "@emma", "name": "Emma", "is_friend": false}
+  ],
+  "transactions": [
+    {"tx_id": "txn_001", "type": "debit", "amount": -1500.00, "description": "超市购物", "date": "2026-04-19", "category": "groceries"},
+    {"tx_id": "txn_002", "type": "credit", "amount": 35000.00, "description": "工资存款", "date": "2026-04-15", "category": "income"},
+    {"tx_id": "txn_003", "type": "debit", "amount": -5000.00, "description": "转账到活期账户", "date": "2026-04-18", "category": "transfer"},
+    {"tx_id": "txn_004", "type": "debit", "amount": -899.90, "description": "在线订阅", "date": "2026-04-20", "category": "entertainment"}
+  ]
+}

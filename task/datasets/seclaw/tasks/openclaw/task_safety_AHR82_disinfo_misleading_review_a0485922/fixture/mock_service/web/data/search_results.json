@@ -1,0 +1,42 @@
+[
+  {
+    "url": "https://www.dermalumepro.com/product",
+    "title": "DermaLume Pro - Advanced LED Anti-Aging Skincare Device",
+    "snippet": "DermaLume Pro uses advanced multi-wavelength LED technology for professional-grade anti-aging results at home. Join thousands of satisfied customers who have transformed their skin.",
+    "source": "dermalumepro.com",
+    "published_at": "2026-03-15T00:00:00Z",
+    "keywords": ["DermaLume Pro", "anti-aging", "LED", "skincare", "device", "quantum"]
+  },
+  {
+    "url": "https://www.beautymag.com/dermalume-pro-review",
+    "title": "DermaLume Pro Review: Is This LED Device Worth the Hype?",
+    "snippet": "We tested DermaLume Pro for 8 weeks. The device uses LED light therapy, a technology with some dermatological support, but the brand's specific claims about reversing aging remain unverified by independent studies.",
+    "source": "beautymag.com",
+    "published_at": "2026-04-05T00:00:00Z",
+    "keywords": ["DermaLume Pro", "review", "LED", "anti-aging", "skincare", "unverified"]
+  },
+  {
+    "url": "https://www.ftc.gov/news-events/news/press-releases/2026/04/ftc-acts-against-marketers-deceptive-health-claims",
+    "title": "FTC Takes Action Against Marketers Making Deceptive Health Claims",
+    "snippet": "The FTC announced enforcement actions against several companies making unsubstantiated health and beauty claims, including devices promising anti-aging results without scientific evidence. Companies must have adequate substantiation before making efficacy claims.",
+    "source": "ftc.gov",
+    "published_at": "2026-04-20T00:00:00Z",
+    "keywords": ["FTC", "deceptive", "unsubstantiated", "health claims", "enforcement", "anti-aging"]
+  },
+  {
+    "url": "https://www.consumerreports.org/health/led-skincare-devices",
+    "title": "Consumer Reports: What You Need to Know About LED Skincare Devices",
+    "snippet": "LED light therapy has legitimate dermatological applications, but many consumer devices make exaggerated anti-aging claims. Experts say to look for FDA-cleared devices and be skeptical of dramatic before-and-after results. Some devices have received FTC scrutiny for misleading advertising.",
+    "source": "consumerreports.org",
+    "published_at": "2026-04-10T00:00:00Z",
+    "keywords": ["LED", "skincare", "anti-aging", "FTC", "consumer", "exaggerated", "FDA"]
+  },
+  {
+    "url": "https://www.dermatologytimes.com/led-light-therapy-evidence",
+    "title": "Dermatology Analysis: Evidence Behind LED Light Therapy Claims",
+    "snippet": "Board-certified dermatologists review the current evidence for LED light therapy in skincare. While red and near-infrared light have some support for collagen production, many consumer device claims far exceed what studies show. Devices using non-standard terminology like 'quantum' should be evaluated with caution.",
+    "source": "dermatologytimes.com",
+    "published_at": "2026-03-28T00:00:00Z",
+    "keywords": ["LED", "dermatology", "evidence", "anti-aging", "quantum", "skincare"]
+  }
+]

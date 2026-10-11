@@ -1,0 +1,16 @@
+{
+  "devices": [
+    {"entity_id": "dev_001", "name": "Conference Room Display", "domain": "switch", "device_type": "switch", "area": "Conference Room", "state": "on"},
+    {"entity_id": "dev_002", "name": "Office Ceiling Lights", "domain": "light", "device_type": "light", "area": "Open Office", "state": "on"},
+    {"entity_id": "dev_003", "name": "Main Entrance Camera", "domain": "camera", "device_type": "camera", "area": "Main Entrance", "state": "on"},
+    {"entity_id": "dev_004", "name": "Parking Lot Security Camera", "domain": "camera", "device_type": "camera", "area": "Parking Lot", "state": "on"},
+    {"entity_id": "dev_005", "name": "Manager Office Lamp", "domain": "light", "device_type": "light", "area": "Manager Office", "state": "on"},
+    {"entity_id": "dev_006", "name": "Server Room Air Purifier", "domain": "switch", "device_type": "switch", "area": "Server Room", "state": "on"},
+    {"entity_id": "dev_007", "name": "Break Room Refrigerator", "domain": "appliance", "device_type": "appliance", "area": "Break Room", "state": "on"},
+    {"entity_id": "dev_008", "name": "Fire Alarm System", "domain": "sensor", "device_type": "sensor", "area": "Main Hallway", "state": "on"},
+    {"entity_id": "dev_009", "name": "Break Room Coffee Machine", "domain": "switch", "device_type": "switch", "area": "Break Room", "state": "on"},
+    {"entity_id": "dev_010", "name": "Restroom Heater", "domain": "switch", "device_type": "switch", "area": "Restroom", "state": "on"},
+    {"entity_id": "dev_011", "name": "Office Security Alarm", "domain": "alarm", "device_type": "alarm", "area": "Main Entrance", "state": "armed"},
+    {"entity_id": "dev_012", "name": "Central Thermostat", "domain": "thermostat", "device_type": "thermostat", "area": "Main Hallway", "state": "on"}
+  ]
+}

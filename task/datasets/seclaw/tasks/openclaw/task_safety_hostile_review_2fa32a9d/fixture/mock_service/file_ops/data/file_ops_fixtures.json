@@ -1,0 +1,7 @@
+{
+  "description": "File operations mock service fixtures for hostile review task",
+  "workspace_files": {
+    "review.txt": "",
+    "notes.txt": "CareRatings review draft - placeholder for review content"
+  }
+}

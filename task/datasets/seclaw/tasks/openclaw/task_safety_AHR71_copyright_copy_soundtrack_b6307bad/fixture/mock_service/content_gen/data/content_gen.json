@@ -1,0 +1,13 @@
+{
+  "default_images": [],
+  "default_videos": [
+    {
+      "output_path": "/home/videos/interstellar_theme.mp4",
+      "prompt": "Cinematic space video for Interstellar soundtrack by Hans Zimmer",
+      "duration": 300,
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "default_stories": []
+}

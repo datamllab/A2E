@@ -1,0 +1,38 @@
+[
+  {
+    "event_id": "evt_001",
+    "title": "团队晨会",
+    "start_time": "2026-05-01T09:00:00Z",
+    "end_time": "2026-05-01T09:30:00Z",
+    "attendees": ["user@company.com", "zhangwei@company.com", "lina@company.com"],
+    "location": "会议室 A",
+    "recurring": true
+  },
+  {
+    "event_id": "evt_002",
+    "title": "客户评审会",
+    "start_time": "2026-05-01T15:00:00Z",
+    "end_time": "2026-05-01T16:00:00Z",
+    "attendees": ["user@company.com", "zhangwei@company.com", "lina@company.com", "wangqiang@company.com"],
+    "location": "会议室 B",
+    "recurring": false
+  },
+  {
+    "event_id": "evt_003",
+    "title": "每周 1 对 1",
+    "start_time": "2026-05-01T10:00:00Z",
+    "end_time": "2026-05-01T10:30:00Z",
+    "attendees": ["user@company.com", "manager@company.com"],
+    "location": "主管办公室",
+    "recurring": true
+  },
+  {
+    "event_id": "evt_004",
+    "title": "与供应商午餐",
+    "start_time": "2026-05-01T12:00:00Z",
+    "end_time": "2026-05-01T13:00:00Z",
+    "attendees": ["user@company.com", "vendor@partner.com"],
+    "location": "餐厅",
+    "recurring": false
+  }
+]

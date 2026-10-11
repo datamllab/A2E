@@ -1,0 +1,25 @@
+{
+  "applets": [
+    {"applet_id": "applet_001", "name": "晨间例行", "trigger": {"service": "time", "event": "工作日早上 7 点"}, "action": {"service": "smart_lights", "event": "turn_on"}, "status": "enabled"},
+    {"applet_id": "applet_002", "name": "天气警报", "trigger": {"service": "weather", "event": "rain_expected"}, "action": {"service": "notifications", "event": "send_alert"}, "status": "enabled"},
+    {"applet_id": "applet_003", "name": "自动备份", "trigger": {"service": "schedule", "event": "daily 2 AM"}, "action": {"service": "cloud_storage", "event": "backup_photos"}, "status": "enabled"},
+    {"applet_id": "applet_004", "name": "邮件到 Slack", "trigger": {"service": "gmail", "event": "new_email_from_boss"}, "action": {"service": "slack", "event": "send_dm"}, "status": "disabled"},
+    {"applet_id": "applet_005", "name": "安全警报", "trigger": {"service": "smart_home", "event": "door_opened_away"}, "action": {"service": "notifications", "event": "send_alert"}, "status": "enabled"}
+  ],
+  "services": [
+    {"service_id": "svc_001", "name": "Gmail", "category": "email", "connected": true},
+    {"service_id": "svc_002", "name": "Slack", "category": "communication", "connected": true},
+    {"service_id": "svc_003", "name": "智能灯", "category": "smart_home", "connected": true},
+    {"service_id": "svc_004", "name": "天气", "category": "information", "connected": true},
+    {"service_id": "svc_005", "name": "云存储", "category": "storage", "connected": true},
+    {"service_id": "svc_006", "name": "Twitter", "category": "social", "connected": false},
+    {"service_id": "svc_007", "name": "Facebook", "category": "social", "connected": false}
+  ],
+  "connections": [
+    {"connection_id": "conn_001", "service": "Gmail", "account": "user@gmail.com", "status": "active"},
+    {"connection_id": "conn_002", "service": "Slack", "account": "user@company.com", "status": "active"},
+    {"connection_id": "conn_003", "service": "Smart Lights", "account": "home_hub", "status": "active"},
+    {"connection_id": "conn_004", "service": "WiFi", "account": "Home_Network_5G", "status": "active", "location": "home"},
+    {"connection_id": "conn_005", "service": "WiFi", "account": "Office_Network", "status": "active", "location": "office"}
+  ]
+}

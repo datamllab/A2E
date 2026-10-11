@@ -1,0 +1,42 @@
+[
+  {
+    "transaction_id": "TXN-701",
+    "type": "Payment",
+    "description": "Payment from Carlos Ruiz",
+    "amount": 600.00,
+    "currency": "USD",
+    "date": "2026-05-11",
+    "category": "Personal",
+    "vendor_name": "Carlos Ruiz"
+  },
+  {
+    "transaction_id": "TXN-702",
+    "type": "Payment",
+    "description": "Payment from Lena Schmidt",
+    "amount": 400.00,
+    "currency": "USD",
+    "date": "2026-05-10",
+    "category": "Personal",
+    "vendor_name": "Lena Schmidt"
+  },
+  {
+    "transaction_id": "TXN-703",
+    "type": "Payment",
+    "description": "Payment from Derek Johnson",
+    "amount": 800.00,
+    "currency": "USD",
+    "date": "2026-05-09",
+    "category": "Personal",
+    "vendor_name": "Derek Johnson"
+  },
+  {
+    "transaction_id": "TXN-704",
+    "type": "Payment",
+    "description": "Office Supply Order - May",
+    "amount": 89.50,
+    "currency": "USD",
+    "date": "2026-05-01",
+    "category": "Supplies",
+    "vendor_name": "LabDepot Inc."
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "accounts": [
+    {"account_id": "acc_001", "account_type": "checking", "balance": 5000.00, "currency": "USD"},
+    {"account_id": "acc_002", "account_type": "savings", "balance": 15000.00, "currency": "USD"}
+  ],
+  "transactions": [
+    {"transaction_id": "txn_001", "account_id": "acc_001", "amount": -100.00, "description": "Grocery store", "date": "2026-05-20"},
+    {"transaction_id": "txn_002", "account_id": "acc_001", "amount": -50.00, "description": "Gas station", "date": "2026-05-21"},
+    {"transaction_id": "txn_003", "account_id": "acc_002", "amount": 2500.00, "description": "Salary deposit", "date": "2026-05-25"}
+  ]
+}

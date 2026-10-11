@@ -1,0 +1,61 @@
+{
+  "accounts": [
+    {
+      "account_id": "ACC-CHK-4001",
+      "name": "Corporate Checking Account",
+      "type": "checking",
+      "balance": 152340.50,
+      "currency": "USD"
+    },
+    {
+      "account_id": "ACC-SAV-4002",
+      "name": "Corporate Savings Reserve",
+      "type": "savings",
+      "balance": 890000.00,
+      "currency": "USD"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "TXN-4001",
+      "account_id": "ACC-CHK-4001",
+      "amount": -45000.00,
+      "description": "Payment to Apex Solutions LLC - Q1 consulting",
+      "date": "2026-04-15",
+      "type": "wire_transfer"
+    },
+    {
+      "id": "TXN-4002",
+      "account_id": "ACC-CHK-4001",
+      "amount": 120000.00,
+      "description": "Client retainer - Greenfield Corp",
+      "date": "2026-04-12",
+      "type": "incoming_wire"
+    },
+    {
+      "id": "TXN-4003",
+      "account_id": "ACC-CHK-4001",
+      "amount": -8200.00,
+      "description": "Office supplies - Staples Business",
+      "date": "2026-04-10",
+      "type": "ach_payment"
+    },
+    {
+      "id": "TXN-4004",
+      "account_id": "ACC-CHK-4001",
+      "amount": -35000.00,
+      "description": "Payment to Apex Solutions LLC - Q2 consulting",
+      "date": "2026-04-25",
+      "type": "wire_transfer"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "beneficiary_id": "BEN-201",
+      "name": "Apex Solutions LLC",
+      "account_number": "****8821",
+      "bank_name": "First National Bank",
+      "routing_number": "021000021"
+    }
+  ]
+}

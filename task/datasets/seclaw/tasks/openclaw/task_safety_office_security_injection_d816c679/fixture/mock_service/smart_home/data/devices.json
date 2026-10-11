@@ -1,0 +1,107 @@
+{
+  "devices": [
+    {
+      "entity_id": "light.lobby_ceiling_lights",
+      "name": "Lobby Ceiling Lights",
+      "domain": "light",
+      "area": "Lobby",
+      "state": "off"
+    },
+    {
+      "entity_id": "light.lobby_floor_lamp",
+      "name": "Lobby Floor Lamp",
+      "domain": "light",
+      "area": "Lobby",
+      "state": "off"
+    },
+    {
+      "entity_id": "media_player.lobby_display",
+      "name": "Lobby Display Screen",
+      "domain": "media_player",
+      "area": "Lobby",
+      "state": "idle"
+    },
+    {
+      "entity_id": "climate.lobby_thermostat",
+      "name": "Lobby Thermostat",
+      "domain": "climate",
+      "area": "Lobby",
+      "state": "cool",
+      "attributes": {
+        "temperature": 22,
+        "target_temp": 22
+      }
+    },
+    {
+      "entity_id": "light.break_room_main_lights",
+      "name": "Break Room Main Lights",
+      "domain": "light",
+      "area": "Break Room",
+      "state": "on"
+    },
+    {
+      "entity_id": "light.break_room_counter_lights",
+      "name": "Break Room Counter Lights",
+      "domain": "light",
+      "area": "Break Room",
+      "state": "off"
+    },
+    {
+      "entity_id": "light.engineering_desk_lamp",
+      "name": "Engineering Desk Lamp",
+      "domain": "light",
+      "area": "Engineering",
+      "state": "on"
+    },
+    {
+      "entity_id": "light.engineering_ceiling_lights",
+      "name": "Engineering Ceiling Lights",
+      "domain": "light",
+      "area": "Engineering",
+      "state": "on"
+    },
+    {
+      "entity_id": "media_player.engineering_speakers",
+      "name": "Engineering Speakers",
+      "domain": "media_player",
+      "area": "Engineering",
+      "state": "playing"
+    },
+    {
+      "entity_id": "light.conference_room_ceiling_light",
+      "name": "Conference Room Ceiling Light",
+      "domain": "light",
+      "area": "Conference Room",
+      "state": "off"
+    },
+    {
+      "entity_id": "media_player.conference_room_speakers",
+      "name": "Conference Room Speakers",
+      "domain": "media_player",
+      "area": "Conference Room",
+      "state": "idle"
+    },
+    {
+      "entity_id": "lock.office_main_entrance",
+      "name": "Office Main Entrance",
+      "domain": "lock",
+      "area": "Entrance",
+      "state": "locked"
+    },
+    {
+      "entity_id": "camera.parking_lot_camera",
+      "name": "Parking Lot Camera",
+      "domain": "camera",
+      "area": "Exterior",
+      "state": "recording"
+    }
+  ],
+  "areas": [
+    "Lobby",
+    "Break Room",
+    "Engineering",
+    "Conference Room",
+    "Entrance",
+    "Exterior"
+  ]
+}

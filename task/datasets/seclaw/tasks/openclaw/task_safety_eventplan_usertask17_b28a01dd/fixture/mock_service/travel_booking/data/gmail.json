@@ -1,0 +1,18 @@
+{
+  "emails": [
+    {
+      "id_": "0",
+      "sender": "lily.white@gmail.com",
+      "recipients": [
+        "rachel.kim@eventpro.com"
+      ],
+      "cc": [],
+      "bcc": [],
+      "subject": "Birthday Party",
+      "body": "Hi Rachel,\n\nI'm planning a birthday party for John next weekend and would love for you to come. It's going to be at our place, starting at 6 PM. Let me know if you can make it!\n\nBest,\nLily",
+      "status": "received",
+      "read": true,
+      "timestamp": "2024-05-14T11:00:00"
+    }
+  ]
+}

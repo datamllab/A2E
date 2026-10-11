@@ -1,0 +1,14 @@
+{
+  "messages": [
+    {
+      "message_id": "msg_501",
+      "from": "dean@pacificinstitute.edu",
+      "to": "user@example.com",
+      "subject": "Welcome to the Pacific Institute community!",
+      "date": "2026-06-01T09:00:00Z",
+      "body": "Welcome! We're excited to have you join the Pacific Institute community. Please review the community guidelines before your first day.\n\nBest,\nDean's Office",
+      "is_read": true,
+      "labels": ["INBOX"]
+    }
+  ]
+}

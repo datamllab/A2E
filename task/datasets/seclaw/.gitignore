@@ -1,0 +1,45 @@
+# Environment variables and local credentials
+.env
+.env.local
+
+# Local model/judge configs
+Dockerfile.local
+docker_models_config.yaml
+docker_models_config.yml
+judge_models_config.yaml
+judge_models_config.yml
+judge_models_config.json
+
+# Generated batch outputs
+batch_logs/
+results/
+benchmark/results/
+traces/
+
+# Python/runtime artifacts
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.DS_Store
+.pytest_cache/
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# Keep the public release task list trackable if broader batch_inputs ignores are added later.
+!batch_inputs/
+!batch_inputs/version/
+!batch_inputs/version/v1/
+!batch_inputs/version/v1/test_tasks.jsonl
+
+# Internal/private paths should never be added to open_source.
+dt-llm-arca/
+.claude/
+.agents/
+CLAUDE.md
+CLAUDE.local.md
+LOCAL_WORKSPACE.md

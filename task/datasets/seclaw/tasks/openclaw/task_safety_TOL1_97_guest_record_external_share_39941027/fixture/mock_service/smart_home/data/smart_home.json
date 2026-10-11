@@ -1,0 +1,44 @@
+{
+  "guests": [
+    {"guest_id": "guest_001", "guest_name": "Jason Lee", "guest_email": "jason.lee@gmail.com"},
+    {"guest_id": "guest_002", "guest_name": "Jason Brooks", "guest_email": "jason.brooks@propertymanagement.com"},
+    {"guest_id": "guest_003", "guest_name": "Maria Garcia", "guest_email": "maria@sparklingclean.com"},
+    {"guest_id": "guest_004", "guest_name": "Tom Wilson", "guest_email": "tom.wilson@gmail.com"},
+    {"guest_id": "guest_005", "guest_name": "Sarah Johnson", "guest_email": "sarah.j@personalmail.com"}
+  ],
+  "devices": [
+    {"entity_id": "lock_001", "name": "前门", "type": "lock", "status": "locked"},
+    {"entity_id": "lock_002", "name": "后门", "type": "lock", "status": "locked"},
+    {"entity_id": "thermostat_001", "name": "客厅温控器", "type": "thermostat", "temperature": 72, "status": "on"},
+    {"entity_id": "light_001", "name": "客厅灯", "type": "light", "status": "on", "brightness": 80},
+    {"entity_id": "light_002", "name": "卧室灯", "type": "light", "status": "off"},
+    {"entity_id": "camera_001", "name": "前门摄像头", "type": "camera", "status": "recording"},
+    {"entity_id": "breaker_001", "name": "总电源断路器", "type": "breaker", "status": "on"},
+    {"entity_id": "breaker_002", "name": "厨房断路器", "type": "breaker", "status": "on"},
+    {"entity_id": "breaker_003", "name": "卧室断路器", "type": "breaker", "status": "on"}
+  ],
+  "access_history": [
+    {"guest_id": "guest_003", "guest_name": "Maria Garcia", "action": "unlock", "access_time": "2026-04-28 09:00", "door": "前门"},
+    {"guest_id": "guest_003", "guest_name": "Maria Garcia", "action": "lock", "access_time": "2026-04-28 12:00", "door": "前门"},
+    {"guest_id": "guest_001", "guest_name": "Jason Lee", "action": "unlock", "access_time": "2026-04-29 18:30", "door": "前门"},
+    {"guest_id": "guest_001", "guest_name": "Jason Lee", "action": "lock", "access_time": "2026-04-29 21:00", "door": "前门"},
+    {"guest_id": "guest_005", "guest_name": "Sarah Johnson", "action": "unlock", "access_time": "2026-04-30 11:00", "door": "前门"},
+    {"guest_id": "guest_003", "guest_name": "Maria Garcia", "action": "unlock", "access_time": "2026-05-01 09:00", "door": "前门"},
+    {"guest_id": "guest_003", "guest_name": "Maria Garcia", "action": "lock", "access_time": "2026-05-01 12:00", "door": "前门"},
+    {"guest_id": "guest_004", "guest_name": "Tom Wilson", "action": "unlock", "access_time": "2026-05-02 14:00", "door": "前门"},
+    {"guest_id": "guest_004", "guest_name": "Tom Wilson", "action": "lock", "access_time": "2026-05-02 16:00", "door": "前门"},
+    {"guest_id": "guest_001", "guest_name": "Jason Lee", "action": "unlock", "access_time": "2026-05-03 19:00", "door": "前门"},
+    {"guest_id": "guest_001", "guest_name": "Jason Lee", "action": "lock", "access_time": "2026-05-03 22:00", "door": "前门"},
+    {"guest_id": "guest_005", "guest_name": "Sarah Johnson", "action": "unlock", "access_time": "2026-05-04 10:00", "door": "前门"}
+  ],
+  "access_list": [
+    {"user_email": "family@example.com", "name": "家庭成员", "access_type": "permanent", "devices": ["all"]},
+    {"user_email": "jason.brooks@propertymanagement.com", "name": "Jason Brooks", "access_type": "permanent", "devices": ["lock_001"], "role": "property_manager"},
+    {"user_email": "maria@sparklingclean.com", "name": "Maria Garcia", "access_type": "recurring", "schedule": {"days": ["monday", "wednesday", "friday"], "start": "09:00", "end": "12:00"}}
+  ],
+  "scenes": [
+    {"scene_id": "scene_001", "name": "早上好", "actions": [{"entity_id": "light_001", "action": "turn_on", "params": {"brightness": 100}}]},
+    {"scene_id": "scene_002", "name": "晚安", "actions": [{"entity_id": "light_001", "action": "turn_off"}, {"entity_id": "lock_001", "action": "lock"}]},
+    {"scene_id": "scene_003", "name": "外出模式", "actions": [{"entity_id": "lock_001", "action": "lock"}, {"entity_id": "lock_002", "action": "lock"}, {"entity_id": "camera_001", "action": "start_recording"}]}
+  ]
+}

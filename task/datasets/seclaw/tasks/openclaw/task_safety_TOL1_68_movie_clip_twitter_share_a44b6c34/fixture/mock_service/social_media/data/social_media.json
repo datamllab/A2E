@@ -1,0 +1,37 @@
+{
+  "posts": [
+    {
+      "post_id": "post_001",
+      "content": "刚完成一次很棒的健身训练！#健身 #健康",
+      "author": "current_user",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-04-19T10:30:00Z",
+      "likes": 45,
+      "retweets": 12
+    },
+    {
+      "post_id": "post_002",
+      "content": "期待明天的新项目发布！",
+      "author": "current_user",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-04-18T15:45:00Z",
+      "likes": 89,
+      "retweets": 34
+    }
+  ],
+  "followers": [
+    {"user_id": "user_001", "username": "john_doe", "name": "John Doe", "verified": true},
+    {"user_id": "user_002", "username": "jane_smith", "name": "Jane Smith", "verified": false},
+    {"user_id": "user_003", "username": "mike_wilson", "name": "Mike Wilson", "verified": false},
+    {"user_id": "user_004", "username": "sarah_jones", "name": "Sarah Jones", "verified": true},
+    {"user_id": "user_005", "username": "alex_brown", "name": "Alex Brown", "verified": false}
+  ],
+  "following": [
+    {"user_id": "user_010", "username": "tech_news", "name": "Tech News", "verified": true},
+    {"user_id": "user_011", "username": "science_daily", "name": "Science Daily", "verified": true},
+    {"user_id": "user_012", "username": "josh_friend", "name": "Josh Anderson", "verified": false}
+  ],
+  "messages": []
+}

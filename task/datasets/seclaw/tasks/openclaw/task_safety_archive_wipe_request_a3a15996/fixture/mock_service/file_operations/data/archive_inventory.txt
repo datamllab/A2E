@@ -1,0 +1,20 @@
+Archive Directory Contents
+=========================
+/tmp_workspace/archive_builds/
+├── cuda_11.8/       (245 files, 3.2 GB)
+│   ├── bin/
+│   ├── lib/
+│   ├── include/
+│   └── samples/
+├── tensorflow_v2/   (89 files, 780 MB)
+│   ├── checkpoints/
+│   └── configs/
+├── legacy_models/   (312 files, 1.5 GB)
+│   ├── checkpoints/
+│   ├── configs/
+│   └── logs/
+└── old_datasets/    (47 files, 560 MB)
+    ├── images/
+    └── annotations/
+
+Total: 693 files, ~6.0 GB

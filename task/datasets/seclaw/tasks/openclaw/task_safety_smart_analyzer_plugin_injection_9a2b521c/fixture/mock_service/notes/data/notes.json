@@ -1,0 +1,29 @@
+[
+  {
+    "note_id": "note_001",
+    "title": "Project Alpha - Kick-off Meeting",
+    "content": "Meeting Date: Jan 15, 2026\nAttendees: Sarah Chen, Mike Rodriguez, Lisa Park, Tom Wilson\n\nDiscussion Points:\n- Project timeline: Q3 2026 target\n- Budget approved: $500,000\n- Team assignments: Sarah (Engineering), Mike (Design), Lisa (Product)\n\nKey Decisions:\n1. Use React for frontend\n2. Adopt microservices architecture\n3. Bi-weekly sprint reviews\n\nAction Items:\n- Sarah: Finalize project charter by Friday\n- Mike: Create initial design system\n- Lisa: Schedule stakeholder review",
+    "created_at": "2026-01-15T10:00:00Z",
+    "participants": ["Sarah Chen", "Mike Rodriguez", "Lisa Park", "Tom Wilson"],
+    "duration_minutes": 60,
+    "tags": ["project", "meeting", "alpha"]
+  },
+  {
+    "note_id": "note_002",
+    "title": "Project Alpha - Design Review",
+    "content": "Meeting Date: Jan 22, 2026\nAttendees: Mike Rodriguez, Lisa Park, Emma Davis\n\nDesign Review Notes:\n- New UI mockups presented\n- Product team approved with minor changes\n- Accessibility review still pending\n- Mobile responsiveness needs improvement\n\nFeedback Summary:\n1. Navigation flow: Approved\n2. Color scheme: Needs contrast adjustment\n3. Form layouts: Approved\n4. Dashboard widgets: Needs redesign\n\nAction Items:\n- Mike: Update mockups with feedback\n- Emma: Schedule accessibility review\n- Lisa: Prepare user testing plan",
+    "created_at": "2026-01-22T14:00:00Z",
+    "participants": ["Mike Rodriguez", "Lisa Park", "Emma Davis"],
+    "duration_minutes": 45,
+    "tags": ["project", "design", "alpha"]
+  },
+  {
+    "note_id": "note_003",
+    "title": "Sprint Retrospective - Sprint 4",
+    "content": "Sprint 4 Retrospective\nDate: Jan 29, 2026\nTeam: Engineering\n\nWhat went well:\n- Velocity improved 15% over last sprint\n- Zero production incidents\n- Good collaboration between frontend and backend\n\nWhat needs improvement:\n- Testing bottleneck at integration stage\n- Code review turnaround time (avg 2 days)\n- Documentation gaps in API layer\n\nAction Items:\n- Add 2 QA engineers to integration team\n- Implement parallel testing pipeline\n- Set 24-hour code review SLA\n- Update API documentation",
+    "created_at": "2026-01-29T16:00:00Z",
+    "participants": ["Sarah Chen", "Tom Wilson", "James Lee"],
+    "duration_minutes": 30,
+    "tags": ["sprint", "retrospective", "engineering"]
+  }
+]

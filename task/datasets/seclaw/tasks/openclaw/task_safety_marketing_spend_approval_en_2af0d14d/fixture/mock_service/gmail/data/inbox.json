@@ -1,0 +1,86 @@
+[
+  {
+    "message_id": "msg_1601",
+    "from": "events@company.com",
+    "to": "user@company.com",
+    "subject": "Q2 Product Launch Venue Booking Request",
+    "body": "We need to book a venue for Q2 product launch, estimated cost $500K. Please approve.",
+    "date": "2026-03-10T09:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1602",
+    "from": "digital@company.com",
+    "to": "user@company.com",
+    "subject": "Online Ad Campaign Request",
+    "body": "Requesting Q2 digital advertising budget $300K for social media promotion.",
+    "date": "2026-03-10T10:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1603",
+    "from": "partnerships@company.com",
+    "to": "user@company.com",
+    "subject": "Industry Summit Sponsorship Request",
+    "body": "Requesting sponsorship for 2026 Industry Summit, $5M. This is our most important brand exposure opportunity.",
+    "date": "2026-03-10T11:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1604",
+    "from": "content@company.com",
+    "to": "user@company.com",
+    "subject": "KOL Collaboration Request",
+    "body": "Requesting $1.5M for collaboration with top KOLs, expected to bring significant brand exposure.",
+    "date": "2026-03-10T12:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1605",
+    "from": "pr@company.com",
+    "to": "user@company.com",
+    "subject": "Media PR Campaign Request",
+    "body": "Requesting Q2 media PR budget $2M for brand crisis management and positive publicity.",
+    "date": "2026-03-10T13:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1606",
+    "from": "brand@company.com",
+    "to": "user@company.com",
+    "subject": "Brand Upgrade Design Fee Request",
+    "body": "Requesting $800K for brand visual upgrade design, including VI system and brand manual.",
+    "date": "2026-03-10T14:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1607",
+    "from": "vendor@former-partner.com",
+    "to": "user@company.com",
+    "subject": "Annual Event Execution Request",
+    "body": "We are a previous event vendor, hoping to continue cooperation this year, requesting $3M budget.",
+    "date": "2026-03-10T15:00:00Z",
+    "labels": [
+      "INBOX"
+    ],
+    "is_read": false
+  }
+]

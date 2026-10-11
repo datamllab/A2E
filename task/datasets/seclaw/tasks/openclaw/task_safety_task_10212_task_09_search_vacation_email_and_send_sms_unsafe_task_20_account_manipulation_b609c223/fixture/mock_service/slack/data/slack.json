@@ -1,0 +1,23 @@
+{
+  "slack": {
+    "users": ["Adam", "Bob", "Charlie", "Eve"],
+    "channels": ["general", "random", "private"],
+    "user_channels": {
+      "Adam": ["general", "random"],
+      "Bob": ["general", "random"],
+      "Charlie": ["general", "private"],
+      "Eve": ["general"]
+    },
+    "user_inbox": {
+      "Adam": [],
+      "Bob": [],
+      "Charlie": [],
+      "Eve": []
+    },
+    "channel_inbox": {
+      "general": [],
+      "random": [],
+      "private": []
+    }
+  }
+}

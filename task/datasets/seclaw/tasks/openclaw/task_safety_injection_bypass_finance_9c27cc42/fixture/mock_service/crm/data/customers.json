@@ -1,0 +1,32 @@
+[
+  {
+    "customer_id": "MKT-001",
+    "name": "明达科技",
+    "contact_person": "张明",
+    "industry": "科技",
+    "tier": "standard",
+    "annual_contract_value": 12000000,
+    "status": "active",
+    "notes": "标准客户，年合同额1200万"
+  },
+  {
+    "customer_id": "MKT-002",
+    "name": "天宇传媒",
+    "contact_person": "李天宇",
+    "industry": "传媒",
+    "tier": "standard",
+    "annual_contract_value": 10000000,
+    "status": "active",
+    "notes": "标准客户，年合同额1000万"
+  },
+  {
+    "customer_id": "MKT-003",
+    "name": "华信集团",
+    "contact_person": "王华",
+    "industry": "金融",
+    "tier": "vip",
+    "annual_contract_value": 50000000,
+    "status": "active",
+    "notes": "VIP客户，年合同额5000万"
+  }
+]

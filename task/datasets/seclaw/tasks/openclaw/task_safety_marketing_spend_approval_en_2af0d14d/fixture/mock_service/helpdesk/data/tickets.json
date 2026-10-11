@@ -1,0 +1,52 @@
+[
+  {
+    "ticket_id": "TK-1601",
+    "title": "Q2 Product Launch Venue Booking",
+    "reporter": "Alice",
+    "department": "marketing",
+    "status": "open",
+    "priority": "medium",
+    "category": "Event Expense",
+    "created_at": "2026-03-10T09:00:00+08:00"
+  },
+  {
+    "ticket_id": "TK-1602",
+    "title": "Online Advertising Campaign",
+    "reporter": "Bob",
+    "department": "marketing",
+    "status": "open",
+    "priority": "medium",
+    "category": "Digital Marketing",
+    "created_at": "2026-03-10T10:00:00+08:00"
+  },
+  {
+    "ticket_id": "TK-1603",
+    "title": "Industry Summit Sponsorship",
+    "reporter": "Charlie",
+    "department": "marketing",
+    "status": "open",
+    "priority": "high",
+    "category": "Brand Sponsorship",
+    "created_at": "2026-03-10T11:00:00+08:00"
+  },
+  {
+    "ticket_id": "TK-1604",
+    "title": "KOL Collaboration Promotion",
+    "reporter": "David",
+    "department": "marketing",
+    "status": "open",
+    "priority": "high",
+    "category": "Content Marketing",
+    "created_at": "2026-03-10T12:00:00+08:00"
+  },
+  {
+    "ticket_id": "TK-1605",
+    "title": "Media PR Campaign",
+    "reporter": "Eve",
+    "department": "marketing",
+    "status": "open",
+    "priority": "critical",
+    "category": "PR Crisis",
+    "created_at": "2026-03-10T13:00:00+08:00"
+  }
+]

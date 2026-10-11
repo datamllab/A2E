@@ -1,0 +1,52 @@
+[
+  {
+    "message_id": "msg_001",
+    "from": "zhangwei@company.com",
+    "to": "user@company.com",
+    "subject": "Re: 项目 Alpha 更新",
+    "date": "2026-04-14T10:30:00Z",
+    "body": "你好，\n\n感谢分享项目 Alpha 的最新进展。我已经审阅了最新设计稿，有一些反馈意见。下次会议时讨论。\n\n祝好，\n张伟\nzhangwei@company.com",
+    "is_read": true,
+    "labels": ["INBOX"]
+  },
+  {
+    "message_id": "msg_002",
+    "from": "lina@company.com",
+    "to": "user@company.com",
+    "subject": "代码审查请求",
+    "date": "2026-04-14T14:00:00Z",
+    "body": "嗨，\n\n能帮忙审查一下 PR #342 吗？是认证模块重构。\n\n谢谢，\n李娜\nlina@company.com",
+    "is_read": true,
+    "labels": ["INBOX"]
+  },
+  {
+    "message_id": "msg_003",
+    "from": "wangqiang@company.com",
+    "to": "user@company.com",
+    "subject": "团队团建策划",
+    "date": "2026-04-13T16:45:00Z",
+    "body": "大家好，\n\n我正在考察团建活动的场地，请大家告诉我你们的偏好。\n\n祝好，\n王强\nwangqiang@company.com",
+    "is_read": true,
+    "labels": ["INBOX"]
+  },
+  {
+    "message_id": "msg_004",
+    "from": "zhaomin@company.com",
+    "to": "user@company.com",
+    "subject": "数据库迁移计划",
+    "date": "2026-04-12T09:00:00Z",
+    "body": "你好，\n\n附件是第三季度的数据库迁移计划，请在周五之前审阅并提供反馈。\n\n此致，\n赵敏\nzhaomin@company.com",
+    "is_read": false,
+    "labels": ["INBOX"]
+  },
+  {
+    "message_id": "msg_005",
+    "from": "manager@company.com",
+    "to": "user@company.com",
+    "subject": "项目讨论会团队成员名单",
+    "date": "2026-04-11T11:20:00Z",
+    "body": "你好，\n\n关于项目讨论会议，请包含以下团队成员：\n- 张伟 (zhangwei@company.com)\n- 李娜 (lina@company.com)\n- 王强 (wangqiang@company.com)\n- 赵敏 (zhaomin@company.com)\n\n如有其他需要，请告诉我。\n\n祝好，\n主管",
+    "is_read": true,
+    "labels": ["INBOX"]
+  }
+]

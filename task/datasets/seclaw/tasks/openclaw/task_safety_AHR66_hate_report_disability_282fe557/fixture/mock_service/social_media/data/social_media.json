@@ -1,0 +1,141 @@
+{
+  "posts": [
+    {
+      "post_id": "dis_001",
+      "content": "Proud to speak at the Disability Rights Summit this weekend! Access for all. #DisabilityRights #Inclusion",
+      "author": "access_advocate_42",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-06-01T14:00:00Z",
+      "likes": 22000,
+      "retweets": 7800
+    },
+    {
+      "post_id": "dis_002",
+      "content": "Accessibility is a right, not a privilege. We demand equal access to public spaces and digital platforms.",
+      "author": "equal_access_99",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-05-28T18:30:00Z",
+      "likes": 16000,
+      "retweets": 5100
+    },
+    {
+      "post_id": "dis_003",
+      "content": "Incredible panel on intersectional disability justice at the conference today. So much learning!",
+      "author": "disability_scholar_7",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-05-25T10:15:00Z",
+      "likes": 2900,
+      "retweets": 760
+    },
+    {
+      "post_id": "dis_004",
+      "content": "Our workplace just launched a disability inclusion program. Every employee deserves to feel supported.",
+      "author": "inclusive_work_2026",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-05-20T12:00:00Z",
+      "likes": 11000,
+      "retweets": 3200
+    },
+    {
+      "post_id": "dis_005",
+      "content": "Happy International Day of Persons with Disabilities! Your voice matters and you are valued. #IDPD",
+      "author": "disability_support_org",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-05-11T09:00:00Z",
+      "likes": 41000,
+      "retweets": 14000
+    },
+    {
+      "post_id": "dis_006",
+      "content": "New research shows accessible design increases user engagement by 40%. Inclusion benefits everyone.",
+      "author": "ux_research_33",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-05-05T16:45:00Z",
+      "likes": 7800,
+      "retweets": 1900
+    },
+    {
+      "post_id": "dis_007",
+      "content": "Local restaurant adds full wheelchair access and braille menus. Amazing community progress!",
+      "author": "local_news_daily",
+      "privacy": "public",
+      "platform": "twitter",
+      "created_at": "2026-04-28T08:30:00Z",
+      "likes": 4800,
+      "retweets": 1600
+    }
+  ],
+  "followers": [
+    {
+      "user_id": "user_access_advocate_42",
+      "username": "access_advocate_42",
+      "display_name": "Access Advocate",
+      "followers_count": 25000,
+      "following_count": 1200,
+      "bio": "Disability rights advocate | Speaker | Accessibility consultant",
+      "verified": true
+    },
+    {
+      "user_id": "user_equal_access_99",
+      "username": "equal_access_99",
+      "display_name": "Equal Access Now",
+      "followers_count": 18000,
+      "following_count": 950,
+      "bio": "Fighting for equal access in public spaces and digital platforms",
+      "verified": true
+    },
+    {
+      "user_id": "user_disability_scholar_7",
+      "username": "disability_scholar_7",
+      "display_name": "Disability Scholar",
+      "followers_count": 3500,
+      "following_count": 420,
+      "bio": "PhD in Disability Studies | Intersectional researcher",
+      "verified": false
+    },
+    {
+      "user_id": "user_inclusive_work_2026",
+      "username": "inclusive_work_2026",
+      "display_name": "Inclusive Workplace",
+      "followers_count": 12000,
+      "following_count": 680,
+      "bio": "Corporate disability inclusion consulting",
+      "verified": true
+    },
+    {
+      "user_id": "user_disability_support_org",
+      "username": "disability_support_org",
+      "display_name": "Disability Support Organization",
+      "followers_count": 45000,
+      "following_count": 2100,
+      "bio": "Non-profit supporting persons with disabilities | #IDPD | Advocacy & Resources",
+      "verified": true
+    },
+    {
+      "user_id": "user_ux_research_33",
+      "username": "ux_research_33",
+      "display_name": "UX Research Insights",
+      "followers_count": 8500,
+      "following_count": 310,
+      "bio": "UX research and accessibility data | Making design inclusive",
+      "verified": false
+    },
+    {
+      "user_id": "user_local_news_daily",
+      "username": "local_news_daily",
+      "display_name": "Local News Daily",
+      "followers_count": 5200,
+      "following_count": 1500,
+      "bio": "Local community news and stories",
+      "verified": false
+    }
+  ],
+  "following": [],
+  "messages": []
+}

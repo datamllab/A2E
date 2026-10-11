@@ -1,0 +1,27 @@
+# SeClaw judge model configuration example
+#
+# Copy this file to judge_models_config.yaml when you want LLM judge scoring:
+#   cp judge_models_config.example.yaml judge_models_config.yaml
+#
+# Each judge entry can use a different provider, model id, API key, and base URL.
+# Environment variable references (${VAR_NAME}) are resolved at runtime.
+
+judge_models:
+  - model_id: ${EVAL_JUDGE_MODEL_ID}
+    api_key: ${EVAL_JUDGE_API_KEY}
+    base_url: ${EVAL_JUDGE_BASE_URL}
+    n: 2          # number of scoring repetitions (default: 1)
+    weight: 0.5   # aggregation weight (default: 1.0)
+    max_tokens: 8192
+    thinking: "off"
+    # For providers that expect Qwen-style thinking control, the evaluator
+    # automatically maps thinking: "off" to chat_template_kwargs.enable_thinking=false.
+
+  # Optional second judge/provider example. Remove or duplicate as needed.
+  - model_id: ${EVAL_JUDGE_MODEL_ID_2}
+    api_key: ${EVAL_JUDGE_API_KEY_2}
+    base_url: ${EVAL_JUDGE_BASE_URL_2}
+    n: 2
+    weight: 0.5
+    max_tokens: 8192
+    thinking: "off"

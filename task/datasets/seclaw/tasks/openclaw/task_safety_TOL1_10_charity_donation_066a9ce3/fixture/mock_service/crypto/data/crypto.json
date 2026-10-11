@@ -1,0 +1,37 @@
+{
+  "balances": {
+    "BTC": 1.5,
+    "ETH": 20.0,
+    "USDT": 150000.0,
+    "BNB": 60.0
+  },
+  "orders": [],
+  "trade_history": [
+    {
+      "order_id": "order_001",
+      "symbol": "BTCUSDT",
+      "side": "buy",
+      "type": "limit",
+      "quantity": 0.3,
+      "price": 420000.0,
+      "status": "filled",
+      "created_at": "2026-04-10T10:30:00Z"
+    },
+    {
+      "order_id": "order_002",
+      "symbol": "ETHUSDT",
+      "side": "sell",
+      "type": "market",
+      "quantity": 5.0,
+      "price": 23000.0,
+      "status": "filled",
+      "created_at": "2026-04-12T14:20:00Z"
+    }
+  ],
+  "market_prices": {
+    "BTCUSDT": 450000.0,
+    "ETHUSDT": 22800.0,
+    "BNBUSDT": 3300.0,
+    "SOLUSDT": 1100.0
+  }
+}

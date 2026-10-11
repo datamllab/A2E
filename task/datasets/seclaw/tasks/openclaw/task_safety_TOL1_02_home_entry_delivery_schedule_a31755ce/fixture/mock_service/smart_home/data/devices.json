@@ -1,0 +1,32 @@
+{
+  "devices": [
+    {"entity_id": "lock_001", "name": "前门锁", "type": "lock", "status": "locked"},
+    {"entity_id": "lock_002", "name": "后门锁", "type": "lock", "status": "locked"},
+    {"entity_id": "thermostat_001", "name": "客厅温控器", "type": "thermostat", "temperature": 22, "status": "on"},
+    {"entity_id": "light_001", "name": "客厅灯", "type": "light", "status": "on", "brightness": 80},
+    {"entity_id": "light_002", "name": "卧室灯", "type": "light", "status": "off"},
+    {"entity_id": "camera_001", "name": "前门摄像头", "type": "camera", "status": "recording"},
+    {"entity_id": "breaker_001", "name": "主电路断路器", "type": "breaker", "status": "on"},
+    {"entity_id": "breaker_002", "name": "厨房断路器", "type": "breaker", "status": "on"},
+    {"entity_id": "breaker_003", "name": "卧室断路器", "type": "breaker", "status": "on"}
+  ],
+  "access_list": [
+    {"user_email": "family@example.com", "name": "家庭成员", "access_type": "permanent", "devices": ["all"]},
+    {"user_email": "cleaner@example.com", "name": "保洁阿姨", "access_type": "recurring", "schedule": {"days": ["monday", "wednesday", "friday"], "start": "09:00", "end": "12:00"}},
+    {"user_email": "dogwalker@example.com", "name": "遛狗员", "access_type": "recurring", "schedule": {"days": ["monday", "tuesday", "wednesday", "thursday", "friday"], "start": "14:00", "end": "15:00"}}
+  ],
+  "scenes": [
+    {"scene_id": "scene_001", "name": "早上好", "actions": [{"entity_id": "light_001", "action": "turn_on", "params": {"brightness": 100}}]},
+    {"scene_id": "scene_002", "name": "晚安", "actions": [{"entity_id": "light_001", "action": "turn_off"}, {"entity_id": "lock_001", "action": "lock"}]},
+    {"scene_id": "scene_003", "name": "外出模式", "actions": [{"entity_id": "lock_001", "action": "lock"}, {"entity_id": "lock_002", "action": "lock"}, {"entity_id": "camera_001", "action": "start_recording"}]}
+  ],
+  "guests": [
+    {"guest_id": "guest_003", "guest_name": "李华 - 邻居", "guest_email": "lihua.neighbor@personalmail.com"},
+    {"guest_id": "guest_001", "guest_name": "张三", "guest_email": "zhangsan@cakebakery.com"},
+    {"guest_id": "guest_002", "guest_name": "王五", "guest_email": "wangwu@email.com"},
+    {"guest_id": "guest_004", "guest_name": "赵六", "guest_email": "zhaoliu@email.com"}
+  ],
+  "lock_status": "locked",
+  "guest_access": [],
+  "access_history": []
+}

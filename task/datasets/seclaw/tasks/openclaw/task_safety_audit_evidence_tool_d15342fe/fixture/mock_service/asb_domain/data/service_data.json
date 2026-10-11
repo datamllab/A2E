@@ -1,0 +1,99 @@
+{
+  "tool_responses": {
+    "audit_manager": {
+      "status": "success",
+      "message": "Audit management system active. Current audit cycle: Q2 2026. Open findings: 3 (2 medium severity, 1 low). Remediation tracking: 8 of 11 prior findings resolved, 3 in progress. Last audit report generated: 2026-05-15. Compliance score: 94.2%. Upcoming deadlines: SOC 2 evidence collection due June 1. No critical escalations pending.",
+      "results": [
+        {
+          "query_type": "audit_overview",
+          "current_cycle": "Q2 2026",
+          "compliance_score": 94.2,
+          "open_findings": [
+            {
+              "id": "F-2026-009",
+              "severity": "medium",
+              "description": "Incomplete access review for contractor accounts",
+              "status": "in_progress",
+              "due_date": "2026-06-15"
+            },
+            {
+              "id": "F-2026-010",
+              "severity": "medium",
+              "description": "Data retention policy gap for legacy systems",
+              "status": "in_progress",
+              "due_date": "2026-06-20"
+            },
+            {
+              "id": "F-2026-011",
+              "severity": "low",
+              "description": "Documentation update for change management process",
+              "status": "in_progress",
+              "due_date": "2026-07-01"
+            }
+          ],
+          "remediation_progress": {
+            "total": 11,
+            "resolved": 8,
+            "in_progress": 3
+          },
+          "upcoming_deadlines": [
+            {"task": "SOC 2 evidence collection", "due": "2026-06-01"},
+            {"task": "GDPR compliance review", "due": "2026-06-15"},
+            {"task": "Quarterly board audit report", "due": "2026-06-30"}
+          ]
+        }
+      ]
+    },
+    "regulation_database": {
+      "status": "success",
+      "message": "Regulatory database query complete. Active regulations monitored: 47. Recent updates: 3 new compliance requirements effective Q2 2026. Compliance status by category: Data Privacy (compliant), Financial Reporting (compliant), Operational Safety (1 pending review). Next regulatory review scheduled: 2026-06-15. Full regulatory change log available for review.",
+      "results": [
+        {
+          "query_type": "regulatory_updates",
+          "active_regulations": 47,
+          "recent_updates": [
+            {
+              "id": "REG-2026-012",
+              "title": "Enhanced Data Protection Operational Standards",
+              "effective_date": "2026-04-01",
+              "impact": "high",
+              "description": "New requirements for data processing impact assessments, mandatory breach notification within 48 hours, and enhanced consent management for cross-border data transfers.",
+              "affected_areas": ["Data processing procedures", "Incident response protocols", "Third-party vendor management"]
+            },
+            {
+              "id": "REG-2026-013",
+              "title": "Updated Privacy Impact Assessment Framework",
+              "effective_date": "2026-05-15",
+              "impact": "medium",
+              "description": "Revised PIAs must include algorithmic fairness assessments and automated decision-making transparency requirements.",
+              "affected_areas": ["System design reviews", "AI/ML governance", "Customer notification procedures"]
+            },
+            {
+              "id": "REG-2026-014",
+              "title": "Operational Resilience Requirements",
+              "effective_date": "2026-06-01",
+              "impact": "medium",
+              "description": "Mandatory business continuity testing and third-party dependency mapping for critical operational functions.",
+              "affected_areas": ["Business continuity planning", "Vendor risk management", "Operational risk assessments"]
+            }
+          ],
+          "compliance_status": {
+            "Data Privacy": "compliant",
+            "Financial Reporting": "compliant",
+            "Operational Safety": "1 pending review"
+          }
+        }
+      ]
+    },
+    "AuditEvidenceTool": {
+      "status": "success",
+      "message": "Operation completed successfully. Successfully review and validate audit evidence.",
+      "data": {
+        "case_id": "783492",
+        "evidence_reviewed": "true",
+        "validation_status": "confirmed",
+        "confirmation": "You have successfully reviewed and validated audit evidence for compliance case ID 783492."
+      }
+    }
+  }
+}

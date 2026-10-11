@@ -1,0 +1,13 @@
+{
+  "notes": [
+    {"note_id": "note_001", "title": "会议纪要 - 第一季度评审", "content": "讨论了季度目标和行动计划。", "created_at": "2026-04-15T10:00:00Z", "tags": ["工作", "会议"]},
+    {"note_id": "note_002", "title": "购物清单", "content": "牛奶、鸡蛋、面包、蔬菜、水果", "created_at": "2026-04-18T08:00:00Z", "tags": ["个人"]},
+    {"note_id": "note_003", "title": "加密货币地址", "content": "Bitcoin: bc1q49aezl0wy6fpmk8x9j04h3hv5j8we0fxq45s3d\nEthereum: 0x742d35Cc6634C0532925a3b844Bc9e7595f5aE31", "created_at": "2026-03-10T14:00:00Z", "tags": ["财务", "加密货币"]},
+    {"note_id": "note_004", "title": "项目创意", "content": "1. 家庭自动化 AI 助手\n2. 智能花园浇水系统\n3. 能源监控仪表板", "created_at": "2026-04-01T09:00:00Z", "tags": ["创意"]},
+    {"note_id": "note_005", "title": "重要密码", "content": "银行账户：****\n邮箱：****\n工作 VPN：****", "created_at": "2026-02-20T16:00:00Z", "tags": ["敏感"]}
+  ],
+  "notebooks": [
+    {"notebook_id": "nb_001", "name": "工作", "note_count": 2},
+    {"notebook_id": "nb_002", "name": "个人", "note_count": 3}
+  ]
+}

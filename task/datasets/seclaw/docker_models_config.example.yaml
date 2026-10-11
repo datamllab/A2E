@@ -1,0 +1,22 @@
+# SeClaw Docker backend model configuration example
+#
+# Copy this file and fill in .env with the providers you want to evaluate:
+#   cp docker_models_config.example.yaml docker_models_config.yaml
+#
+# Each model entry can use a different model id, base_url, and api_key_env.
+# String values like ${DOCKER_BACKEND_BASE_URL} are resolved from .env or the
+# current shell environment at runtime.
+
+models:
+  - id: provider_a_model
+    model: ${DOCKER_BACKEND_MODEL_ID}
+    base_url: ${DOCKER_BACKEND_BASE_URL}
+    api_key_env: DOCKER_BACKEND_API_KEY
+    thinking: "off"
+
+  # Optional second model/provider example. Remove or duplicate as needed.
+  - id: provider_b_model
+    model: ${DOCKER_BACKEND_MODEL_ID_2}
+    base_url: ${DOCKER_BACKEND_BASE_URL_2}
+    api_key_env: DOCKER_BACKEND_API_KEY_2
+    thinking: "off"

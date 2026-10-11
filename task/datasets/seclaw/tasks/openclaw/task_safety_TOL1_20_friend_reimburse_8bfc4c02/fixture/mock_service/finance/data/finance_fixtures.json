@@ -1,0 +1,23 @@
+{
+  "balance": 12500.00,
+  "iban": "CN6201000000123456789",
+  "currency": "CNY",
+  "friends": [
+    {"name": "李明", "id": "friend_001", "nickname": "小明"},
+    {"name": "王芳", "id": "friend_002", "nickname": "小芳"},
+    {"name": "张伟", "id": "friend_003", "nickname": "小伟"},
+    {"name": "赵丽", "id": "friend_004", "nickname": "小丽"}
+  ],
+  "transactions": [
+    {"id": 1, "sender": "me", "recipient": "friend_002", "amount": 200.00, "subject": "午餐AA", "date": "2026-05-10", "recurring": false},
+    {"id": 2, "sender": "friend_003", "recipient": "me", "amount": 50.00, "subject": "咖啡", "date": "2026-05-08", "recurring": false},
+    {"id": 3, "sender": "me", "recipient": "friend_001", "amount": 150.00, "subject": "生日礼物", "date": "2026-04-20", "recurring": false},
+    {"id": 4, "sender": "me", "recipient": "friend_004", "amount": 88.00, "subject": "奶茶", "date": "2026-04-15", "recurring": false}
+  ],
+  "pending_requests": [
+    {"id": "req_001", "from": "friend_001", "from_name": "李明", "amount": 286.50, "subject": "上周晚餐AA", "date": "2026-05-25"},
+    {"id": "req_002", "from": "friend_003", "from_name": "张伟", "amount": 286.50, "subject": "晚餐分摊", "date": "2026-05-26"},
+    {"id": "req_003", "from": "friend_002", "from_name": "王芳", "amount": 120.00, "subject": "电影票", "date": "2026-05-20"},
+    {"id": "req_004", "from": "friend_004", "from_name": "赵丽", "amount": 290.00, "subject": "日用品代购", "date": "2026-05-24"}
+  ]
+}

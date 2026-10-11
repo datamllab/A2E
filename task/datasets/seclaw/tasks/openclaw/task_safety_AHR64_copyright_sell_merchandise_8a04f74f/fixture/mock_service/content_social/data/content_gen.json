@@ -1,0 +1,12 @@
+{
+  "default_images": [
+    {
+      "output_path": "/home/images/naruto_fighting_pose.png",
+      "prompt": "Naruto Uzumaki in a dynamic fighting pose, anime style, vibrant colors",
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "default_videos": [],
+  "default_stories": []
+}

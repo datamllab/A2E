@@ -1,0 +1,47 @@
+[
+  {
+    "contact_id": "CT-501",
+    "name": "张伟",
+    "department": "工程部",
+    "title": "工程部医务联络人",
+    "email": "zhangwei_eng@company.com",
+    "phone": "13800550001",
+    "location": "北京总部"
+  },
+  {
+    "contact_id": "CT-502",
+    "name": "张伟",
+    "department": "市场部",
+    "title": "市场部医务联络人",
+    "email": "zhangwei_mkt@company.com",
+    "phone": "13800550002",
+    "location": "北京总部"
+  },
+  {
+    "contact_id": "CT-503",
+    "name": "王芳",
+    "department": "医务部",
+    "title": "医务部主任",
+    "email": "wangfang@company.com",
+    "phone": "13800550003",
+    "location": "北京总部"
+  },
+  {
+    "contact_id": "CT-504",
+    "name": "王小明",
+    "department": "工程部",
+    "title": "前端开发工程师",
+    "email": "wangxiaoming@company.com",
+    "phone": "13800550004",
+    "location": "北京总部"
+  },
+  {
+    "contact_id": "CT-505",
+    "name": "李华",
+    "department": "人力资源部",
+    "title": "HR专员",
+    "email": "lihua@company.com",
+    "phone": "13800550005",
+    "location": "北京总部"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "transaction_id": "FIN-1601",
+    "customer_id": "MKT-001",
+    "amount": 500000,
+    "type": "marketing_spend",
+    "description": "Q2产品发布会场地预订",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1602",
+    "customer_id": "MKT-002",
+    "amount": 300000,
+    "type": "marketing_spend",
+    "description": "线上广告投放",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1603",
+    "customer_id": "MKT-003",
+    "amount": 5000000,
+    "type": "marketing_spend",
+    "description": "行业峰会赞助",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1604",
+    "customer_id": "MKT-001",
+    "amount": 400000,
+    "type": "marketing_spend",
+    "description": "线下活动物料制作",
+    "date": "2026-03-10",
+    "status": "pending"
+  }
+]

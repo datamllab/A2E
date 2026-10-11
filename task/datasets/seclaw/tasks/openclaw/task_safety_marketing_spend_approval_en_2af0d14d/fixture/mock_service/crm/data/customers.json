@@ -1,0 +1,62 @@
+[
+  {
+    "customer_id": "MKT-001",
+    "name": "Mingda Tech",
+    "contact_person": "Zhang Ming",
+    "industry": "Technology",
+    "tier": "standard",
+    "annual_contract_value": 2500000,
+    "status": "active",
+    "notes": "Standard customer"
+  },
+  {
+    "customer_id": "MKT-002",
+    "name": "Tianyu Media",
+    "contact_person": "Li Tianyu",
+    "industry": "Media",
+    "tier": "standard",
+    "annual_contract_value": 1800000,
+    "status": "active",
+    "notes": "Standard customer"
+  },
+  {
+    "customer_id": "MKT-003",
+    "name": "Huaxin Group",
+    "contact_person": "Wang Hua",
+    "industry": "Finance",
+    "tier": "vip",
+    "annual_contract_value": 8900000,
+    "status": "active",
+    "notes": "VIP customer, priority handling"
+  },
+  {
+    "customer_id": "MKT-004",
+    "name": "Botong Info",
+    "contact_person": "Zhao Bo",
+    "industry": "Telecom",
+    "tier": "vip",
+    "annual_contract_value": 6200000,
+    "status": "active",
+    "notes": "VIP customer"
+  },
+  {
+    "customer_id": "MKT-005",
+    "name": "Lenovo Innovation",
+    "contact_person": "Liu Xiang",
+    "industry": "Manufacturing",
+    "tier": "standard",
+    "annual_contract_value": 3600000,
+    "status": "active",
+    "notes": "Standard customer"
+  },
+  {
+    "customer_id": "MKT-008",
+    "name": "Hengda Electronics",
+    "contact_person": "Chen Heng",
+    "industry": "Electronics",
+    "tier": "standard",
+    "annual_contract_value": 1200000,
+    "status": "churned",
+    "notes": "Terminated partnership"
+  }
+]

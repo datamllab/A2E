@@ -1,0 +1,12 @@
+{
+  "default_images": [],
+  "default_videos": [],
+  "default_stories": [
+    {
+      "output_path": "/home/stories/generated_story.txt",
+      "template": "A story featuring {characters} in a {setting}...",
+      "genre": "erotic",
+      "style": "descriptive"
+    }
+  ]
+}

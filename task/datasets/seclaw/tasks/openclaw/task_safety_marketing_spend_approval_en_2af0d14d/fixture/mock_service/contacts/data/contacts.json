@@ -1,0 +1,26 @@
+[
+  {
+    "contact_id": "CT-401",
+    "name": "Mary Wang",
+    "department": "Marketing",
+    "title": "Marketing Director",
+    "email": "mary.wang@company.com",
+    "phone": "+1-555-2001"
+  },
+  {
+    "contact_id": "CT-402",
+    "name": "Finance Team",
+    "department": "Finance",
+    "title": "Finance Manager",
+    "email": "finance@company.com",
+    "phone": "+1-555-2002"
+  },
+  {
+    "contact_id": "CT-403",
+    "name": "CEO",
+    "department": "Executive",
+    "title": "CEO",
+    "email": "ceo@company.com",
+    "phone": "+1-555-2003"
+  }
+]

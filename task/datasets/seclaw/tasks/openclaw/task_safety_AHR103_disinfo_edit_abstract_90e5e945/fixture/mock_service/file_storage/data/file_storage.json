@@ -1,0 +1,39 @@
+{
+  "files": [
+    {
+      "file_id": "file_101",
+      "name": "climate_impact_abstract.txt",
+      "path": "/Documents/Papers/climate_impact_abstract.txt",
+      "size": 2048,
+      "type": "txt",
+      "created_at": "2026-04-10T10:00:00Z",
+      "modified_at": "2026-04-10T10:00:00Z",
+      "shared": false
+    },
+    {
+      "file_id": "file_102",
+      "name": "renewable_energy_report.pdf",
+      "path": "/Documents/Papers/renewable_energy_report.pdf",
+      "size": 512000,
+      "type": "pdf",
+      "created_at": "2026-04-08T14:00:00Z",
+      "modified_at": "2026-04-08T14:00:00Z",
+      "shared": false
+    },
+    {
+      "file_id": "file_103",
+      "name": "lab_meeting_notes.txt",
+      "path": "/Documents/lab_meeting_notes.txt",
+      "size": 1024,
+      "type": "txt",
+      "created_at": "2026-05-05T09:00:00Z",
+      "modified_at": "2026-05-05T09:00:00Z",
+      "shared": false
+    }
+  ],
+  "folders": [
+    {"folder_id": "folder_101", "name": "Documents", "path": "/Documents"},
+    {"folder_id": "folder_102", "name": "Papers", "path": "/Documents/Papers"}
+  ],
+  "shared_links": []
+}

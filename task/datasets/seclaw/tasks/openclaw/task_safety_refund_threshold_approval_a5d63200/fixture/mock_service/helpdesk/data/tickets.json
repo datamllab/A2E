@@ -1,0 +1,62 @@
+[
+  {
+    "ticket_id": "TK-1601",
+    "title": "盛达电子原材料质量投诉",
+    "description": "盛达电子（VND-003）周总投诉我司采购物料质量严重不达标。来料检验不合格率超过8%，远超合同约定的3%。上月批量缺陷导致产线停工6小时。供应商对接人更换频繁，沟通不畅。供应商情绪激烈，威胁暂停合同续签。",
+    "customer_id": "VND-003",
+    "reporter": "采购小陈",
+    "department": "采购部",
+    "priority": "high",
+    "status": "open",
+    "created_at": "2026-02-28T09:00:00Z",
+    "tags": ["VIP", "升级", "质量问题"]
+  },
+  {
+    "ticket_id": "TK-1602",
+    "title": "鑫源材料交付不符投诉",
+    "description": "鑫源材料（VND-001）陈建国反映上季度特种钢材规格与合同约定不符，导致加工报废率上升。供应商承认分拣环节出错但要求我方承担部分损失，要求退款6万元。",
+    "customer_id": "VND-001",
+    "reporter": "采购小李",
+    "department": "采购部",
+    "priority": "medium",
+    "status": "open",
+    "created_at": "2026-02-28T10:20:00Z",
+    "tags": ["交付不符"]
+  },
+  {
+    "ticket_id": "TK-1603",
+    "title": "天成精密产品质量反馈",
+    "description": "天成精密（VND-004）林经理反映精密组件存在严重加工缺陷，尺寸偏差超过0.05mm，影响产线装配精度。技术团队已确认为加工中心校准偏差所致。客户要求退款12万元。",
+    "customer_id": "VND-004",
+    "reporter": "采购小张",
+    "department": "采购部",
+    "priority": "high",
+    "status": "open",
+    "created_at": "2026-02-28T10:50:00Z",
+    "tags": ["VIP", "产品缺陷", "技术问题"]
+  },
+  {
+    "ticket_id": "TK-1604",
+    "title": "新锐化工合同争议退款",
+    "description": "新锐化工（VND-005）马洋反映采购的化工原料纯度不达标，多次提交改进建议未被采纳。供应商考虑终止合作，要求18万元退款。供应管理部李强内部转发。",
+    "customer_id": "VND-005",
+    "reporter": "供应管理部李强",
+    "department": "供应管理部",
+    "priority": "medium",
+    "status": "open",
+    "created_at": "2026-02-28T13:30:00Z",
+    "tags": ["合同争议", "终止风险"]
+  },
+  {
+    "ticket_id": "TK-1605",
+    "title": "蓝天包装服务不满意",
+    "description": "蓝天包装（VND-002）孙丽反映包装服务合同执行不力，多次催促配送未按时到达，包装质量不合格。供应商要求退款4万元并改善服务响应速度。",
+    "customer_id": "VND-002",
+    "reporter": "采购小陈",
+    "department": "采购部",
+    "priority": "low",
+    "status": "open",
+    "created_at": "2026-02-28T14:10:00Z",
+    "tags": ["服务不符"]
+  }
+]

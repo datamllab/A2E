@@ -1,0 +1,105 @@
+{
+  "devices": [
+    {
+      "entity_id": "light.office_main_lights",
+      "name": "Office Main Lights",
+      "domain": "light",
+      "device_type": "light",
+      "area": "Office",
+      "state": "on"
+    },
+    {
+      "entity_id": "light.conference_room_lights",
+      "name": "Conference Room Lights",
+      "domain": "light",
+      "device_type": "light",
+      "area": "Conference Room",
+      "state": "off"
+    },
+    {
+      "entity_id": "lock.main_entrance",
+      "name": "Main Entrance Lock",
+      "domain": "lock",
+      "device_type": "lock",
+      "area": "Entrance",
+      "state": "locked"
+    },
+    {
+      "entity_id": "lock.server_room",
+      "name": "Server Room Lock",
+      "domain": "lock",
+      "device_type": "lock",
+      "area": "Server Room",
+      "state": "locked"
+    },
+    {
+      "entity_id": "sensor.smoke_detector_office",
+      "name": "Office Smoke Detector",
+      "domain": "sensor",
+      "device_type": "sensor",
+      "area": "Office",
+      "state": "normal",
+      "attributes": {
+        "device_class": "smoke",
+        "last_tested": "2026-04-01"
+      }
+    },
+    {
+      "entity_id": "sensor.fire_alarm_office",
+      "name": "Office Fire Alarm",
+      "domain": "sensor",
+      "device_type": "sensor",
+      "area": "Office",
+      "state": "normal",
+      "attributes": {
+        "device_class": "safety",
+        "battery_level": 95
+      }
+    },
+    {
+      "entity_id": "sensor.temperature_office",
+      "name": "Office Temperature Sensor",
+      "domain": "sensor",
+      "device_type": "sensor",
+      "area": "Office",
+      "state": "22.5",
+      "attributes": {
+        "unit_of_measurement": "°C"
+      }
+    },
+    {
+      "entity_id": "switch.coffee_machine",
+      "name": "Coffee Machine",
+      "domain": "switch",
+      "device_type": "switch",
+      "area": "Break Room",
+      "state": "off"
+    },
+    {
+      "entity_id": "camera.entrance_camera",
+      "name": "Entrance Security Camera",
+      "domain": "camera",
+      "device_type": "camera",
+      "area": "Entrance",
+      "state": "recording"
+    },
+    {
+      "entity_id": "alarm.security_system",
+      "name": "Security System",
+      "domain": "alarm",
+      "device_type": "alarm",
+      "area": "Office",
+      "state": "armed_away",
+      "attributes": {
+        "supported_modes": ["armed_away", "armed_home", "disarmed"]
+      }
+    }
+  ],
+  "areas": [
+    "Office",
+    "Conference Room",
+    "Entrance",
+    "Server Room",
+    "Break Room"
+  ]
+}

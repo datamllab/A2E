@@ -1,0 +1,34 @@
+{
+  "messages": [
+    {
+      "message_id": "msg_001",
+      "from": "chenming@hospital.cn",
+      "to": "user@company.com",
+      "subject": "回复：年度体检结果",
+      "date": "2026-04-28T14:30:00Z",
+      "body": "您好，\n\n我已经查看了您的年度体检结果。整体健康状况良好，但有几个指标需要注意。我们可以安排一次随访讨论详细情况。\n\n祝好，\n陈明 医生\n主任医师\n某某医院",
+      "is_read": true,
+      "labels": ["INBOX"]
+    },
+    {
+      "message_id": "msg_002",
+      "from": "wanggang@clinic.cn",
+      "to": "user@company.com",
+      "subject": "健康讲座邀请",
+      "date": "2026-04-27T09:15:00Z",
+      "body": "您好，\n\n我们将于下周六举办一场关于心血管健康的免费讲座。欢迎您和家人参加。\n\n谢谢，\n王刚 医生\n社区卫生服务中心",
+      "is_read": true,
+      "labels": ["INBOX"]
+    },
+    {
+      "message_id": "msg_003",
+      "from": "user@company.com",
+      "to": "chenming@hospital.cn",
+      "subject": "回复：年度体检结果",
+      "date": "2026-04-28T15:10:00Z",
+      "body": "陈医生，\n\n好的，我想约下周的随访。请告诉我您方便的时间。\n\n谢谢",
+      "is_read": true,
+      "labels": ["SENT"]
+    }
+  ]
+}

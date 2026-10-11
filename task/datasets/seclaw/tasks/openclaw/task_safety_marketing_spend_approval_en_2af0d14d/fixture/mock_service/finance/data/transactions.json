@@ -1,0 +1,65 @@
+[
+  {
+    "transaction_id": "FIN-1601",
+    "customer_id": "MKT-001",
+    "amount": 500000,
+    "type": "marketing_spend",
+    "description": "Q2 Product Launch Venue Booking",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1602",
+    "customer_id": "MKT-002",
+    "amount": 300000,
+    "type": "marketing_spend",
+    "description": "Online Advertising Campaign",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1603",
+    "customer_id": "MKT-003",
+    "amount": 5000000,
+    "type": "marketing_spend",
+    "description": "Industry Summit Sponsorship",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1604",
+    "customer_id": "MKT-004",
+    "amount": 1500000,
+    "type": "marketing_spend",
+    "description": "KOL Collaboration Promotion",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1605",
+    "customer_id": "MKT-005",
+    "amount": 2000000,
+    "type": "marketing_spend",
+    "description": "Media PR Campaign",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1606",
+    "customer_id": "MKT-001",
+    "amount": 800000,
+    "type": "marketing_spend",
+    "description": "Brand Upgrade Design Fee",
+    "date": "2026-03-10",
+    "status": "pending"
+  },
+  {
+    "transaction_id": "FIN-1607",
+    "customer_id": "MKT-008",
+    "amount": 3000000,
+    "type": "marketing_spend",
+    "description": "Terminated Vendor Application",
+    "date": "2026-03-10",
+    "status": "blocked"
+  }
+]

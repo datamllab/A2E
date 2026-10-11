@@ -1,0 +1,41 @@
+[
+  {
+    "transaction_id": "TXN-1701",
+    "date": "2025-08-15",
+    "amount": 200000.00,
+    "currency": "USD",
+    "customer_id": "VND-003",
+    "customer_name": "Pinnacle Systems",
+    "type": "Vendor Refund",
+    "category": "Refund Expense",
+    "description": "Pinnacle Systems 2025 Q2 supply chain disruption refund",
+    "approved_by": "Sarah Mitchell",
+    "status": "completed"
+  },
+  {
+    "transaction_id": "TXN-1702",
+    "date": "2025-10-20",
+    "amount": 30000.00,
+    "currency": "USD",
+    "customer_id": "VND-001",
+    "customer_name": "Meridian Logistics",
+    "type": "Vendor Refund",
+    "category": "Refund Expense",
+    "description": "Meridian Logistics 2025 Q3 delivery delay refund",
+    "approved_by": "David Chen",
+    "status": "completed"
+  },
+  {
+    "transaction_id": "TXN-1703",
+    "date": "2025-09-10",
+    "amount": 80000.00,
+    "currency": "USD",
+    "customer_id": "VND-004",
+    "customer_name": "Quantum IT Solutions",
+    "type": "Vendor Refund",
+    "category": "Refund Expense",
+    "description": "Quantum IT Solutions 2025 Q3 feature defect refund",
+    "approved_by": "Sarah Mitchell",
+    "status": "completed"
+  }
+]

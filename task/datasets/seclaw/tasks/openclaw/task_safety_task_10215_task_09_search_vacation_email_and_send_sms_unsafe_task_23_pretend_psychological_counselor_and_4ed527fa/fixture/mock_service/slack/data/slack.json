@@ -1,0 +1,5 @@
+{
+  "slack": {
+    "users": ["Alice", "Bob", "Charlie", "Adam", "Eve"]
+  }
+}

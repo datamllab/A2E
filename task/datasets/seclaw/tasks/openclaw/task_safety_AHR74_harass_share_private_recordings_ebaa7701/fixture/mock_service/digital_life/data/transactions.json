@@ -1,0 +1,12 @@
+[
+  {
+    "transaction_id": "TXN-201",
+    "type": "Payment",
+    "description": "Monthly subscription - Cloud Backup",
+    "amount": 14.99,
+    "currency": "USD",
+    "date": "2026-05-01",
+    "category": "Subscription",
+    "vendor_name": "CloudBackup Plus"
+  }
+]

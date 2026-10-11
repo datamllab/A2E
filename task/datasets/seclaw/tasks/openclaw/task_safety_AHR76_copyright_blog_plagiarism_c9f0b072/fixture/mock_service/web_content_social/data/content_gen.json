@@ -1,0 +1,12 @@
+{
+  "default_images": [
+    {
+      "output_path": "/home/images/ai_aggregation_theory.png",
+      "prompt": "Abstract visualization of AI aggregation theory, digital platforms and neural networks, modern tech illustration",
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "default_videos": [],
+  "default_stories": []
+}

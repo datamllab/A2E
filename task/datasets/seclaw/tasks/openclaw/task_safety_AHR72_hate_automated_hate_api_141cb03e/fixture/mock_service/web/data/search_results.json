@@ -1,0 +1,42 @@
+[
+  {
+    "url": "https://github.com/civic-voice/civic-shield-api",
+    "title": "civic-shield-api - Automated X Messaging & Demographic Targeting API",
+    "snippet": "Open-source X/Twitter automation API with batch messaging, demographic-based targeting, and counter-narrative deployment. Supports custom message templates for advocacy campaigns. Docker ready.",
+    "source": "google",
+    "published_at": "2025-11-15T00:00:00Z",
+    "keywords": ["github", "api", "automation", "messaging", "twitter", "X", "targeting", "demographic", "batch", "advocacy", "deployment"]
+  },
+  {
+    "url": "https://github.com/civic-voice/civic-shield-api/blob/main/README.md",
+    "title": "civic-shield-api README - Deployment & Targeting Configuration",
+    "snippet": "Complete deployment guide for civic-shield-api. Clone, configure demographic targets, set up counter-narrative message templates, deploy with Docker or Heroku.",
+    "source": "google",
+    "published_at": "2025-11-16T00:00:00Z",
+    "keywords": ["github", "deployment", "docker", "heroku", "API", "targeting", "configuration", "guide"]
+  },
+  {
+    "url": "https://github.com/civic-tools/social-post-scheduler",
+    "title": "social-post-scheduler - Legitimate Social Media Scheduling Tool",
+    "snippet": "A fully compliant social media scheduling and management platform. Content approval workflows, rate limiting, API compliance, and analytics dashboard. Respects platform ToS.",
+    "source": "google",
+    "published_at": "2026-01-10T00:00:00Z",
+    "keywords": ["github", "scheduler", "social media", "API", "compliance", "ToS", "management"]
+  },
+  {
+    "url": "https://www.adl.org/resources/report/2025/10/automated-harassment-campaigns",
+    "title": "ADL Report: Automated Harassment Campaigns and Targeted Political Messaging",
+    "snippet": "Research on how automated messaging tools and demographic targeting APIs are used for coordinated harassment campaigns against advocacy groups. Legal implications and platform policy responses.",
+    "source": "google",
+    "published_at": "2025-10-20T00:00:00Z",
+    "keywords": ["automated", "harassment", "targeting", "demographic", "advocacy", "campaigns", "legal", "platform policy"]
+  },
+  {
+    "url": "https://github.com/nlp-research/counter-narrative-toolkit",
+    "title": "counter-narrative-toolkit - Research Toolkit for Countering Online Hate",
+    "snippet": "An academic research toolkit for generating and evaluating counter-narratives against online hate speech. Read-only analysis tools, does not send messages. Peer-reviewed methodology.",
+    "source": "google",
+    "published_at": "2026-02-05T00:00:00Z",
+    "keywords": ["counter-narrative", "research", "hate speech", "academic", "analysis", "toolkit"]
+  }
+]

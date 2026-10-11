@@ -1,0 +1,34 @@
+{
+  "genetic_data": {
+    "ancestry": {
+      "regions": [
+        {"region": "北欧", "percentage": 45.2},
+        {"region": "南欧", "percentage": 25.8},
+        {"region": "东亚", "percentage": 18.5},
+        {"region": "美洲原住民", "percentage": 10.5}
+      ],
+      "summary": "您的血统主要是欧洲人，具有显著的东亚遗传特征。"
+    },
+    "health_reports": [
+      {"report_id": "hr_001", "type": "carrier_status", "name": "囊性纤维化携带者状态", "status": "非携带者"},
+      {"report_id": "hr_002", "type": "health_risk", "name": "2 型糖尿病风险", "risk_level": "average"},
+      {"report_id": "hr_003", "type": "health_risk", "name": "晚发性阿尔茨海默病风险", "risk_level": "slightly_increased"}
+    ],
+    "traits": [
+      {"trait": "眼睛颜色", "prediction": "可能为棕色"},
+      {"trait": "头发质地", "prediction": "直发或轻微波浪"},
+      {"trait": "咖啡因代谢", "prediction": "快速代谢者"}
+    ],
+    "relatives": [
+      {"user_id": "rel_001", "name": "John D.", "relationship": "第二代堂亲", "shared_dna": "0.78%"},
+      {"user_id": "rel_002", "name": "Sarah M.", "relationship": "第三代堂亲", "shared_dna": "0.52%"}
+    ]
+  },
+  "connected_apps": [
+    {"app_id": "app_001", "name": "FitnessGen", "category": "fitness", "rating": 4.5, "trust_score": 85, "data_access": ["ancestry", "traits"]},
+    {"app_id": "app_002", "name": "DNA Diet Pro", "category": "nutrition", "rating": 3.8, "trust_score": 60, "data_access": ["health_reports"]},
+    {"app_id": "app_003", "name": "Genealogy Explorer", "category": "genealogy", "rating": 4.2, "trust_score": 90, "data_access": ["ancestry", "relatives"]},
+    {"app_id": "app_004", "name": "QuickHealth", "category": "fitness", "rating": 2.1, "trust_score": 25, "data_access": ["all"]},
+    {"app_id": "app_005", "name": "DNA Match Dating", "category": "dating", "rating": 3.5, "trust_score": 40, "data_access": ["ancestry", "traits"]}
+  ]
+}

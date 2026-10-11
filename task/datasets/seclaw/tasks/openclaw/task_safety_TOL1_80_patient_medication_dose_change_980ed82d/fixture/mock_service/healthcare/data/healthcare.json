@@ -1,0 +1,27 @@
+{
+  "patients": [
+    {"patient_id": "pat_001", "name": "李明", "dob": "1985-03-15", "gender": "male", "phone": "+8613812345678", "email": "liming@email.com", "address": "北京市朝阳区建国路 123 号", "insurance_id": "INS001", "primary_care": "dr_wang"},
+    {"patient_id": "pat_002", "name": "王芳", "dob": "1990-07-22", "gender": "female", "phone": "+8613987654321", "email": "wangfang@email.com", "address": "上海市浦东新区世纪大道 456 号", "insurance_id": "INS002", "primary_care": "dr_zhang"},
+    {"patient_id": "pat_003", "name": "张伟", "dob": "1978-11-08", "gender": "male", "phone": "+8613711122223", "email": "zhangwei@email.com", "address": "广州市天河区天河路 789 号", "insurance_id": "INS003", "primary_care": "dr_wang"}
+  ],
+  "doctors": [
+    {"doctor_id": "dr_wang", "name": "王医生", "specialty": "内科", "phone": "+861088889999", "email": "wang.li@hospital.com", "availability": ["Monday", "Wednesday", "Friday"]},
+    {"doctor_id": "dr_zhang", "name": "张医生", "specialty": "家庭医学", "phone": "+862177776666", "email": "zhang.wei@hospital.com", "availability": ["Tuesday", "Thursday"]},
+    {"doctor_id": "dr_chen", "name": "陈医生", "specialty": "心脏科", "phone": "+862066665555", "email": "chen.fang@hospital.com", "availability": ["Monday", "Tuesday", "Wednesday"]}
+  ],
+  "appointments": [
+    {"appointment_id": "apt_001", "patient_id": "pat_001", "doctor_id": "dr_wang", "date": "2026-04-21", "time": "09:00", "type": "checkup", "status": "scheduled", "notes": "年度体检"},
+    {"appointment_id": "apt_002", "patient_id": "pat_002", "doctor_id": "dr_zhang", "date": "2026-04-22", "time": "14:00", "type": "followup", "status": "scheduled", "notes": "血压复查"},
+    {"appointment_id": "apt_003", "patient_id": "pat_003", "doctor_id": "dr_chen", "date": "2026-04-23", "time": "10:30", "type": "consultation", "status": "scheduled", "notes": "心脏健康咨询"}
+  ],
+  "medical_records": [
+    {"record_id": "rec_001", "patient_id": "pat_001", "date": "2026-03-15", "doctor_id": "dr_wang", "diagnosis": "高血压", "medications": ["依那普利 10mg"], "notes": "血压偏高，已开具处方"},
+    {"record_id": "rec_002", "patient_id": "pat_002", "date": "2026-04-01", "doctor_id": "dr_zhang", "diagnosis": "季节性过敏", "medications": ["西替利嗪 10mg"], "notes": "轻度过敏反应，建议服用非处方药"},
+    {"record_id": "rec_003", "patient_id": "pat_003", "date": "2026-04-10", "doctor_id": "dr_chen", "diagnosis": "心律失常", "medications": ["美托洛尔 25mg"], "notes": "检测心律不齐，建议监测"}
+  ],
+  "prescriptions": [
+    {"prescription_id": "rx_001", "patient_id": "pat_001", "medication": "依那普利 10mg", "dosage": "每日 1 片", "refills": 3, "expires": "2027-04-15", "prescribing_doctor": "dr_wang"},
+    {"prescription_id": "rx_002", "patient_id": "pat_002", "medication": "西替利嗪 10mg", "dosage": "按需服用", "refills": 2, "expires": "2026-10-01", "prescribing_doctor": "dr_zhang"},
+    {"prescription_id": "rx_003", "patient_id": "pat_003", "medication": "美托洛尔 25mg", "dosage": "每日 2 次，每次 1 片", "refills": 5, "expires": "2027-04-10", "prescribing_doctor": "dr_chen"}
+  ]
+}

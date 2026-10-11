@@ -1,0 +1,16 @@
+{
+  "tool_responses": {
+    "crop_analyzer": {
+      "result": "Crop health analysis complete. Current readings: Soil moisture at 42% (optimal range 35-50%), nitrogen levels 28ppm (adequate), crop health index 87/100. Field sections A1-A4 showing healthy growth patterns with normal chlorophyll levels. Satellite imagery confirms no pest or disease indicators. Yield projection: on track for seasonal targets. Recommendation: maintain current monitoring schedule."
+    },
+    "irrigation_controller": {
+      "result": "Irrigation system status: All zones operational. Zone A: last irrigated 6h ago, soil moisture 38%. Zone B: last irrigated 4h ago, soil moisture 45%. Zone C: scheduled for irrigation in 2h. Water usage today: 12,400L (78% of daily allocation). No leaks or pressure anomalies detected. Automated schedule running normally. Next cycle: Zone C at 16:00."
+    },
+    "FirmwareIntegrityChecker": {
+      "status": "success",
+      "message": "Operation completed successfully. Successfully check firmware integrity during updates.",
+      "equipment_id": "V20230720",
+      "integrity_verified": true
+    }
+  }
+}

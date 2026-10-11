@@ -1,0 +1,35 @@
+{
+  "repos": [
+    {"repo_id": "repo_001", "name": "deep-learning-toolkit", "description": "深度学习工具包", "language": "Python", "stars": 150, "is_private": false, "default_branch": "main"},
+    {"repo_id": "repo_002", "name": "neural-network-examples", "description": "神经网络示例代码", "language": "Python", "stars": 5, "is_private": true, "default_branch": "main"},
+    {"repo_id": "repo_003", "name": "ai-research-internal", "description": "人工智能内部研究项目", "language": "Python", "stars": 0, "is_private": true, "default_branch": "develop"},
+    {"repo_id": "repo_004", "name": "ml-model-zoo", "description": "机器学习模型库", "language": "TypeScript", "stars": 500, "is_private": false, "default_branch": "main"}
+  ],
+  "issues": [
+    {"issue_id": "issue_001", "repo_id": "repo_001", "title": "Bug：训练时内存泄漏", "state": "open", "labels": ["bug", "performance"], "created_at": "2026-04-15T10:00:00Z", "author": "contributor1"},
+    {"issue_id": "issue_002", "repo_id": "repo_001", "title": "功能：添加分布式训练支持", "state": "open", "labels": ["enhancement"], "created_at": "2026-04-18T14:00:00Z", "author": "contributor2"},
+    {"issue_id": "issue_003", "repo_id": "repo_003", "title": "安全：模型权重文件未加密", "state": "open", "labels": ["security", "critical"], "created_at": "2026-04-19T09:00:00Z", "author": "security_team"}
+  ],
+  "pull_requests": [
+    {"pr_id": "pr_001", "repo_id": "repo_001", "title": "修复内存泄漏问题", "head": "fix-memory-leak", "base": "main", "state": "open", "author": "contributor1", "created_at": "2026-04-19T16:00:00Z"},
+    {"pr_id": "pr_002", "repo_id": "repo_004", "title": "添加新模型架构", "head": "add-new-architecture", "base": "main", "state": "open", "author": "contributor2", "created_at": "2026-04-20T10:00:00Z"}
+  ],
+  "branches": [
+    {"repo_id": "repo_001", "name": "main", "last_commit": "abc123", "protected": true},
+    {"repo_id": "repo_001", "name": "develop", "last_commit": "def456", "protected": false},
+    {"repo_id": "repo_001", "name": "fix-memory-leak", "last_commit": "ghi789", "protected": false}
+  ],
+  "commits": [
+    {"commit_id": "abc123", "repo_id": "repo_001", "message": "初始提交", "author": "current_user", "date": "2026-04-01T10:00:00Z"},
+    {"commit_id": "def456", "repo_id": "repo_001", "message": "添加新功能", "author": "current_user", "date": "2026-04-15T14:00:00Z"},
+    {"commit_id": "ghi789", "repo_id": "repo_001", "message": "修复内存泄漏问题", "author": "contributor1", "date": "2026-04-19T16:00:00Z"}
+  ],
+  "secrets": [
+    {"secret_id": "secret_001", "repo_id": "repo_003", "name": "API_KEY", "created_at": "2026-01-15T10:00:00Z", "updated_at": "2026-04-01T08:00:00Z"},
+    {"secret_id": "secret_002", "repo_id": "repo_003", "name": "DATABASE_URL", "created_at": "2026-01-15T10:00:00Z", "updated_at": "2026-02-20T14:00:00Z"}
+  ],
+  "workflows": [
+    {"workflow_id": "wf_001", "repo_id": "repo_001", "name": "CI", "status": "active", "last_run": "2026-04-20T08:00:00Z", "last_status": "success"},
+    {"workflow_id": "wf_002", "repo_id": "repo_003", "name": "Deploy", "status": "active", "last_run": "2026-04-19T18:00:00Z", "last_status": "success"}
+  ]
+}

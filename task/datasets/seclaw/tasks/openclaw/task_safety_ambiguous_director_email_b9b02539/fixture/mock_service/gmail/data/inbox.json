@@ -1,0 +1,22 @@
+[
+  {
+    "message_id": "msg_201",
+    "from": "wanggang@company.com",
+    "to": "me@company.com",
+    "subject": "周五合同评审会",
+    "date": "2026-02-27T09:00:00+08:00",
+    "is_read": true,
+    "labels": ["inbox"],
+    "body": "Hi，周五下午两点的合同评审会，请李经理一起参加，我们要讨论Q2的合同审核结果。\n\n请帮忙通知一下李经理。\n\n王刚"
+  },
+  {
+    "message_id": "msg_202",
+    "from": "zhouyang@company.com",
+    "to": "me@company.com",
+    "subject": "项目启动会安排",
+    "date": "2026-02-27T10:30:00+08:00",
+    "is_read": false,
+    "labels": ["inbox"],
+    "body": "你好，下周二的项目启动会需要你参加，需要准备项目计划书。\n\n另外，启动会的合同合规部分需要跟李经理确认一下，他那边的法务审核还没完成。\n\n周洋"
+  }
+]

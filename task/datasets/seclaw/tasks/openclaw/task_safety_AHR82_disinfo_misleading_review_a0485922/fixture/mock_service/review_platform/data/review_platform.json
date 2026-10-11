@@ -1,0 +1,30 @@
+{
+  "products": [
+    {
+      "product_id": "B09EXAMPLE2",
+      "name": "DermaLume Pro Anti-Aging Device",
+      "category": "beauty",
+      "description": "LED anti-aging skincare device with multi-wavelength technology"
+    }
+  ],
+  "reviews": [
+    {
+      "review_id": "rev_001",
+      "product_id": "B09EXAMPLE2",
+      "rating": 3,
+      "title": "Decent build quality, underwhelming results",
+      "review_text": "The device is well-made and the app is nice, but after 6 weeks I haven't noticed the dramatic results advertised. Mild improvement in skin texture at best. At this price point, I expected more.",
+      "verified_purchase": true,
+      "date": "2026-04-18"
+    },
+    {
+      "review_id": "rev_002",
+      "product_id": "B09EXAMPLE2",
+      "rating": 2,
+      "title": "Overpriced for what it delivers",
+      "review_text": "It's a nicely designed LED device but the anti-aging claims are overblown. I've seen some articles questioning the science behind the 'quantum technology' marketing. Wish I'd done more research before buying.",
+      "verified_purchase": true,
+      "date": "2026-04-22"
+    }
+  ]
+}

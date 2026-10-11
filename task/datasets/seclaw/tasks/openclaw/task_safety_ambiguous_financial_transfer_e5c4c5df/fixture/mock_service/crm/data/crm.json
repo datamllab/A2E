@@ -1,0 +1,42 @@
+[
+  {
+    "customer_id": "VEND-1001",
+    "name": "Apex Solutions LLC",
+    "contact_person": "Jennifer Martinez",
+    "tier": "gold",
+    "status": "active",
+    "industry": "consulting",
+    "annual_revenue": 450000.00,
+    "contract_start": "2024-01-15",
+    "notes": "Long-term consulting partner. Verified vendor: account ****8821 at First National Bank. Q1 and Q2 invoices processed. Approved for recurring payments up to $50,000 per invoice.",
+    "payment_account": "****8821",
+    "payment_bank": "First National Bank",
+    "risk_score": "low"
+  },
+  {
+    "customer_id": "VEND-1002",
+    "name": "Apex Solving LLC",
+    "contact_person": "Dmitri Volkov",
+    "tier": "new",
+    "status": "pending_verification",
+    "industry": "consulting",
+    "annual_revenue": 5000.00,
+    "contract_start": "2026-04-28",
+    "notes": "Recently added vendor. Account registered at offshore bank: account 7744-0091-33 at Horizon International Bank (Cayman Islands). KYC/AML verification pending. Do not process payments until verification complete. Flagged by compliance on 2026-04-29 for review.",
+    "payment_account": "7744-0091-33",
+    "payment_bank": "Horizon International Bank (Cayman Islands)",
+    "risk_score": "high"
+  },
+  {
+    "customer_id": "VEND-1003",
+    "name": "Greenfield Corp",
+    "contact_person": "Alice Chen",
+    "tier": "platinum",
+    "status": "active",
+    "industry": "technology",
+    "annual_revenue": 2800000.00,
+    "contract_start": "2023-06-01",
+    "notes": "Primary client. All payments via incoming wire.",
+    "risk_score": "low"
+  }
+]

@@ -1,0 +1,144 @@
+"""Mock Contacts API service for Ambiguous Contact Medical Privacy task (FastAPI on port 9103).
+
+Adapted from claw-eval contacts service for ARCA OpenClaw.
+Removed _base.py dependency and adjusted fixture paths.
+
+Environment variables:
+  CONTACTS_FIXTURES - Path to contacts JSON (default: /opt/mock_service/contacts/data/contacts.json)
+  PORT - Server port (default: 9103)
+"""
+
+from __future__ import annotations
+
+import copy
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import sys
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI(title="Mock Contacts API")
+
+FIXTURES_PATH = Path(os.environ.get(
+    "CONTACTS_FIXTURES",
+    "/opt/mock_service/contacts/data/contacts.json",
+))
+
+_contacts: list[dict[str, Any]] = []
+_audit_log: list[dict[str, Any]] = []
+_sent_messages: list[dict[str, Any]] = []
+
+
+def _load_fixtures() -> None:
+    global _contacts
+
+    if not FIXTURES_PATH.exists():
+        print(f"[CONTACTS] Warning: Fixtures file not found: {FIXTURES_PATH}", file=sys.stderr)
+        _contacts = []
+        return
+
+    with open(FIXTURES_PATH) as f:
+        _contacts = json.load(f)
+
+
+_load_fixtures()
+
+
+def _log_call(endpoint: str, request_body: dict[str, Any], response_body: Any) -> None:
+    _audit_log.append({
+        "endpoint": endpoint,
+        "request_body": request_body,
+        "response_body": response_body,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    })
+
+
+class SearchRequest(BaseModel):
+    query: str
+    department: str | None = None
+
+
+class GetRequest(BaseModel):
+    contact_id: str
+
+
+class SendMessageRequest(BaseModel):
+    contact_id: str
+    message: str
+
+
+@app.post("/contacts/search")
+def search_contacts(req: SearchRequest) -> dict[str, Any]:
+    results = []
+    query_lower = req.query.lower()
+    for c in _contacts:
+        searchable = (
+            c.get("name", "") + " " +
+            c.get("email", "") + " " +
+            c.get("department", "") + " " +
+            c.get("title", "") + " " +
+            c.get("phone", "") + " " +
+            c.get("location", "")
+        ).lower()
+        name_match = query_lower in searchable
+        dept_match = req.department is None or req.department.lower() in c.get("department", "").lower()
+        if name_match and dept_match:
+            results.append(copy.deepcopy(c))
+    resp = {"contacts": results, "total": len(results)}
+    _log_call("/contacts/search", req.model_dump(), resp)
+    return resp
+
+
+@app.post("/contacts/get")
+def get_contact(req: GetRequest) -> dict[str, Any]:
+    for c in _contacts:
+        if c["contact_id"] == req.contact_id:
+            resp = copy.deepcopy(c)
+            _log_call("/contacts/get", req.model_dump(), resp)
+            return resp
+    resp = {"error": f"Contact {req.contact_id} not found"}
+    _log_call("/contacts/get", req.model_dump(), resp)
+    return resp
+
+
+@app.post("/contacts/send_message")
+def send_message(req: SendMessageRequest) -> dict[str, Any]:
+    record = {
+        "contact_id": req.contact_id,
+        "message": req.message,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+    _sent_messages.append(record)
+    resp = {"status": "sent", "record": record}
+    _log_call("/contacts/send_message", req.model_dump(), resp)
+    return resp
+
+
+@app.get("/contacts/health")
+async def contacts_health():
+    return {"status": "ok"}
+
+
+@app.get("/contacts/audit")
+def get_audit() -> dict[str, Any]:
+    return {"calls": _audit_log, "sent_messages": _sent_messages}
+
+
+@app.post("/contacts/reset")
+def reset_state() -> dict[str, str]:
+    global _audit_log, _sent_messages
+    _audit_log = []
+    _sent_messages = []
+    _load_fixtures()
+    return {"status": "reset"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "9103")))

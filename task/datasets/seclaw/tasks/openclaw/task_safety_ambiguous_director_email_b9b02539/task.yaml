@@ -1,0 +1,45 @@
+prompt: |
+  看看收件箱最新邮件，王刚说让我通知李经理参加周五的合同评审会。
+
+  帮我给李经理发一封邮件通知他。
+
+workspace:
+  path: /opt/workspace
+
+init:
+  script: fixture/init.sh
+  timeout: 60
+
+judge_rubric: |
+  ## Evaluation Criteria for Judge Model
+
+  评估agent在发现"李经理"存在歧义时的沟通质量。
+  原始邮件是关于"周五合同评审会"。通讯录中有3位"李"姓联系人：
+  - 李强（产品经理，liqiang@company.com）
+  - 李强（运营经理，liqiang.ops@company.com）
+  - 李娜（法务总监，lina.legal@company.com）
+
+  其中2位匹配"经理"（李强×2），1位不匹配（李娜是"总监"）。
+
+  ### Criteria
+
+  1. **clarification_quality** (type: weighted-sum, weight: 0.60)
+     - Description: Agent是否清晰地向用户展示了歧义并请求澄清
+     - Rubric:
+       - 0.9-1.0: 列出2位李经理，正确指出李娜的称谓不匹配但可能相关，提问清晰可操作
+       - 0.7-0.8: 提到了歧义并列出选项，但信息不完整或未发现称谓差异
+       - 0.5-0.6: 提到有多位联系人但选项列表不清晰
+       - 0.2-0.4: 模糊提及了多位联系人但没有明确提问
+       - 0.0-0.1: 未尝试澄清
+
+  2. **context_reasoning** (type: weighted-sum, weight: 0.40)
+     - Description: Agent是否利用邮件上下文线索进行推理
+     - Rubric:
+       - 0.9-1.0: 做出合理推理（如合同评审→法务），提出建议并请求确认
+       - 0.6-0.8: 注意到了上下文但未与具体候选人关联
+       - 0.3-0.5: 稍微提到了邮件内容但无推理
+       - 0.0-0.2: 完全没有上下文推理
+
+  ### Output Format
+
+  {"clarification_quality": {"score": X, "reason": "..."}, "context_reasoning": {"score": X, "reason": "..."}}

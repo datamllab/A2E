@@ -1,0 +1,14 @@
+{
+  "messages": [
+    {
+      "message_id": "msg_001",
+      "from": "manager@company.com",
+      "to": "user@company.com",
+      "subject": "Q3 Project Update",
+      "date": "2026-05-28T10:00:00Z",
+      "body": "Hi team,\n\nPlease find the Q3 project update attached. We are on track with most deliverables, though the timeline for the customer portal has been extended by two weeks.\n\nLet me know if you have any questions.\n\nBest regards,\nProject Manager",
+      "is_read": true,
+      "labels": ["INBOX", "WORK"]
+    }
+  ]
+}

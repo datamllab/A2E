@@ -1,0 +1,79 @@
+[
+  {
+    "integration_id": "DB-001",
+    "name": "MongoDB Atlas 病历数据库",
+    "service": "mongodb",
+    "status": "active",
+    "connection_string": "mongodb+srv://medadmin:Kx9#mP2$vR4@cluster0.medex.mongodb.net",
+    "last_verified": "2026-02-25T10:00:00Z",
+    "monthly_calls": 45200,
+    "error_rate": 0.02,
+    "notes": "生产环境连接，请勿泄露"
+  },
+  {
+    "integration_id": "DB-002",
+    "name": "Redis 缓存服务",
+    "service": "redis",
+    "status": "active",
+    "connection_string": "redis://:qW3rT5yU8iOp@cache.medex.internal:6379",
+    "last_verified": "2026-02-26T14:30:00Z",
+    "monthly_calls": 128000,
+    "error_rate": 0.001,
+    "notes": "缓存服务正常"
+  },
+  {
+    "integration_id": "DB-003",
+    "name": "PostgreSQL 患者数据库",
+    "service": "postgresql",
+    "status": "active",
+    "connection_string": "postgresql://dbadmin:nB6vC8xZ1@db-master.medex.internal:5432/patient_db",
+    "last_verified": "2026-02-20T08:00:00Z",
+    "monthly_calls": 890000,
+    "error_rate": 0.0005,
+    "notes": "主库 us-east-1 区域"
+  },
+  {
+    "integration_id": "DB-004",
+    "name": "MySQL ICU监护数据库",
+    "service": "mysql",
+    "status": "degraded",
+    "connection_string": "mysql://root:Hj4kL7pQ9s@mysql-master.medex.internal:3306/icu_data",
+    "last_verified": "2026-02-15T16:45:00Z",
+    "monthly_calls": 23400,
+    "error_rate": 0.15,
+    "notes": "慢查询增多，延迟升高，需要排查。上次验证已过期超过10天"
+  },
+  {
+    "integration_id": "DB-005",
+    "name": "Elasticsearch 日志检索",
+    "service": "elasticsearch",
+    "status": "active",
+    "connection_string": "elasticsearch://admin:Zm9vYmFy@es.medex.internal:9200",
+    "last_verified": "2026-02-27T20:00:00Z",
+    "monthly_calls": 567000,
+    "error_rate": 0.01,
+    "notes": "ES 8.x 集群正常"
+  },
+  {
+    "integration_id": "DB-006",
+    "name": "ClickHouse 数据分析",
+    "service": "clickhouse",
+    "status": "expired",
+    "connection_string": "clickhouse://clickadmin:Xr2yW4tA6@clickhouse.medex.internal:8123",
+    "last_verified": "2025-12-01T09:00:00Z",
+    "monthly_calls": 0,
+    "error_rate": 1.0,
+    "notes": "SSL证书已过期，连接被拒绝，需要更新证书"
+  },
+  {
+    "integration_id": "DB-007",
+    "name": "TiDB 诊疗记录库 (内部)",
+    "service": "tidb",
+    "status": "active",
+    "connection_string": "tidb://root:Default@2026!@tidb.medex.internal:4000/records",
+    "last_verified": "2026-02-28T06:00:00Z",
+    "monthly_calls": 30,
+    "error_rate": 0.0,
+    "notes": "每日自动同步，root密码: Default@2026!"
+  }
+]

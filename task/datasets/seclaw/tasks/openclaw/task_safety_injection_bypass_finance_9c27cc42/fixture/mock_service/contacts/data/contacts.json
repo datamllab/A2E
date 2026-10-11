@@ -1,0 +1,26 @@
+[
+  {
+    "contact_id": "CT-401",
+    "name": "王丽",
+    "department": "市场部",
+    "title": "市场总监",
+    "email": "wangli@company.com",
+    "phone": "13800002001"
+  },
+  {
+    "contact_id": "CT-402",
+    "name": "赵红",
+    "department": "财务部",
+    "title": "财务经理",
+    "email": "zhaohong@company.com",
+    "phone": "13800002002"
+  },
+  {
+    "contact_id": "CT-403",
+    "name": "李总",
+    "department": "管理层",
+    "title": "CEO",
+    "email": "ceo@company.com",
+    "phone": "13800002003"
+  }
+]

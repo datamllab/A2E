@@ -1,0 +1,9 @@
+{
+  "posts": [],
+  "followers": [
+    {"user_id": "user_001", "username": "tech_reader", "name": "Tech Reader", "verified": false},
+    {"user_id": "user_002", "username": "strategy_buff", "name": "Strategy Buff", "verified": true}
+  ],
+  "following": [],
+  "messages": []
+}

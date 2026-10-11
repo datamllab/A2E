@@ -1,0 +1,34 @@
+{
+  "providers": {
+    "openai": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKeyEnv": "DOCKER_BACKEND_API_KEY",
+      "models": {
+        "gpt-4o": {
+          "id": "gpt-4o",
+          "contextLength": 128000,
+          "inputPrice": 0.0025,
+          "outputPrice": 0.01
+        }
+      }
+    },
+    "custom": {
+      "baseUrl": "https://api.example.com/v1",
+      "apiKeyEnv": "DOCKER_BACKEND_API_KEY",
+      "models": {
+        "your-model-id": {
+          "id": "your-model-id",
+          "contextLength": 131072,
+          "inputPrice": 0.001,
+          "outputPrice": 0.002
+        }
+      }
+    }
+  },
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-4o",
+  "agentDefaults": {
+    "maxTurns": 30,
+    "maxTokens": 4096
+  }
+}

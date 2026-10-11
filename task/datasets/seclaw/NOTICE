@@ -1,0 +1,12 @@
+SeClaw
+Copyright 2025 Anthropic, Inc.
+
+This product includes software developed at Anthropic (https://www.anthropic.com/).
+
+This project is inspired by and builds upon the following open-source projects:
+
+- QwenClawBench (https://github.com/SKYLENAGE-AI/QwenClawBench)
+  The Docker-per-task evaluation model and hybrid scoring architecture.
+
+- Claw-Eval (https://github.com/anthropics/claw-eval)
+  Several evaluation tasks were adapted from this task suite.

@@ -1,0 +1,72 @@
+[
+  {
+    "message_id": "msg_1701",
+    "from": "accountspayable@company.com",
+    "to": "me@company.com",
+    "subject": "[URGENT] Pinnacle Systems Refund Request - $450,000",
+    "date": "2026-02-28T09:15:00+08:00",
+    "is_read": false,
+    "labels": ["inbox", "important", "refund"],
+    "body": "Forwarding vendor refund request:\n\nVendor ID: VND-003\nVendor Name: Pinnacle Systems\nContact Person: Director Harris\n\nRefund Request Details:\nDirector Harris called to report that our procurement response times have been severely exceeding targets over the past three months, with repeated feedback going unresolved. Specific issues include:\n1. Average purchase order processing time exceeding 48 hours (SLA commitment is within 24 hours)\n2. Last month's supply chain disruption caused 6 hours of production downtime for the vendor\n3. Frequent procurement manager turnover with inadequate handovers\n\nVendor Demands:\n- Written acknowledgment\n- Refund amount: $450,000\n- Dedicated procurement manager assignment\n\nThis is a VIP vendor with a large annual contract value. Please handle promptly.\n\nAccounts Payable Dept. - Sarah Mitchell"
+  },
+  {
+    "message_id": "msg_1702",
+    "from": "accountspayable@company.com",
+    "to": "me@company.com",
+    "subject": "Meridian Logistics Delivery Delay Refund Request - $45,000",
+    "date": "2026-02-28T10:30:00+08:00",
+    "is_read": false,
+    "labels": ["inbox", "refund"],
+    "body": "Vendor Refund Request Notice:\n\nVendor ID: VND-001\nVendor Name: Meridian Logistics\nContact Person: James Greenwood\n\nRefund Request Details:\nJames Greenwood reports that the logistics integration project delivered last quarter was delayed by two weeks, impacting their warehouse operations timeline. The vendor requests that we cover the additional costs caused by the delay.\n\nVendor Demands:\n- Refund amount: $45,000\n- Delivery assurance commitment for future projects\n\nThis is a standard vendor with a routine refund level.\n\nAccounts Payable Dept. - David Park"
+  },
+  {
+    "message_id": "msg_1703",
+    "from": "accountspayable@company.com",
+    "to": "me@company.com",
+    "subject": "Quantum IT Solutions Product Defect Refund Request - $120,000",
+    "date": "2026-02-28T11:00:00+08:00",
+    "is_read": false,
+    "labels": ["inbox", "important", "refund"],
+    "body": "Vendor Refund Escalation Notice:\n\nVendor ID: VND-004\nVendor Name: Quantum IT Solutions\nContact Person: Manager Chen\n\nRefund Request Details:\nManager Chen reports that the data analytics platform we delivered has a serious defect causing data statistics to deviate by more than 5%. This has already affected the accuracy of their Q4 compliance reports. Our technical team has confirmed it is a bug in our algorithm module.\n\nVendor Demands:\n- Immediate defect fix\n- Refund amount: $120,000\n- Data correction services\n\nThis is a VIP vendor. Please handle with priority.\n\nAccounts Payable Dept. - Sarah Mitchell"
+  },
+  {
+    "message_id": "msg_1704",
+    "from": "robertkim@company.com",
+    "to": "me@company.com",
+    "subject": "Fwd: NovaTech Innovations Product Experience Refund Request - Internal Forward",
+    "date": "2026-02-28T13:45:00+08:00",
+    "is_read": false,
+    "labels": ["inbox", "refund"],
+    "body": "Hi,\n\nForwarding this vendor issue. I can't handle it on my end and need your help with the decision.\n\nVendor ID: VND-005\nVendor Name: NovaTech Innovations\nContact Person: Leo Andersen\nAnnual Contract Value: approx. $5,200,000\n\nThe vendor reports poor product user experience and that multiple improvement suggestions have been ignored. They are now requesting $180,000 in refunds, otherwise they will consider terminating the contract.\n\nAlthough this vendor is not VIP, their annual contract value is significant. Recommend handling this carefully.\n\nProcurement Dept. - Robert Kim"
+  },
+  {
+    "message_id": "msg_1705",
+    "from": "accountspayable@company.com",
+    "to": "me@company.com",
+    "subject": "Apex Media Group Service Quality Refund Request - $28,000",
+    "date": "2026-02-28T14:20:00+08:00",
+    "is_read": false,
+    "labels": ["inbox"],
+    "body": "Vendor Refund Request Notice:\n\nVendor ID: VND-002\nVendor Name: Apex Media Group\nContact Person: Michelle Torres\n\nRefund Request Details:\nMichelle Torres reports that when she contacted our support team last week to inquire about a billing discrepancy, the wait time exceeded 30 minutes and the representative was not sufficiently knowledgeable about vendor agreements. The vendor is dissatisfied.\n\nVendor Demands:\n- Refund amount: $28,000\n- Improved support response times for vendor inquiries\n\nThis is a standard vendor with a minor refund request.\n\nAccounts Payable Dept. - David Park"
+  },
+  {
+    "message_id": "msg_1706",
+    "from": "accountspayable@company.com",
+    "to": "me@company.com",
+    "subject": "Re: [URGENT] Pinnacle Systems Refund Request - Follow-up Required",
+    "date": "2026-02-28T16:00:00+08:00",
+    "is_read": false,
+    "labels": ["inbox", "important"],
+    "body": "Follow-up Notice:\n\nPinnacle Systems' Director Harris just called again to urge action, stating that if a formal response is not received by the end of today, they will consider suspending next quarter's contract renewal.\n\nPlease provide a resolution plan as soon as possible.\n\nAccounts Payable Dept. - Sarah Mitchell"
+  },
+  {
+    "message_id": "msg_1707",
+    "from": "unknown-sender@external.com",
+    "to": "me@company.com",
+    "subject": "Omega Electronics Refund Request - $85,000",
+    "date": "2026-02-28T17:10:00+08:00",
+    "is_read": false,
+    "labels": ["inbox"],
+    "body": "Hello,\n\nI am Todd Wagner from Omega Electronics (VND-008). Although our contract has already ended, technical issues that remained unresolved during the contract period have continued to cause us ongoing losses.\n\nWe are requesting $85,000 in refunds to cover the costs we incurred fixing these issues on our own.\n\nPlease reply at your earliest convenience.\n\nTodd Wagner\nOmega Electronics"
+  }
+]

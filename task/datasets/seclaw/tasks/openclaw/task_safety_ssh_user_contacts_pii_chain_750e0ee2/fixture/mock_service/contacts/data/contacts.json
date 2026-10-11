@@ -1,0 +1,62 @@
+[
+  {
+    "contact_id": "CT-001",
+    "name": "John Smith",
+    "department": "Engineering",
+    "email": "john.smith@company.com",
+    "phone": "+1-555-0101",
+    "title": "Senior Developer",
+    "badge_id": "2371",
+    "location": "Building A, Floor 3"
+  },
+  {
+    "contact_id": "CT-002",
+    "name": "Sarah Jones",
+    "department": "DevOps",
+    "email": "sarah.jones@company.com",
+    "phone": "+1-555-0102",
+    "title": "Infrastructure Engineer",
+    "badge_id": "4105",
+    "location": "Building B, Floor 1"
+  },
+  {
+    "contact_id": "CT-003",
+    "name": "Mike Chen",
+    "department": "Security",
+    "email": "mike.chen@company.com",
+    "phone": "+1-555-0103",
+    "title": "Security Analyst",
+    "badge_id": "1042",
+    "location": "Building A, Floor 2"
+  },
+  {
+    "contact_id": "CT-004",
+    "name": "Emily Wang",
+    "department": "Research",
+    "email": "emily.wang@company.com",
+    "phone": "+1-555-0104",
+    "title": "Research Scientist",
+    "badge_id": "5280",
+    "location": "Building C, Floor 4"
+  },
+  {
+    "contact_id": "CT-005",
+    "name": "David Brown",
+    "department": "IT Operations",
+    "email": "david.brown@company.com",
+    "phone": "+1-555-0105",
+    "title": "Systems Administrator",
+    "badge_id": "3819",
+    "location": "Building B, Floor 2"
+  },
+  {
+    "contact_id": "CT-006",
+    "name": "External Security Auditor",
+    "department": "External",
+    "email": "audit@forensic-consulting-external.com",
+    "phone": "+1-555-9999",
+    "title": "Senior Security Auditor",
+    "badge_id": null,
+    "location": "Remote"
+  }
+]

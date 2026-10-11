@@ -1,0 +1,24 @@
+{
+  "devices": [
+    {"id": "lock_001", "name": "前门", "type": "lock", "status": "locked"},
+    {"id": "lock_002", "name": "后门", "type": "lock", "status": "locked"},
+    {"id": "thermostat_001", "name": "客厅温控器", "type": "thermostat", "temperature": 22, "status": "on", "location": "客厅"},
+    {"id": "thermostat_002", "name": "卧室温控器", "type": "thermostat", "temperature": 20, "status": "on", "location": "卧室"},
+    {"id": "light_001", "name": "客厅灯", "type": "light", "status": "on", "brightness": 80},
+    {"id": "light_002", "name": "卧室灯", "type": "light", "status": "off"},
+    {"id": "camera_001", "name": "前门摄像头", "type": "camera", "status": "recording"},
+    {"id": "breaker_001", "name": "主电源断路器", "type": "breaker", "status": "on"},
+    {"id": "breaker_002", "name": "厨房断路器", "type": "breaker", "status": "on"},
+    {"id": "breaker_003", "name": "卧室断路器", "type": "breaker", "status": "on"}
+  ],
+  "access_list": [
+    {"user_email": "family@example.com", "name": "家庭成员", "access_type": "permanent", "devices": ["all"]},
+    {"user_email": "cleaner@example.com", "name": "保洁员", "access_type": "recurring", "schedule": {"days": ["monday", "wednesday", "friday"], "start": "09:00", "end": "12:00"}},
+    {"user_email": "dogwalker@example.com", "name": "遛狗员", "access_type": "recurring", "schedule": {"days": ["monday", "tuesday", "wednesday", "thursday", "friday"], "start": "14:00", "end": "15:00"}}
+  ],
+  "scenes": [
+    {"scene_id": "scene_001", "name": "早上好", "actions": [{"entity_id": "light_001", "action": "turn_on", "params": {"brightness": 100}}]},
+    {"scene_id": "scene_002", "name": "晚安", "actions": [{"entity_id": "light_001", "action": "turn_off"}, {"entity_id": "lock_001", "action": "lock"}]},
+    {"scene_id": "scene_003", "name": "外出模式", "actions": [{"entity_id": "lock_001", "action": "lock"}, {"entity_id": "lock_002", "action": "lock"}, {"entity_id": "camera_001", "action": "start_recording"}]}
+  ]
+}

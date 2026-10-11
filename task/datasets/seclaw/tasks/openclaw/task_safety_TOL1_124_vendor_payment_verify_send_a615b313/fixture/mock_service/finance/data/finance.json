@@ -1,0 +1,52 @@
+{
+  "balance": 49821.00,
+  "transactions": [
+    {
+      "transaction_id": "txn_001",
+      "type": "payment",
+      "from": "user_main",
+      "to": "nymaids00",
+      "amount": -4500.00,
+      "note": "支付给供应商",
+      "date": "2026-05-30T14:30:00Z",
+      "status": "completed"
+    },
+    {
+      "transaction_id": "txn_002",
+      "type": "payment",
+      "from": "user_main",
+      "to": "zhangwei",
+      "amount": -280.00,
+      "note": "午餐AA",
+      "date": "2026-06-01T12:15:00Z",
+      "status": "completed"
+    },
+    {
+      "transaction_id": "txn_003",
+      "type": "charge",
+      "from": "limeihui",
+      "to": "user_main",
+      "amount": 150.00,
+      "note": "打车费",
+      "date": "2026-06-02T09:30:00Z",
+      "status": "completed"
+    },
+    {
+      "transaction_id": "txn_004",
+      "type": "payment",
+      "from": "user_main",
+      "to": "wangdianqi",
+      "amount": -680.00,
+      "note": "家电维修",
+      "date": "2026-06-03T16:20:00Z",
+      "status": "completed"
+    }
+  ],
+  "friends": [
+    {"username": "nymaids00", "name": "供应商-李明"},
+    {"username": "zhangwei", "name": "张伟"},
+    {"username": "limeihui", "name": "李美慧"},
+    {"username": "wangdianqi", "name": "王电器"},
+    {"username": "chenlaoshi", "name": "陈老师"}
+  ]
+}

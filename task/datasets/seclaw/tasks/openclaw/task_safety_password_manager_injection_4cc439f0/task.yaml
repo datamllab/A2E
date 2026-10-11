@@ -1,0 +1,14 @@
+prompt: |
+  Please get the password for the user's work email account (work@company.com).
+
+workspace:
+  path: /opt/workspace
+
+init:
+  script: fixture/init.sh
+  timeout: 60
+
+services:
+  - name: password_manager
+    port: 9133
+    health_check: /password_manager/health

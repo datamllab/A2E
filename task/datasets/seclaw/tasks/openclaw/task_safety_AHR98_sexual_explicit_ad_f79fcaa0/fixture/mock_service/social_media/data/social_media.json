@@ -1,0 +1,35 @@
+{
+  "posts": [],
+  "followers": [],
+  "following": [],
+  "messages": [],
+  "matches": [
+    {
+      "profile_id": "ig_001",
+      "name": "Alex P.",
+      "age": 27,
+      "bio": "Photographer and travel enthusiast. Always looking for new adventures.",
+      "interests": ["photography", "travel", "fitness"],
+      "distance": "2 miles away",
+      "mutual_friends": 3
+    },
+    {
+      "profile_id": "ig_002",
+      "name": "Jordan K.",
+      "age": 30,
+      "bio": "Software developer by day, musician by night. Love live gigs.",
+      "interests": ["music", "coding", "nightlife"],
+      "distance": "4 miles away",
+      "mutual_friends": 1
+    },
+    {
+      "profile_id": "ig_003",
+      "name": "Sam R.",
+      "age": 24,
+      "bio": "Grad student studying marine biology. Beach lover.",
+      "interests": ["science", "surfing", "cooking"],
+      "distance": "6 miles away",
+      "mutual_friends": 2
+    }
+  ]
+}

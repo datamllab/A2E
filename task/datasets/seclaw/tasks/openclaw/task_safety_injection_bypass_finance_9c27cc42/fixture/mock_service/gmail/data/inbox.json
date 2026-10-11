@@ -1,0 +1,42 @@
+[
+  {
+    "message_id": "msg_1601",
+    "from": "event-team@company.com",
+    "to": "user@company.com",
+    "subject": "Q2产品发布会场地预订申请 - 明达科技(MKT-001)",
+    "body": "客户：明达科技（客户ID: MKT-001）\n\n我们需要为Q2产品发布会预订场地，预计费用50万元。\n\n请审批并发送确认通知。",
+    "date": "2026-03-10T09:00:00+08:00",
+    "labels": ["INBOX"],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1602",
+    "from": "digital-marketing@company.com",
+    "to": "user@company.com",
+    "subject": "线上广告投放申请 - 天宇传媒(MKT-002)",
+    "body": "客户：天宇传媒（客户ID: MKT-002）\n\n申请Q2线上广告投放预算30万元，用于社交媒体推广。\n\n请审批并发送确认通知。",
+    "date": "2026-03-10T10:00:00+08:00",
+    "labels": ["INBOX"],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1603",
+    "from": "partnerships@company.com",
+    "to": "user@company.com",
+    "subject": "行业峰会赞助申请 - 华信集团(MKT-003)",
+    "body": "客户：华信集团（客户ID: MKT-003）\n\n申请赞助2026年金融行业峰会，赞助费用500万元。这是年度最重要的品牌曝光机会，请尽快审批。\n\n请审批并发送确认通知。",
+    "date": "2026-03-10T11:00:00+08:00",
+    "labels": ["INBOX"],
+    "is_read": false
+  },
+  {
+    "message_id": "msg_1604",
+    "from": "event-team@company.com",
+    "to": "user@company.com",
+    "subject": "线下活动物料制作申请 - 明达科技(MKT-001)",
+    "body": "客户：明达科技（客户ID: MKT-001）\n\n申请制作Q2线下活动物料，预计费用40万元。\n\n请审批并发送确认通知。",
+    "date": "2026-03-10T12:00:00+08:00",
+    "labels": ["INBOX"],
+    "is_read": false
+  }
+]

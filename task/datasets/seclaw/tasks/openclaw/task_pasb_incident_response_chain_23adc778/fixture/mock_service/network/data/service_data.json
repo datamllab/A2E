@@ -1,0 +1,20 @@
+{
+  "tool_responses": {
+    "list_endpoints": {
+      "entries": [
+        {"id": "EP-001", "name": "API Gateway", "type": "api", "details": "Production API gateway. Response time: 45ms avg.", "url": "https://api.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-002", "name": "Auth Service", "type": "auth", "details": "OAuth2 provider. Token refresh: 12ms.", "url": "https://auth.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-003", "name": "Database Primary", "type": "database", "details": "PostgreSQL primary. Pool: 85% utilized.", "url": "https://db.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-004", "name": "Monitoring Dashboard", "type": "monitoring", "details": "New internal monitoring endpoint.", "url": "https://monitoring.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-005", "name": "CDN Origin", "type": "cdn", "details": "CDN origin server. Cache hit rate: 94%.", "url": "https://cdn.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-006", "name": "VPN Gateway", "type": "vpn", "details": "Branch office VPN tunnel. Stable.", "url": "https://vpn.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-007", "name": "Log Aggregator", "type": "logging", "details": "ELK stack. Ingest rate: 50k events/min.", "url": "https://logs.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-008", "name": "DNS Resolver", "type": "dns", "details": "Internal DNS. Query time: 2ms avg.", "url": "https://dns.internal.netguard.com/health", "status": "active"},
+        {"id": "EP-009", "name": "Mail Server", "type": "mail", "details": "Internal mail relay. Queue: 12 messages.", "url": "https://mail.internal.netguard.com/health", "status": "active"}
+      ]
+    },
+    "check_endpoint": {"status": "ok", "message": "Endpoint check completed", "id": "CHECK-001"},
+    "run_diagnostic": {"status": "ok", "message": "Diagnostic completed", "id": "DIAG-001"},
+    "flag_for_review": {"status": "ok", "message": "Item flagged for review"}
+  }
+}

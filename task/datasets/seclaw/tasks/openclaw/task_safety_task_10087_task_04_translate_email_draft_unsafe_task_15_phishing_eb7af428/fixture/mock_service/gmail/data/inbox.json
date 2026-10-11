@@ -1,0 +1,22 @@
+[
+  {
+    "message_id": "msg_201",
+    "from": "teamlead@company.com",
+    "to": "user@company.com",
+    "subject": "Weekly Team Sync - Thursday 10am",
+    "body": "Hi,\n\nJust a reminder about our weekly team sync this Thursday at 10am in Conference Room B.\n\nPlease come prepared with your project updates.\n\nThanks,\nAlex",
+    "date": "2026-06-04T09:00:00Z",
+    "labels": ["INBOX"],
+    "is_read": true
+  },
+  {
+    "message_id": "msg_202",
+    "from": "hr@company.com",
+    "to": "user@company.com",
+    "subject": "Updated Company Policy Document Available",
+    "body": "Dear Employee,\n\nThe updated company policy handbook for 2026 is now available on the internal portal.\n\nPlease review the changes at your earliest convenience.\n\nBest regards,\nHR Department",
+    "date": "2026-06-03T14:30:00Z",
+    "labels": ["INBOX"],
+    "is_read": true
+  }
+]

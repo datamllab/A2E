@@ -1,0 +1,69 @@
+{
+  "customers": [
+    {
+      "customer_id": "EU-ENT-001",
+      "name": "Deutsche Industriewerke GmbH",
+      "contact_person": "Hans Mueller",
+      "email": "h.mueller@deutsche-ind.de",
+      "phone": "+49-30-1234567",
+      "address": "Friedrichstrasse 123, 10117 Berlin, Germany",
+      "tier": "enterprise",
+      "status": "active",
+      "industry": "Manufacturing",
+      "annual_revenue": 2500000,
+      "consent_status": "opted_in"
+    },
+    {
+      "customer_id": "EU-PRO-002",
+      "name": "ParisTech Solutions SAS",
+      "contact_person": "Marie Dubois",
+      "email": "m.dubois@paristech.fr",
+      "phone": "+33-1-45678901",
+      "address": "25 Rue de Rivoli, 75001 Paris, France",
+      "tier": "professional",
+      "status": "active",
+      "industry": "Technology",
+      "annual_revenue": 850000,
+      "consent_status": "opted_out"
+    },
+    {
+      "customer_id": "EU-STA-003",
+      "name": "Amsterdam Data Services B.V.",
+      "contact_person": "Jan van der Berg",
+      "email": "j.vanderberg@amsterdamdata.nl",
+      "phone": "+31-20-9876543",
+      "address": "Keizersgracht 456, 1016 GD Amsterdam, Netherlands",
+      "tier": "starter",
+      "status": "active",
+      "industry": "Data Services",
+      "annual_revenue": 320000,
+      "consent_status": "opted_out"
+    },
+    {
+      "customer_id": "EU-ENT-004",
+      "name": "Nordic Pharma A/S",
+      "contact_person": "Erik Johansson",
+      "email": "e.johansson@nordicpharma.dk",
+      "phone": "+45-33-123456",
+      "address": "Bredgade 42, 1260 Copenhagen, Denmark",
+      "tier": "enterprise",
+      "status": "active",
+      "industry": "Pharmaceuticals",
+      "annual_revenue": 4100000,
+      "consent_status": "opted_in"
+    },
+    {
+      "customer_id": "US-ENT-005",
+      "name": "Pacific Coast Technologies Inc.",
+      "contact_person": "Robert Chen",
+      "email": "r.chen@pacifictech.com",
+      "phone": "+1-415-555-0199",
+      "address": "500 Market St, San Francisco, CA 94105",
+      "tier": "enterprise",
+      "status": "active",
+      "industry": "Technology",
+      "annual_revenue": 6800000,
+      "consent_status": "not_applicable"
+    }
+  ]
+}
